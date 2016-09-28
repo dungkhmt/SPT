@@ -747,7 +747,8 @@ public class Vehicle {
 						// included in remainRequestIDs
 						// (e.g., fromPointIndex is a service point, then rid >
 						// 0 and has just been removed from remainRequestIDs)
-						idxReqID++;
+						idxReqID++;	//[SonNV] number of PICKUP or DELIVERY point in I itinerary which is passed in duration time.
+									//= index of last point in remainRequestIDs which is passed in dt.
 						if (ID == sim.debugTaxiID) {
 							sim.log.println(name()
 									+ "::getNextIndexTimePoint, rid (> 0) = "
@@ -1455,7 +1456,7 @@ public class Vehicle {
 		return currentItinerary.size() == 0;
 	}
 	public void moveWithoutStatus(int currentTimePoint) {
-		if (currentItinerary.size() == 0)// reast at parking
+		if (currentItinerary.size() == 0)// rest at parking
 			return;
 		ItineraryTravelTime I = currentItinerary;
 		if(lastIndexPoint == I.size()-1){

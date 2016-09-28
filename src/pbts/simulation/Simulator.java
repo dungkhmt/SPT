@@ -38,6 +38,10 @@ class TaxiLocation {
 	}
 }
 
+/**
+ * @author son
+ *
+ */
 public class Simulator {
 
 	/**
@@ -164,8 +168,8 @@ public class Simulator {
 	public ArrayList<PeopleRequest> runningPeopleRequests = new ArrayList<PeopleRequest>();
 	public ArrayList<ParcelRequest> runningParcelRequests = new ArrayList<ParcelRequest>();
 
-	public HashMap<Integer, PeopleRequest> mPeopleRequest;
-	public HashMap<Integer, ParcelRequest> mParcelRequest;
+	public HashMap<Integer, PeopleRequest> mPeopleRequest;	//Integer: people request ID.
+	public HashMap<Integer, ParcelRequest> mParcelRequest;	//Integer: parcel request ID.
 	public HashMap<Integer, Integer> mTaxi2Depot;
 	public HashMap<Integer, Integer> mTaxiID2Index;
 
@@ -410,12 +414,16 @@ public class Simulator {
 		return s;
 	}
 
+	/*****[SonNV]
+	 * Read information of locations from text file
+	 * @param filename	:	id, latitude, longitude
+	 */
 	public void loadMapFromTextFile(String filename) {
 		map = new RoadMap();
 		map.loadData(filename);
 		// System.exit(-1);
-		T = new TimeHorizon(startWorkingTime, terminateRequestTime,
-				terminateWorkingTime);
+		/*T = new TimeHorizon(startWorkingTime, terminateRequestTime,
+				terminateWorkingTime);*/ //[SonNV] not used, wait initTimeHorizon() called
 
 		// set default travel time for all roads
 		for (int i = 0; i < map.Arcs.size(); i++) {
@@ -3146,6 +3154,12 @@ public class Simulator {
 		return status[k][t - startWorkingTime];
 	}
 
+	/*****[SonNV]
+	 * Load information of depot parkings from text file.
+	 * @param fn	:
+	 * 			Depots: include id of depots and position of all taxis.
+	 * 			Parkings: include id and capacity of parkings.
+	 */
 	public void loadDepotParkings(String fn) {
 		try {
 			Scanner in = new Scanner(new File(fn));
@@ -3246,7 +3260,6 @@ public class Simulator {
 		return null;
 	}
 
-	
 	public void initVehicles() {
 		mTaxi2Depot = new HashMap<Integer, Integer>();
 		mTaxiID2Index = new HashMap<Integer, Integer>();
@@ -4053,6 +4066,10 @@ public class Simulator {
 
 	}
 
+	/*****[SonNV]
+	 * Load configuration parameters of system from text file (config-parameters.txt).
+	 * @param filename
+	 */
 	public void loadParameters(String filename) {
 		try {
 			Scanner in = new Scanner(new File(filename));
@@ -4148,7 +4165,8 @@ public class Simulator {
 	}
 
 	public void initTimeHorizon() {
-		int Th = terminateWorkingTime - startWorkingTime;
+		//[SonNV] not used
+		//int Th = terminateWorkingTime - startWorkingTime;
 		T = new TimeHorizon(startWorkingTime, terminateRequestTime,
 				terminateWorkingTime);
 	}

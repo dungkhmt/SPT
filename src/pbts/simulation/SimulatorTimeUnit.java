@@ -11,7 +11,6 @@ import pbts.entities.*;
 import pbts.enums.VehicleAction;
 import pbts.enums.VehicleStatus;
 import pbts.shortestpaths.DijkstraBinaryHeap;
-import pbts.onlinealgorithms.GreedyWithSharingPreserveNextServicePoint;
 import pbts.onlinealgorithmtimeunit.*;
 
 public class SimulatorTimeUnit extends Simulator {
@@ -849,7 +848,7 @@ public class SimulatorTimeUnit extends Simulator {
 			CI.addAction(I.getAction(i));
 			CI.addRequestID(I.getRequestID(i));
 			if (i < I.size() - 1)
-				if (I.getArrivalTime(i) > I.getDepartureTime(i)) {
+				if (I.getArrivalTime(i) > I.getDepartureTime(i)) { //[SonNV] don't understand: arrival time i > departure time i (i+1)?
 					System.out.println(name()
 							+ "::admitItinerary EXCEPTION I.arrTime(" + i
 							+ ") = " + I.getArrivalTime(i) + " > I.depTime("
@@ -1979,8 +1978,9 @@ public class SimulatorTimeUnit extends Simulator {
 			Vehicle taxi, ParcelRequest pr) {
 		
 		// find delivery people location
-		LatLng llPickup = map.mLatLng.get(pr.pickupLocationID);
-		LatLng llDelivery = map.mLatLng.get(pr.deliveryLocationID);
+		//[SonNV] Both of the variables are not used.
+		//LatLng llPickup = map.mLatLng.get(pr.pickupLocationID);
+		//LatLng llDelivery = map.mLatLng.get(pr.deliveryLocationID);
 		int locID = -1;
 		int idxLocID = -1;
 		TimePointIndex tpi = taxi.getNextTimePointIndex(taxi.lastIndexPoint,
@@ -1992,9 +1992,11 @@ public class SimulatorTimeUnit extends Simulator {
 					+ taxi.ID + " HAVING " + taxi.requestStatus() + ", tpi = "
 					+ tpi.toString());
 		}
-		boolean ok = taxi.remainRequestIDs == null;
-		ok = ok || taxi.remainRequestIDs.size() == 0;
-		if (ok) {
+		//When the taxi is initialized, remainRequestIDs is not null.
+		/*boolean ok = taxi.remainRequestIDs == null;
+		ok = ok || taxi.remainRequestIDs.size() == 0;*/
+		//[SonNV] If the itinerary of the taxi is finished, return it.
+		if (taxi.remainRequestIDs.size() == 0) {
 			/*
 			LatLng ll = map.mLatLng.get(tpi.point);
 			double d = G.computeDistanceHaversine(ll.lat, ll.lng, llPickup.lat,
@@ -2020,12 +2022,15 @@ public class SimulatorTimeUnit extends Simulator {
 					+ ", pr = " + pr.id + ", T.currentTimePoint = "
 					+ T.currentTimePoint + ", tpi = " + tpi.toString());
 		}
+		
+		//[SonNV] Get last people delivery point.
 		int countPeopleDelivery = 0;
 		int lastPeopleDeliveryRequestID = -1;
 		for (int i = 0; i < taxi.remainRequestIDs.size(); i++) {
 			int rid = taxi.remainRequestIDs.get(i);
-			if (rid > 0)
+			if (rid > 0) //pickup point
 				continue;
+			//[SonNV]If rid < 0, this point is either parcel or people delivery point.
 			PeopleRequest r = mPeopleRequest.get(Math.abs(rid));
 			if (r != null) {
 				locID = r.deliveryLocationID;
@@ -2066,13 +2071,15 @@ public class SimulatorTimeUnit extends Simulator {
 		ArrayList<Integer> KR = new ArrayList<Integer>();// kept remain request
 															// sequences
 
-		idxLocID = idxLocID < taxi.remainRequestIDs.size() - 1 ? idxLocID
-				: taxi.remainRequestIDs.size() - 1;
+		//[SonNV]Unnecessary
+		//idxLocID = idxLocID < taxi.remainRequestIDs.size() - 1 ? idxLocID
+		//		: taxi.remainRequestIDs.size() - 1;
 		for (int i = 0; i <= idxLocID; i++)
 			KR.add(taxi.remainRequestIDs.get(i));
 		for (int i = idxLocID + 1; i < taxi.remainRequestIDs.size(); i++)
 			R.add(taxi.remainRequestIDs.get(i));
 
+		//[SonNV]Have people request in remain requests list.
 		if (locID >= 0) {
 			// for(int i = 0; i <= idxLocID; i++)
 			// KR.add(taxi.remainRequestIDs.get(i));
@@ -2130,6 +2137,8 @@ public class SimulatorTimeUnit extends Simulator {
 						+ "::availableTaxi, DEBUG TRUE, checkNotContains TRUE");
 			}
 		}
+		
+		//estimate shortest distance to go to pickup and delivery locations.
 		double distancePickup = 1000000000;
 		double distanceDelivery = 1000000000;
 
@@ -2538,7 +2547,8 @@ public class SimulatorTimeUnit extends Simulator {
 		// if(true) return;
 
 		// for(int t = startWorkingTime; t < terminateWorkingTime; t++){
-		boolean ok = false;
+		//[SonNV] this variable is not used
+		//boolean ok = false;
 		// PeopleRequest peopleR = null;
 		// ParcelRequest parcelR = null;
 
@@ -2626,6 +2636,7 @@ public class SimulatorTimeUnit extends Simulator {
 			// System.out.println("WHILE queueParcel = " + queueParcelReq.size()
 			// + " queuePeople = " + queuePeopleReq.size());
 
+			//[SonNV] Because this statistics are contained others, should remove it.
 			for (int i = 0; i < queueParcelReq.size(); i++) {
 				ParcelRequest parcelR = queueParcelReq.get(i);
 
@@ -2963,15 +2974,16 @@ public class SimulatorTimeUnit extends Simulator {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
-		String mapFileName = "C:\\DungPQ\\research\\projects\\prediction-based-transport-scheduling\\code\\pbts\\SanFrancisco_std\\SanfranciscoRoad-connected-contracted-5-refine-50.txt";
-		String configFileName = "C:\\DungPQ\\research\\projects\\prediction-based-transport-scheduling\\code\\pbts\\SanFrancisco_std\\config-parameters.txt";
-		String requestFileName = "C:\\DungPQ\\research\\projects\\prediction-based-transport-scheduling\\code\\pbts\\SanFrancisco_std\\ins_day_3_minSpd_5_maxSpd_60.txt";
-		String depotParkingFileName = "C:\\DungPQ\\research\\projects\\prediction-based-transport-scheduling\\code\\pbts\\SanFrancisco_std\\depots1000-parkings34.txt";
+		//[SonNV] change path selected.
+		String data_dir = "E:\\task2\\git_project\\SPT\\";
+		String mapFileName = data_dir + "SanFrancisco_std\\SanfranciscoRoad-connected-contracted-5-refine-50.txt";
+		String configFileName = data_dir + "SanFrancisco_std\\config-parameters.txt";
+		String requestFileName = data_dir + "SanFrancisco_std\\ins_day_3_minSpd_5_maxSpd_60.txt";
+		String depotParkingFileName = data_dir + "SanFrancisco_std\\depots1000-parkings34.txt";
 		String plannerName = "NaiveSequentialDecisionTimeLimitPlanner";
-		String progressiveStatisticFileName = "C:\\DungPQ\\research\\projects\\prediction-based-transport-scheduling\\code\\pbts\\SanFrancisco_std\\output\\ins_day_3_minSpd_5_maxSpd_60.txt-plannerGreedyExchangeSharingDecisionTimeLimit-maxPendingStops10-decisionTime15-statistic-progress.txt";
-		String itineraryFileName = "C:\\DungPQ\\research\\projects\\prediction-based-transport-scheduling\\code\\pbts\\SanFrancisco_std\\output\\ins_day_3_minSpd_5_maxSpd_60.txt-plannerGreedyExchangeSharingDecisionTimeLimit-maxPendingStops10-decisionTime15-itinerary.txt";
-		String summaryFileName = "C:\\DungPQ\\research\\projects\\prediction-based-transport-scheduling\\code\\pbts\\SanFrancisco_std\\output\\ins_day_3_minSpd_5_maxSpd_60.txt-plannerGreedyExchangeSharingDecisionTimeLimit-maxPendingStops10-decisionTime15-summary.xml";
+		String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\output\\ins_day_3_minSpd_5_maxSpd_60.txt-plannerGreedyExchangeSharingDecisionTimeLimit-maxPendingStops10-decisionTime15-statistic-progress.txt";
+		String itineraryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_3_minSpd_5_maxSpd_60.txt-plannerGreedyExchangeSharingDecisionTimeLimit-maxPendingStops10-decisionTime15-itinerary.txt";
+		String summaryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_3_minSpd_5_maxSpd_60.txt-plannerGreedyExchangeSharingDecisionTimeLimit-maxPendingStops10-decisionTime15-summary.xml";
 		int maxNbPendingStops = 10;
 		int maxTimeReceiveRequest = 64800;
 		int startSimulationTime = 21600;
@@ -3021,7 +3033,6 @@ public class SimulatorTimeUnit extends Simulator {
 				);
 		
 		SimulatorTimeUnit simulator = new SimulatorTimeUnit();
-		
 		
 		simulator.loadMapFromTextFile(mapFileName);
 

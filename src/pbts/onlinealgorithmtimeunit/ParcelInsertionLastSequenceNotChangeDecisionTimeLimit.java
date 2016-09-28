@@ -233,6 +233,12 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 		}
 	}
 
+	/****[SonNV]
+	 * Process parcel request inserted: find nearest satisfy taxi and insert parcel for requests. 
+	 * @param:
+	 * 		parReq			:		list parcels need insert.
+	 * 		startDecideTime :		decided time.
+	 */
 	public void processParcelRequests(ArrayList<ParcelRequest> parReq, double startDecideTime) {
 		// TODO Auto-generated method stub
 		System.out.println(name() + "::processParcelRequests(parReq.sz = " + parReq.size() + ")");
@@ -261,8 +267,6 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 			if(t > sim.maxTimeOneParcelInsertion) sim.maxTimeOneParcelInsertion = t;
 			
 			System.out.println(name() + "::procesParcelRequests, sim.status = " + sim.getAcceptRejectStatus());
-			
-			
 		}
 	}
 

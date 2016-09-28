@@ -11,10 +11,13 @@ public class ItineraryTravelTime extends Itinerary{
 	 */
 	//private ArrayList<Integer> arrTime;// arrTime.get(i) is the arrival time point of vehicle at point path.get(i);
 	//private ArrayList<Integer> depTime;// depTime.get(i) is the departure time point of vehicle from point path.get(i);
-	public HashMap<Integer, Integer> arrTime;
+	public HashMap<Integer, Integer> arrTime; //[SonNV] arrival time point of the vehicle at point path.get(i).
 	public HashMap<Integer, Integer> depTime;
+	
+	//[SonNV]requestID: -1, 10, -1, 20, -1, -1, 10, 20, 30 ... (requestID[i] is id of request at point path.get(i).
+	//[SonNV]Positive values is PICKUP or DELIVERY action, negative values is PASS action.
 	public ArrayList<Integer> requestID;// ID of the request that the vehicle services
-	public ArrayList<VehicleAction> actions;
+	public ArrayList<VehicleAction> actions;//[SonNV] actions[i] is kind of action at path.get(i).
 	public HashMap<Integer, VehicleStatus> mStatus;
 	
 	
