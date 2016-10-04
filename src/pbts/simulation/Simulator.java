@@ -1709,6 +1709,17 @@ public class Simulator {
 		return I;
 	}
 	
+	/****[SonNV]
+	 * Establish itinerary based on sequence ss: 
+	 * 		+ Establish subs itinerary from i-point to j-point (i, j in ss, i-index < j-index). 
+	 * 		+ Subs itinerary are connected, departure time, arrival time, ... are computed. 
+	 * @param:
+	 * 		taxi				:		The taxi is chosen.
+	 * 		nextStartTimePoint	:		Time point of start point.
+	 * 		fromIndex			:		Index of start point.
+	 * 		fromPoint			:		Start point.
+	 * 		ss					: 		Sequence remain point.
+	 */
 	public ItineraryTravelTime establishItinerary(Vehicle taxi,
 			int nextStartTimePoint, int fromIndex, 
 			int fromPoint, ServiceSequence ss) {
@@ -1755,6 +1766,7 @@ public class Simulator {
 		// firstLoc &&
 		// taxi.currentItinerary.getRequestID(taxi.currentItinerary.size()-1) ==
 		// Math.abs(ss.rids[0]))
+		//If from point is the last point in remainRequestIDs which is passed in decision time (indexRemainRequestIDs).
 		if (firstLoc == fromPoint && reqIDAtFromPoint == Math.abs(ss.rids[0]))
 			startI = 1;// fromPoint = first point of ss.rids then startI = 1 in
 						// order to avoid repeating point

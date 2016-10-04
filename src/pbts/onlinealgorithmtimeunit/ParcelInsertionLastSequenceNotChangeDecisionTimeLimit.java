@@ -32,6 +32,12 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 		return "ParcelInsertionLastSequenceNotChangeDecisionTimeLimit";
 	}
 	
+	/****[SonNV]
+	 * Find nearest taxi for parcel insertion.
+	 * @param:
+	 * 		pr			:		parcel request.
+	 * 		maxTime		:		max time allowed finding best taxi for parcel insert.
+	 */
 	public TaxiTimePointIndex findTaxiForParcelInsertion(ParcelRequest pr, double maxTime){
 		double minDis = 1000000000;
 		double t0 = System.currentTimeMillis();
@@ -45,6 +51,7 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 			if (taxi.remainRequestIDs.size()+2 > sim.maxPendingStops)// consider also pickup and delivery points of pr
 				continue;
 			TaxiTimePointIndex ttpi = sim.estimatePickupPlusDeliveryDistanceTaxi(taxi, pr);
+			//[SonNV]Compared distance to others and get the taxi which has shortest distance.
 			if(ttpi != null)if(ttpi.estimation <  minDis){
 				minDis = ttpi.estimation;
 				sel_ttpi = ttpi;
@@ -62,6 +69,15 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 		return sel_ttpi;
 	}
 	
+	/****[SonNV]
+	 * Compute a sequence of point consist of remain request points and new request point and nearest parking.
+	 * @param:
+	 * 		taxi			:		Taxi is chosen to add.
+	 * 		tpi				: 		Information of the taxi.
+	 * 		pr				:		New parcel request.
+	 * 		keptReq			: 		Requests are kept.
+	 * 		remainRequests	:		Remain requests.
+	 */
 	public ServiceSequence computeParcelInsertionSequence(Vehicle taxi,
 			TimePointIndex tpi, ParcelRequest pr, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs) {
 		int startIdx = 0;
@@ -76,37 +92,51 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 		}
 		ArrayList<Integer> parkings = sim.collectAvailableParkings(taxi);
 		ServiceSequence ss = null;
+		/****[SonNV]Remove this block, because sel_nod array consist of remainRequests array and pr request at the end.
+		//[SonNV] Create new remainRequests array consist of remain request and pr (pickup and delivery).
 		int[] r = new int[remainRequestIDs.size() + 2];
 		for(int i = 0; i < remainRequestIDs.size(); i++)
 			r[i] = remainRequestIDs.get(i);
+		//insert into end of array.
 		r[r.length-2] = pr.id;
 		r[r.length-1] = -pr.id;
 		
+		//[SonNV] Kept requests and new remainRequests arrays are concatenated.
 		int[] t_sel_nod = new int[r.length + keptReq.size()];//seqOptimizer.computeShortestSequence(taxi, nextStartPoint, keptReq, r);
 		for(int i = 0; i < keptReq.size(); i++)
 			t_sel_nod[i] = keptReq.get(i);
 		for(int i = 0; i < r.length; i++)
 			t_sel_nod[i + keptReq.size()] = r[i];
 		
-			
 		if(t_sel_nod == null){
 			log.println(name() + "::computeParcelInsertionSequence taxi = " + taxi.ID + ", sel_nod = NULL NO SOLUTION?? " + 
 		", taxi.requestStatus = " + taxi.requestStatus());
 			return null;
 		}
+		
 		int[] sel_nod = new int[t_sel_nod.length - keptReq.size()];
 		for(int i = keptReq.size(); i < t_sel_nod.length; i++){
 			sel_nod[i-keptReq.size()] = t_sel_nod[i];
 		}
+		
 		if(taxi.ID == sim.debugTaxiID){
 			log.println(name() + "::computeParcelInsertionSequence, taxi " + taxi.ID + ", pr = " + pr.id + 
 					", OBTAIN sel_nod = " + Utility.arr2String(sel_nod));
 			System.out.println(name() + "::computeParcelInsertionSequence, taxi " + taxi.ID + ", pr = " + pr.id + 
 					", OBTAIN sel_nod = " + Utility.arr2String(sel_nod));
 			
-		}
+		}**/
+		//[SonNV] Create new remainRequests array consist of remain request and pr (pickup and delivery).
+		int[] sel_nod = new int[remainRequestIDs.size() + 2];
+		for(int i = 0; i < remainRequestIDs.size(); i++)
+			sel_nod[i] = remainRequestIDs.get(i);
+		//insert into end of array.
+		sel_nod[sel_nod.length-2] = pr.id;
+		sel_nod[sel_nod.length-1] = -pr.id;
+		
 		int sel_pk = -1;
 		double minD = 100000000;
+		/***[SonNV] endReq is pr request.
 		int endReq = sel_nod[sel_nod.length-1];
 		int endLocID = -1;
 		PeopleRequest peoR = sim.mPeopleRequest.get(Math.abs(endReq));
@@ -116,7 +146,12 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 			ParcelRequest parR = sim.mParcelRequest.get(Math.abs(endReq));
 			if(endReq < 0) endLocID = parR.deliveryLocationID; else endLocID = parR.pickupLocationID;
 		}
+		***/
+		//[SonNV] Get location id of last point in remain requests. In remain requests array, the last element is new parcel request.
+		ParcelRequest parR = sim.mParcelRequest.get(Math.abs(pr.id));
+		int endLocID = parR.deliveryLocationID;
 		
+		//[SonNV]Compute distance from last point in remain request to parking. Then,the nearest parking is inserted.
 		LatLng endLL = sim.map.mLatLng.get(endLocID);
 		for(int k = 0; k < parkings.size(); k++){
 			int pk = parkings.get(k);
@@ -136,7 +171,7 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 
 	public ItineraryServiceSequence computeItineraryParcelInsertion(
 			Vehicle taxi, TimePointIndex next_tpi, ParcelRequest pr, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs) {
-		// compute best added itinerary when pr is inserted into taxi
+		// compute best added itinerary when pr is inserted into taxi.
 		ServiceSequence ss = computeParcelInsertionSequence(taxi, next_tpi,
 				pr, keptReq, remainRequestIDs);
 		int fromIndex = next_tpi.indexPoint;
@@ -162,6 +197,7 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 		ItineraryTravelTime I = sim.establishItinerary(taxi,
 				nextStartTimePoint, fromIndex, reqID, fromPoint, ss);
 		*/
+		//[SonNV]Establish itinerary based on sequence ss.
 		ItineraryTravelTime I = sim.establishItinerary(taxi,
 				nextStartTimePoint, fromIndex, fromPoint, ss);
 		
@@ -234,7 +270,9 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 	}
 
 	/****[SonNV]
-	 * Process parcel request inserted: find nearest satisfy taxi and insert parcel for requests. 
+	 * Process parcel request inserted: 
+	 * 		+ Find nearest taxi: status of all taxis is updated in decision time and the shortest distance from taxi to pickup and delivery point is calculated.
+	 * 		+ Insert parcel:
 	 * @param:
 	 * 		parReq			:		list parcels need insert.
 	 * 		startDecideTime :		decided time.

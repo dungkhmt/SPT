@@ -747,7 +747,7 @@ public class Vehicle {
 						// included in remainRequestIDs
 						// (e.g., fromPointIndex is a service point, then rid >
 						// 0 and has just been removed from remainRequestIDs)
-						idxReqID++;	//[SonNV] number of PICKUP or DELIVERY point in I itinerary which is passed in duration time.
+						idxReqID++;	//[SonNV] number of PICKUP or DELIVERY point in I itinerary which is passed in decision time.
 									//= index of last point in remainRequestIDs which is passed in dt.
 						if (ID == sim.debugTaxiID) {
 							sim.log.println(name()

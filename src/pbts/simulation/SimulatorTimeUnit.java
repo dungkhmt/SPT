@@ -1995,7 +1995,7 @@ public class SimulatorTimeUnit extends Simulator {
 		//When the taxi is initialized, remainRequestIDs is not null.
 		/*boolean ok = taxi.remainRequestIDs == null;
 		ok = ok || taxi.remainRequestIDs.size() == 0;*/
-		//[SonNV] If the itinerary of the taxi is finished, return it.
+		//[SonNV] If the itinerary of the taxi is finished, return this taxi.
 		if (taxi.remainRequestIDs.size() == 0) {
 			/*
 			LatLng ll = map.mLatLng.get(tpi.point);
@@ -2032,7 +2032,7 @@ public class SimulatorTimeUnit extends Simulator {
 				continue;
 			//[SonNV]If rid < 0, this point is either parcel or people delivery point.
 			PeopleRequest r = mPeopleRequest.get(Math.abs(rid));
-			if (r != null) {
+			if (r != null) { //[SonNV]If it is people request, the last people request point is saved.
 				locID = r.deliveryLocationID;
 				idxLocID = i;
 				lastPeopleDeliveryRequestID = r.id;
@@ -2056,6 +2056,7 @@ public class SimulatorTimeUnit extends Simulator {
 					+ tpi.indexRemainRequestIDs + ", taxi.currentItinerary = "
 					+ taxi.currentItinerary.toString());
 		}
+
 		idxLocID = idxLocID > tpi.indexRemainRequestIDs ? idxLocID
 				: tpi.indexRemainRequestIDs;
 
@@ -2071,9 +2072,8 @@ public class SimulatorTimeUnit extends Simulator {
 		ArrayList<Integer> KR = new ArrayList<Integer>();// kept remain request
 															// sequences
 
-		//[SonNV]Unnecessary
-		//idxLocID = idxLocID < taxi.remainRequestIDs.size() - 1 ? idxLocID
-		//		: taxi.remainRequestIDs.size() - 1;
+		idxLocID = idxLocID < taxi.remainRequestIDs.size() - 1 ? idxLocID
+				: taxi.remainRequestIDs.size() - 1;
 		for (int i = 0; i <= idxLocID; i++)
 			KR.add(taxi.remainRequestIDs.get(i));
 		for (int i = idxLocID + 1; i < taxi.remainRequestIDs.size(); i++)
@@ -2086,6 +2086,7 @@ public class SimulatorTimeUnit extends Simulator {
 			// for(int i = idxLocID+1; i < taxi.remainRequestIDs.size(); i++)
 			// R.add(taxi.remainRequestIDs.get(i));
 
+			//[SonNV]Find last people delivery point and update variables: timePoint, indexPoint, point.
 			for (int i = taxi.lastIndexPoint; i < taxi.currentItinerary.size(); i++) {
 				if (taxi.currentItinerary.getAction(i) == VehicleAction.DELIVERY_PEOPLE
 						&&
@@ -2116,11 +2117,14 @@ public class SimulatorTimeUnit extends Simulator {
 
 		}
 
+		//[SonNV]Update variables in case index of last delivery point is higher than 
+		//index of last point in remainRequestIDs which is passed in decision time (indexRemainRequestIDs).
 		if (timePoint > tpi.timePoint) {
 			tpi.timePoint = timePoint;
 			tpi.point = point;
 			tpi.indexPoint = indexPoint;
-		} 
+		}
+		
 		if (DEBUG && taxi.ID == debugTaxiID) {
 			if (!taxi.checkNotConstains(indexPoint + 1, KR)) {
 				System.out.println(name() + "::availableTaxi, taxi " + taxi.ID
@@ -2985,9 +2989,9 @@ public class SimulatorTimeUnit extends Simulator {
 		String itineraryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_3_minSpd_5_maxSpd_60.txt-plannerGreedyExchangeSharingDecisionTimeLimit-maxPendingStops10-decisionTime15-itinerary.txt";
 		String summaryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_3_minSpd_5_maxSpd_60.txt-plannerGreedyExchangeSharingDecisionTimeLimit-maxPendingStops10-decisionTime15-summary.xml";
 		int maxNbPendingStops = 10;
-		int maxTimeReceiveRequest = 64800;
-		int startSimulationTime = 21600;
-		int decisionTime = 15;
+		int maxTimeReceiveRequest = 6480;
+		int startSimulationTime = 2160;
+		int decisionTime = 150;
 		
 		for(int i = 0; i < args.length; i++){
 			if(args[i].equals("--mapFileName"))
