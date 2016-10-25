@@ -36,7 +36,7 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 	 * Find nearest taxi for parcel insertion.
 	 * @param:
 	 * 		pr			:		parcel request.
-	 * 		maxTime		:		max time allowed finding best taxi for parcel insert.
+	 * 		maxTime		:		max time allowed finding best taxi for parcel insertion.
 	 */
 	public TaxiTimePointIndex findTaxiForParcelInsertion(ParcelRequest pr, double maxTime){
 		double minDis = 1000000000;
@@ -80,11 +80,6 @@ public class ParcelInsertionLastSequenceNotChangeDecisionTimeLimit implements
 	 */
 	public ServiceSequence computeParcelInsertionSequence(Vehicle taxi,
 			TimePointIndex tpi, ParcelRequest pr, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs) {
-		int startIdx = 0;
-		// int taxiID = 1;
-		int nextStartPoint = tpi.point;// taxi.getNextStartPoint();
-		int startTimePoint = tpi.timePoint;// taxi.getNextStartTimePoint();
-
 		if(taxi.ID == sim.debugTaxiID){
 			log.println(name() + "::computeParcelInsertionSequence, taxi " + taxi.ID + ", pr = " + pr.id + " tpi = " + tpi.toString() + 
 					", keptReq = " + Utility.arr2String(keptReq) + ", remainrequestIDs = "

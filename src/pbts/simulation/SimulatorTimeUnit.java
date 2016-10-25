@@ -47,6 +47,40 @@ public class SimulatorTimeUnit extends Simulator {
 		}
 		return null;
 	}
+	
+	/****[SonNV]
+	 * Find nearest available taxi for people insertion.
+	 * @param:
+	 * 		pr			:		people request.
+	 * 		maxTime		:		max time allowed finding best taxi for people insertion.
+	 */
+	public TaxiTimePointIndex getNearestAvailableTaxiForPeople(PeopleRequest pr, double maxTime){
+		double t0 = System.currentTimeMillis();
+		TaxiTimePointIndex sel_tpi = null;
+		double minDis = 1000000000;
+		for(int k = 0; k < vehicles.size(); k++){
+			Vehicle taxi = vehicles.get(k);
+			if (taxi.status == VehicleStatus.STOP_WORK)
+				continue;
+			if (taxi.totalTravelDistance > maxTravelDistance)
+				continue;
+			if (taxi.remainRequestIDs.size()+2 > maxPendingStops)// consider also pickup and delivery points of pr
+				continue;
+			TaxiTimePointIndex tpi = availableTaxiWithTimePriority(taxi, pr);
+			if(tpi != null){
+				if(tpi.estimation < minDis){
+					sel_tpi = tpi;
+					minDis = sel_tpi.estimation;
+				}
+			}
+			if((System.currentTimeMillis()-t0)*0.001 > maxTime) break;
+		}
+		double t = System.currentTimeMillis() - t0;
+		t = t * 0.001;
+		if(t > maxTimeFindTaxiParcelInsertion) maxTimeFindTaxiParcelInsertion = t;
+		return sel_tpi;
+	}
+	
 	public TaxiTimePointIndex availableTaxiForPeople(Vehicle taxi, PeopleRequest pr) {
 		// find delivery people location
 		int locID = -1;
@@ -2984,14 +3018,14 @@ public class SimulatorTimeUnit extends Simulator {
 		String configFileName = data_dir + "SanFrancisco_std\\config-parameters.txt";
 		String requestFileName = data_dir + "SanFrancisco_std\\ins_day_3_minSpd_5_maxSpd_60.txt";
 		String depotParkingFileName = data_dir + "SanFrancisco_std\\depots1000-parkings34.txt";
-		String plannerName = "NaiveSequentialDecisionTimeLimitPlanner";
+		String plannerName = "SequenceDecidedBasedOnPopularPointPlanner";
 		String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\output\\ins_day_3_minSpd_5_maxSpd_60.txt-plannerGreedyExchangeSharingDecisionTimeLimit-maxPendingStops10-decisionTime15-statistic-progress.txt";
 		String itineraryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_3_minSpd_5_maxSpd_60.txt-plannerGreedyExchangeSharingDecisionTimeLimit-maxPendingStops10-decisionTime15-itinerary.txt";
 		String summaryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_3_minSpd_5_maxSpd_60.txt-plannerGreedyExchangeSharingDecisionTimeLimit-maxPendingStops10-decisionTime15-summary.xml";
 		int maxNbPendingStops = 10;
-		int maxTimeReceiveRequest = 6480;
-		int startSimulationTime = 2160;
-		int decisionTime = 150;
+		int maxTimeReceiveRequest = 64800;
+		int startSimulationTime = 21600;
+		int decisionTime = 15;
 		
 		for(int i = 0; i < args.length; i++){
 			if(args[i].equals("--mapFileName"))
@@ -3053,7 +3087,8 @@ public class SimulatorTimeUnit extends Simulator {
 															new NaiveSequentialPlanner(simulator),
 															new GreedyExchangeSharingDecisionTimeLimitPlanner(simulator),
 															new GreedySharingNoExchangeDecisionTimeLimitPlanner(simulator),
-															new NaiveSequentialDecisionTimeLimitPlanner(simulator)
+															new NaiveSequentialDecisionTimeLimitPlanner(simulator),
+															new SequenceDecidedBasedOnPopularPointPlanner(simulator)
 														};
 		
 		OnlinePlanner selectedPlanner = null;
@@ -3140,6 +3175,7 @@ public class SimulatorTimeUnit extends Simulator {
 		GreedyExchangeSharingDecisionTimeLimitPlanner planner6 = new GreedyExchangeSharingDecisionTimeLimitPlanner(sim);
 		GreedySharingNoExchangeDecisionTimeLimitPlanner planner7 = new GreedySharingNoExchangeDecisionTimeLimitPlanner(sim);
 		NaiveSequentialDecisionTimeLimitPlanner planner8 = new NaiveSequentialDecisionTimeLimitPlanner(sim);
+		SequenceDecidedBasedOnPopularPointPlanner planner9 = new SequenceDecidedBasedOnPopularPointPlanner(sim);
 		
 		OnlinePlanner[] planner = new OnlinePlanner[] { planner1, planner2,
 				planner3, planner4, planner5, planner6, planner7,planner8};

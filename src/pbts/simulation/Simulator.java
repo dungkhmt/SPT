@@ -10,6 +10,7 @@ import pbts.entities.PeopleRequest;
 import pbts.entities.Vehicle;
 import pbts.gismap.*;
 import pbts.gismap.googlemaps.GoogleMapsQuery;
+import pbts.prediction.behrouz.fixedrate.FixedRateSampler;
 
 import java.io.*;
 import java.text.DecimalFormat;
@@ -155,6 +156,7 @@ public class Simulator {
 
 	public RoadMap map;
 	public TimeHorizon T;
+	public FixedRateSampler frs;
 
 	public int nbTaxis;// number of taxis
 	public int nbPeopleRequests;
@@ -247,7 +249,7 @@ public class Simulator {
 	//public String dir_slash = "/";
 			
 	public Simulator() {
-		
+		frs = new FixedRateSampler();
 	}
 	
 	public void initStatisticParameters(){
@@ -634,10 +636,6 @@ public class Simulator {
 		ArrayList<Integer> R = new ArrayList<Integer>();// new remain requestIDs
 		ArrayList<Integer> KR = new ArrayList<Integer>();// kept remain request sequences
 		idxLocID = idxLocID < taxi.remainRequestIDs.size()-1 ? idxLocID : taxi.remainRequestIDs.size()-1;
-		for(int i = 0; i <= idxLocID; i++)
-			KR.add(taxi.remainRequestIDs.get(i));
-		for(int i = idxLocID+1; i < taxi.remainRequestIDs.size(); i++)
-			R.add(taxi.remainRequestIDs.get(i));
 		
 		if (locID >= 0) {
 			//for (int i = idxLocID + 1; i < taxi.remainRequestIDs.size(); i++)
@@ -682,15 +680,153 @@ public class Simulator {
 		
 		//double d = dijkstra.queryDistance(point, pr.pickupLocationID);
 		double t = getTravelTime(d, maxSpeedms);
-		tpi = new TimePointIndex(timePoint, point, indexPoint);
 
-		if (t + timePoint <= pr.latePickupTime)
-			return new TaxiTimePointIndex(taxi, tpi, R, KR);
+		if (t + timePoint <= pr.latePickupTime){
+			for(int i = 0; i <= idxLocID; i++)
+				KR.add(taxi.remainRequestIDs.get(i));
+			for(int i = idxLocID+1; i < taxi.remainRequestIDs.size(); i++)
+				R.add(taxi.remainRequestIDs.get(i));
+			//[SonNV]Distance from current point of this taxi to pickup point is saved.
+			tpi = new TimePointIndex(timePoint, point, indexPoint);
+			TaxiTimePointIndex sel_ttpi = new TaxiTimePointIndex(taxi, tpi, R, KR);
+			sel_ttpi.estimation = d;
+			return sel_ttpi;
+		}
 
 		return null;
 	}
 	
-	
+	/****[SonNV]
+	 * Find nearest available taxi for people insertion with time priority
+	 * After last people is delivered: find last parcel delivery point which is satisfy with late pickup time of this request.
+	 * @param:
+	 * 		taxi		:		taxi is considered.
+	 * 		pr			:		people request.
+	 */
+	public TaxiTimePointIndex availableTaxiWithTimePriority(Vehicle taxi, PeopleRequest pr) {
+		
+		if(taxi.remainRequestIDs.size() + 2 > maxPendingStops) return null;
+		if(taxi.totalTravelDistance > maxTravelDistance) return null;
+		
+		// find delivery people location
+		int locID = -1;
+		int idxLocID = -1;
+		TimePointIndex tpi = taxi.getNextTimePointIndex(taxi.lastIndexPoint,
+				T.currentTimePoint, TimePointDuration);
+		if (taxi.ID == debugTaxiID) {
+			System.out.println(name() + "SequenceDecidedBasedOnPopularPointPlanner::availableTaxi, taxi = " + taxi.ID
+					+ ", pr = " + pr.id + ", T.currentTimePoint = "
+					+ T.currentTimePoint + ", tpi = " + tpi.toString());
+			log.println(name() + "SequenceDecidedBasedOnPopularPointPlanner::availableTaxi, taxi = " + taxi.ID
+					+ ", pr = " + pr.id + ", T.currentTimePoint = "
+					+ T.currentTimePoint + ", tpi = " + tpi.toString());
+		}
+		int countPeopleDelivery = 0;
+		int lastPeopleDeliveryRequestID = -1;
+		for (int i = 0; i < taxi.remainRequestIDs.size(); i++) {
+			int rid = taxi.remainRequestIDs.get(i);
+			if (rid > 0)
+				continue;
+			PeopleRequest r = mPeopleRequest.get(Math.abs(rid));
+			if (r != null) {
+				locID = r.deliveryLocationID;
+				idxLocID = i;
+				lastPeopleDeliveryRequestID = r.id;
+				countPeopleDelivery++;
+				//break;
+			}
+		}
+
+		idxLocID = idxLocID > tpi.indexRemainRequestIDs ? idxLocID : tpi.indexRemainRequestIDs;
+		
+		if(countPeopleDelivery > 1){
+			return null;// do not consider itinerary having more than one people being deliveried
+		}
+		
+		int timePoint = -1;
+		int point = -1;
+		int indexPoint = -1;
+
+		ArrayList<Integer> R = new ArrayList<Integer>();// new remain requestIDs
+		ArrayList<Integer> KR = new ArrayList<Integer>();// kept remain request sequences
+		idxLocID = idxLocID < taxi.remainRequestIDs.size()-1 ? idxLocID : taxi.remainRequestIDs.size()-1;
+		
+		if (locID >= 0) {
+			for (int i = taxi.lastIndexPoint; i < taxi.currentItinerary.size(); i++) {
+				if (taxi.currentItinerary.getAction(i) == VehicleAction.DELIVERY_PEOPLE
+						&& taxi.currentItinerary.getRequestID(i) == lastPeopleDeliveryRequestID){
+					timePoint = taxi.currentItinerary.getDepartureTime(i);
+					if (timePoint < 0)// ith position is not only delivery
+										// location but also parking location
+						timePoint = taxi.currentItinerary.getArrivalTime(i)
+								+ pr.deliveryDuration;
+					point = taxi.currentItinerary.get(i);
+					indexPoint = i;
+					break;
+				}
+			}
+
+		} else {
+
+		}
+
+		if (timePoint < tpi.timePoint) {
+			timePoint = tpi.timePoint;
+			point = tpi.point;
+			indexPoint = tpi.indexPoint;
+		}
+
+		double d = estimateTravelingDistance(point,  pr.pickupLocationID);
+		
+		double t = getTravelTime(d, maxSpeedms);
+		if (t + timePoint <= pr.latePickupTime){
+			int ixLocParcelDelivery = idxLocID;
+			int newTimePoint = timePoint;
+			int newIndexPoint = indexPoint;
+			int newPoint = point;
+			for(int i = ixLocParcelDelivery + 1; i < taxi.remainRequestIDs.size(); i++){
+				int rid = taxi.remainRequestIDs.get(i);
+				if (rid > 0)
+					continue;
+				ParcelRequest r = mParcelRequest.get(Math.abs(rid));
+				if (r != null) {
+					for (int j = taxi.lastIndexPoint; j < taxi.currentItinerary.size(); j++) {
+						if (taxi.currentItinerary.getAction(j) == VehicleAction.DELIVERY_PARCEL
+								&& taxi.currentItinerary.getRequestID(j) == r.id){
+							newTimePoint = taxi.currentItinerary.getDepartureTime(j);
+							if (newTimePoint < 0)// ith position is not only delivery
+												// location but also parking location
+								newTimePoint = taxi.currentItinerary.getArrivalTime(j)
+										+ pr.deliveryDuration;
+							newPoint = taxi.currentItinerary.get(j);
+							double newD = estimateTravelingDistance(newPoint,  pr.pickupLocationID);
+							
+							double newT = getTravelTime(newD, maxSpeedms);
+							if (newT + newTimePoint <= pr.latePickupTime){
+								indexPoint = j;
+								point = newPoint;
+								timePoint = newTimePoint;
+								idxLocID = i;
+								d = newD;
+							}
+							break;
+						}
+					}
+				}
+			}
+			for(int k = 0; k <= idxLocID; k++)
+				KR.add(taxi.remainRequestIDs.get(k));
+			for(int k = idxLocID+1; k < taxi.remainRequestIDs.size(); k++)
+				R.add(taxi.remainRequestIDs.get(k));
+			//[SonNV]Distance from current point of this taxi to pickup point is saved.
+			tpi = new TimePointIndex(timePoint, point, indexPoint);
+			TaxiTimePointIndex sel_ttpi = new TaxiTimePointIndex(taxi, tpi, R, KR);
+			sel_ttpi.estimation = d;
+			return sel_ttpi;
+		}
+
+		return null;
+	}
 	public int findAvailableTaxi(int t, int src, int des) {
 		// TODO
 		// System.out.println("MapBasedDataGenerator::findAvailableTaxi not implemented");
@@ -1985,6 +2121,9 @@ public class Simulator {
 			}
 			curPos = nextPoint;
 		}
+		
+		
+		
 		Itinerary I = dijkstra.queryShortestPath(curPos,
 				ss.parkingLocationPoint);
 		int t = getTravelTime(I.getDistance(), maxSpeedms);
@@ -2028,6 +2167,298 @@ public class Simulator {
 		return retI;
 	}
 
+	/****[SonNV]
+	 * Compute sequence of popular points from the last delivery point to parking.
+	 * Find popular points in period time, the taxi is allowed go around nearest points in 15 minutes (a period).
+	 * @param:
+	 * 		point		:		the last point in remain requests.
+	 * 		timePoint	:		last delivery time.
+	 * 		taxi		:		the taxi is chosen.
+	 */
+	public ArrayList<Integer> computeSequenceOfPopularPoints(int point, int timePoint, Vehicle taxi){
+		ArrayList<Integer> ssPp = new ArrayList<Integer>();
+		int period = timePoint / 900;
+		
+		//get popular points in this period time.
+		ArrayList<Integer> popularRqIdInPeriod = new ArrayList<Integer>();
+		popularRqIdInPeriod = frs.getRequests(period);
+		
+		int timeAllow = 0;//the taxi is allowed go around in 15 minutes.
+		int ppId = -1;
+		double D;
+		int prePoint = point;
+		
+		while(timeAllow < 900){
+			double shortestDis = 10000000;
+			int nearestPointId = -1;
+			for(int i = 0; i < popularRqIdInPeriod.size(); i++){
+				ppId = popularRqIdInPeriod.get(i);
+				if(ppId != prePoint){
+					D = estimateTravelingDistance(ppId, prePoint);
+					//Find the nearest points in popular points
+					if(shortestDis > D){
+						shortestDis = D;
+						nearestPointId = ppId;
+					}
+				}
+			}
+			if(nearestPointId != -1){
+				ssPp.add(nearestPointId);
+				double t = getTravelTime(shortestDis, maxSpeedms);
+				timeAllow += t;
+				prePoint = nearestPointId;
+			}
+		}
+		return ssPp;
+	}
+	
+	/****[SonNV]
+	 * Establish itinerary based on sequence ss and predicable point: 
+	 * 		+ Establish subs itinerary from i-point to j-point (i, j in ss, i-index < j-index). 
+	 * 		+ Subs itinerary are connected, departure time, arrival time, ... are computed. 
+	 * @param:
+	 * 		taxi				:		The taxi is chosen.
+	 * 		nextStartTimePoint	:		Time point of start point.
+	 * 		fromIndex			:		Index of start point.
+	 * 		fromPoint			:		Start point.
+	 * 		ss					: 		Sequence remain point.
+	 */
+	public ItineraryTravelTime establishItineraryWithPredicablePoint(Vehicle taxi,
+			int nextStartTimePoint, int fromIndex, 
+			int fromPoint, ServiceSequence ss) {
+		
+		if(fromIndex >= taxi.currentItinerary.size() && taxi.currentItinerary.size() > 0){
+			System.out.println(name() + "::establishItinerary, taxi = " + taxi.ID + ", fromIndex = " + fromIndex +
+					", currentItinerary.sz = " + taxi.currentItinerary.size() + " -> exit ??????");
+			//exit();
+		}
+		
+		int reqIDAtFromPoint = -1;
+		if (taxi.currentItinerary.size() > 0)
+			reqIDAtFromPoint = taxi.currentItinerary.getRequestID(fromIndex);
+		
+		int taxiID = debugTaxiID;
+		if (taxiID == taxi.ID) {
+			log.println(name() + "::establishItinerary(DEBUG taxi = " + taxi.ID
+					+ ", nextStartTimePoint = " + nextStartTimePoint
+					+ ", fromPoint = " + fromPoint);
+		}
+		ItineraryTravelTime retI = new ItineraryTravelTime();
+
+		int curPos = fromPoint;
+		int td = nextStartTimePoint;
+		int startI = 0;
+		int firstLoc = getLocationFromEncodedRequest(ss.rids[0]);
+		
+		//If from point is the last point in remainRequestIDs which is passed in decision time (indexRemainRequestIDs).
+		if (firstLoc == fromPoint && reqIDAtFromPoint == Math.abs(ss.rids[0]))
+			startI = 1;// fromPoint = first point of ss.rids then startI = 1 in
+						// order to avoid repeating point
+		int late = -1;
+		for (int i = startI; i < ss.rids.length; i++) {
+			// for(int i = 0; i < ss.rids.length; i++){
+			int rid = ss.rids[i];
+			int arid = Math.abs(rid);
+			int nextPoint = -1;
+			int duration = -1;
+			int early = -1;
+			late = -1;
+			PeopleRequest peopleReq = mPeopleRequest.get(arid);
+			if (peopleReq != null) {
+				if (rid > 0){
+					nextPoint = peopleReq.pickupLocationID;
+					duration = peopleReq.pickupDuration;
+					early = peopleReq.earlyPickupTime; late = peopleReq.latePickupTime;
+				}else{
+					nextPoint = peopleReq.deliveryLocationID;
+					duration = peopleReq.deliveryDuration;
+					early = peopleReq.earlyDeliveryTime; late = peopleReq.lateDeliveryTime;
+				}
+				Itinerary I = dijkstra.queryShortestPath(curPos, nextPoint);
+				int min_t = getTravelTime(I.getDistance(), maxSpeedms);
+				int max_t = getTravelTime(I.getDistance(), minSpeedms);
+				if(td + min_t > late || td + max_t < early){
+					System.out.println(name() + "::establishItinerary, taxi " + taxi.ID + ", out of time windows of people, td = " + td + 
+							", min_t = " + min_t + ", max_ t= " + max_t + ", early = " + early + ", late = " + 
+							late + " --> RETURN NULL");
+					return null;
+				}
+				
+				int t = early < td + min_t ? td + min_t : early;// run as fast as possible but respect early time window
+				t = t - td;
+				
+				double d = I.getDistance();
+				int v0 = I.get(0);
+				for (int j = 1; j < I.size() - 1; j++) {
+					int v = I.get(j);
+					retI.addPoint(v);
+					retI.addAction(VehicleAction.PASS);
+					retI.addRequestID(-1);
+
+					Arc a = map.getArc(v0, v);
+					int dt = (int) (t * a.w / d);
+					td = td + dt;
+					t = t - dt;
+					d = d - a.w;
+					v0 = v;
+					retI.setArrivalTime(retI.size() - 1, td);
+					retI.setDepartureTime(retI.size() - 1, td);
+				}
+				retI.addPoint(I.get(I.size() - 1));
+				retI.addRequestID(arid);
+
+				td = td + t;
+				retI.setArrivalTime(retI.size() - 1, td);
+				if (rid > 0) {
+					retI.addAction(VehicleAction.PICKUP_PEOPLE);
+					if (td > peopleReq.latePickupTime || td <
+							 peopleReq.earlyPickupTime) return null;		 
+					td = td + peopleReq.pickupDuration;
+					retI.setDepartureTime(retI.size() - 1, td);
+				} else {
+					retI.addAction(VehicleAction.DELIVERY_PEOPLE);
+					if (td > peopleReq.lateDeliveryTime || td <
+					 peopleReq.earlyDeliveryTime) return null;
+					 
+
+					td = td + peopleReq.deliveryDuration;
+					retI.setDepartureTime(retI.size() - 1, td);
+				}
+			} else {
+				ParcelRequest parcelReq = mParcelRequest.get(arid);
+				if (rid > 0){
+					nextPoint = parcelReq.pickupLocationID;
+					duration = parcelReq.pickupDuration;
+					early = parcelReq.earlyPickupTime; late = parcelReq.latePickupTime;
+				}else{
+					nextPoint = parcelReq.deliveryLocationID;
+					duration = parcelReq.deliveryDuration;
+					early = parcelReq.earlyDeliveryTime; late = parcelReq.lateDeliveryTime;
+				}
+				Itinerary I = dijkstra.queryShortestPath(curPos, nextPoint);
+				int min_t = getTravelTime(I.getDistance(), maxSpeedms);
+				int max_t = getTravelTime(I.getDistance(), minSpeedms);
+				
+				if(td + min_t > late || td + max_t < early){
+					System.out.println(name() + "::establishItinerary, taxi " + taxi.ID + ", out of time windows of parcel, td = " + td + 
+							", min_t = " + min_t + ", max_ t= " + max_t + ", early = " + early + ", late = " + 
+							late + " --> RETURN NULL");
+					return null;
+				}
+				
+				int t = early < td + min_t ? td + min_t : early;// run as fast as possible but respect early time window
+				t = t - td;
+				
+				double d = I.getDistance();
+				int v0 = I.get(0);
+				for (int j = 1; j < I.size() - 1; j++) {
+					int v = I.get(j);
+					retI.addPoint(v);
+					retI.addAction(VehicleAction.PASS);
+					retI.addRequestID(-1);
+
+					Arc a = map.getArc(v0, v);
+					int dt = (int) (t * a.w / d);
+					td = td + dt;
+					t = t - dt;
+					d = d - a.w;
+					v0 = v;
+					retI.setArrivalTime(retI.size() - 1, td);
+					retI.setDepartureTime(retI.size() - 1, td);
+				}
+				retI.addPoint(I.get(I.size() - 1));
+				retI.addRequestID(arid);
+
+				td = td + t;
+				retI.setArrivalTime(retI.size() - 1, td);
+
+				if (rid > 0) {
+					retI.addAction(VehicleAction.PICKUP_PARCEL);
+
+					if ((parcelReq.earlyPickupTime > td ||
+						parcelReq.latePickupTime < td) &&
+						(parcelReq.earlyPickupTime > td +
+						parcelReq.pickupDuration || parcelReq.latePickupTime < td
+					 	+ parcelReq.pickupDuration)) return null;
+					td = td + parcelReq.pickupDuration;
+					retI.setDepartureTime(retI.size() - 1, td);
+				} else {
+					retI.addAction(VehicleAction.DELIVERY_PARCEL);
+					if ((parcelReq.earlyDeliveryTime > td ||
+						parcelReq.lateDeliveryTime < td) &&
+						(parcelReq.earlyDeliveryTime > td +
+						parcelReq.deliveryDuration || parcelReq.lateDeliveryTime
+						< td + parcelReq.deliveryDuration)) return null;
+					td = td + parcelReq.deliveryDuration;
+					retI.setDepartureTime(retI.size() - 1, td);
+				}
+			}
+			curPos = nextPoint;
+		}
+		
+		//add popular point to itinerary
+		ArrayList<Integer> ss_popular = computeSequenceOfPopularPoints(curPos, late, taxi);
+		for(int i = 0; i < ss_popular.size(); i++){
+			int nextPopularPpoint = ss_popular.get(i);
+			Itinerary I = dijkstra.queryShortestPath(curPos,
+					nextPopularPpoint);
+			int t = getTravelTime(I.getDistance(), maxSpeedms);
+			double d = I.getDistance();
+			int v0 = I.get(0);
+
+			for (int j = 1; j < I.size() - 1; j++) {
+				int v = I.get(j);
+				retI.addPoint(v);
+				retI.addAction(VehicleAction.PASS);
+				retI.addRequestID(-1);
+				Arc a = map.getArc(v0, v);
+				int dt = (int) (t * a.w / d);
+				td = td + dt;
+				t = t - dt;
+				d = d - a.w;
+				v0 = v;
+				retI.setArrivalTime(retI.size() - 1, td);
+				retI.setDepartureTime(retI.size() - 1, td);
+			}
+			retI.addPoint(I.get(I.size() - 1));
+			retI.addRequestID(-1);;
+			retI.addAction(VehicleAction.PASS);
+			td = td + t;
+			retI.setArrivalTime(retI.size() - 1, td);
+			retI.setDepartureTime(retI.size() - 1, td);
+			curPos = nextPopularPpoint;
+		}
+		
+		//add parking point to itinerary.
+		Itinerary I = dijkstra.queryShortestPath(curPos,
+				ss.parkingLocationPoint);
+		int t = getTravelTime(I.getDistance(), maxSpeedms);
+		double d = I.getDistance();
+		int v0 = I.get(0);
+
+		for (int j = 1; j < I.size() - 1; j++) {
+			int v = I.get(j);
+			retI.addPoint(v);
+			retI.addAction(VehicleAction.PASS);
+			retI.addRequestID(-1);
+			Arc a = map.getArc(v0, v);
+			int dt = (int) (t * a.w / d);
+			td = td + dt;
+			t = t - dt;
+			d = d - a.w;
+			v0 = v;
+			retI.setArrivalTime(retI.size() - 1, td);
+			retI.setDepartureTime(retI.size() - 1, td);
+		}
+		retI.addPoint(I.get(I.size() - 1));
+		retI.addRequestID(-1);
+		retI.addAction(VehicleAction.STOP);
+		td = td + t;
+		retI.setArrivalTime(retI.size() - 1, td);
+		
+		return retI;
+	}
+	
 	public boolean assignTimePoint(ItineraryTravelTime I, Vehicle vh, int t) {
 		ArrayList<PeopleRequest> peopleReq = new ArrayList<PeopleRequest>();
 		ArrayList<ParcelRequest> parcels = new ArrayList<ParcelRequest>();
