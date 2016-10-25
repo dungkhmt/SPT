@@ -2178,7 +2178,7 @@ public class SimulatorTimeUnit extends Simulator {
 		
 		//estimate shortest distance to go to pickup and delivery locations.
 		double distancePickup = 1000000000;
-		double distanceDelivery = 1000000000;
+		int idxInRemainRqL = idxLocID;
 
 		for (int i = idxLocID + 1; i < taxi.remainRequestIDs.size(); i++) {
 			int rid = taxi.remainRequestIDs.get(i);
@@ -2200,16 +2200,20 @@ public class SimulatorTimeUnit extends Simulator {
 			LatLng ll = map.mLatLng.get(p);
 
 			double dpickup = estimateTravelingDistance(pr.pickupLocationID, p);// G.computeDistanceHaversine(llPickup.lat, llPickup.lng, ll.lat, ll.lng);
-			double ddelivery = estimateTravelingDistance(pr.deliveryLocationID, p);//G.computeDistanceHaversine(llDelivery.lat, llDelivery.lng, ll.lat, ll.lng);
+			//double ddelivery = estimateTravelingDistance(pr.deliveryLocationID, p);//G.computeDistanceHaversine(llDelivery.lat, llDelivery.lng, ll.lat, ll.lng);
 
-			distancePickup = distancePickup < dpickup ? distancePickup
-					: dpickup;
-			distanceDelivery = distanceDelivery < ddelivery ? distanceDelivery
-					: ddelivery;
+			if(dpickup < distancePickup){
+				distancePickup = dpickup;
+				idxInRemainRqL = i;
+			}
+			//distanceDelivery = distanceDelivery < ddelivery ? distanceDelivery
+			//		: ddelivery;
 
 		}
 		TaxiTimePointIndex ttpi = new TaxiTimePointIndex(taxi, tpi, R, KR);
-		ttpi.estimation = distancePickup + distanceDelivery;
+		//ttpi.estimation = distancePickup + distanceDelivery;
+		ttpi.estimation = distancePickup;
+		ttpi.idx = idxInRemainRqL;
 		return ttpi;
 	}
 

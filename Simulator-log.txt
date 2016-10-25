@@ -1,0 +1,89 @@
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:5[21600], parcel request 27314 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:7[21600], parcel request 159396 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:6[21600], people request 20240 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:13[21600], people request 97775 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117  -> mRequestID2Index.put(20240,116)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117  -> mRequestID2Index.put(-20240,167)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(97775,48)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(-97775,95)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:22[21615], parcel request 102950 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:32[21630], parcel request 124252 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:36[21630], parcel request 80413 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:38[21630], parcel request 268975 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:40[21630], parcel request 323552 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:31[21630], people request 205083 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:33[21630], people request 189721 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:37[21630], people request 56934 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:39[21630], people request 299434 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117  -> mRequestID2Index.put(205083,226)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117  -> mRequestID2Index.put(-205083,277)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:53[21645], parcel request 184837 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:52[21645], people request 56153 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:0:55[21645], people request 329395 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(56153,179)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(-56153,286)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176  -> mRequestID2Index.put(329395,66)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176  -> mRequestID2Index.put(-329395,122)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:1:5[21660], parcel request 17760 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:1:8[21660], people request 91281 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 118  -> mRequestID2Index.put(91281,215)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 118  -> mRequestID2Index.put(-91281,325)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:1:19[21675], parcel request 72634 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:1:30[21675], parcel request 98765 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:1:25[21675], people request 317601 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 177  -> mRequestID2Index.put(317601,61)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 177  -> mRequestID2Index.put(-317601,157)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:1:41[21690], parcel request 103413 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:1:31[21690], people request 198061 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:1:45[21690], people request 83266 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 178  -> mRequestID2Index.put(198061,89)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 178  -> mRequestID2Index.put(-198061,178)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:1:54[21705], parcel request 39475 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:2:0[21705], parcel request 145432 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:1:55[21705], people request 40998 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 179  -> mRequestID2Index.put(40998,104)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 179  -> mRequestID2Index.put(-40998,152)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:2:3[21720], parcel request 79102 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:2:2[21720], people request 22569 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:2:9[21720], people request 251332 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 179  -> mRequestID2Index.put(22569,187)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 179  -> mRequestID2Index.put(-22569,317)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:2:25[21735], parcel request 71908 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:2:30[21735], parcel request 63781 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:2:26[21735], people request 76028 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 180  -> mRequestID2Index.put(76028,54)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 180  -> mRequestID2Index.put(-76028,183)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:2:37[21750], parcel request 12859 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:2:31[21750], people request 217440 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 181  -> mRequestID2Index.put(217440,64)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 181  -> mRequestID2Index.put(-217440,166)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:0[21765], parcel request 280831 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:2:47[21765], people request 338196 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 177  -> mRequestID2Index.put(338196,285)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 177  -> mRequestID2Index.put(-338196,390)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:10[21780], parcel request 166120 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:7[21780], people request 63125 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 182  -> mRequestID2Index.put(63125,54)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 182  -> mRequestID2Index.put(-63125,80)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:30[21795], parcel request 269789 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:29[21795], people request 173992 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 183  -> mRequestID2Index.put(173992,30)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 183  -> mRequestID2Index.put(-173992,71)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:36[21810], parcel request 187729 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:41[21810], parcel request 265507 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:35[21810], people request 218211 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:39[21810], people request 232752 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:42[21810], people request 41800 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 183  -> mRequestID2Index.put(218211,103)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 183  -> mRequestID2Index.put(-218211,141)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:51[21825], parcel request 199558 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:58[21825], parcel request 130237 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:3:52[21825], people request 178797 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 182  -> mRequestID2Index.put(178797,98)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 182  -> mRequestID2Index.put(-178797,171)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:4:2[21840], parcel request 62489 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:4:1[21840], people request 293059 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 6:4:13[21840], people request 247239 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 184  -> mRequestID2Index.put(293059,47)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 184  -> mRequestID2Index.put(-293059,127)
+SimulatorTimeUnit::simulateDataFromFile --> At 6:4:18[

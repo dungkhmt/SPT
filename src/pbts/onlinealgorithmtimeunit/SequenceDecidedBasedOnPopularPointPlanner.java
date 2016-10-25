@@ -29,7 +29,7 @@ public class SequenceDecidedBasedOnPopularPointPlanner implements OnlinePlanner 
 		this.sim = sim;
 		this.log = sim.log;
 		peopleInserter = new PeopleInsertionBasedOnPopularPoint(sim);
-		parcelInserter = new ParcelInsertionLastSequenceNotChangeDecisionTimeLimit(sim);
+		parcelInserter = new ParcelInsertionBasedOnPopularPoint(sim);
 	}
 
 	public void setSimulator(SimulatorTimeUnit sim) {
