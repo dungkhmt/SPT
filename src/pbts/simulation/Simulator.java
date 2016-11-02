@@ -123,6 +123,8 @@ public class Simulator {
 	public int nbPeopleRequestRejectedDueToNoPossibleInsertion = 0;
 	public int nbParcelRequestRejectedDueToFarDistance = 0;
 	public int nbParcelRequestRejectedDueToNoPossibleInsertion = 0;
+	public int nbTaxisPickUpPeopleOnBoard = 0;
+	public int nbTaxisPickUpParcelOnBoard = 0;
 
 	// statistic information
 	public double transportationCost;
@@ -2183,12 +2185,12 @@ public class Simulator {
 		ArrayList<Integer> popularRqIdInPeriod = new ArrayList<Integer>();
 		popularRqIdInPeriod = frs.getRequests(period);
 		
-		int timeAllow = 0;//the taxi is allowed go around in 15 minutes.
+		//int timeAllow = 0;//the taxi is allowed go around in 15 minutes.
 		int ppId = -1;
 		double D;
 		int prePoint = point;
 		
-		while(timeAllow < 900){
+		//while(timeAllow < 900){
 			double shortestDis = 10000000;
 			int nearestPointId = -1;
 			for(int i = 0; i < popularRqIdInPeriod.size(); i++){
@@ -2205,10 +2207,10 @@ public class Simulator {
 			if(nearestPointId != -1){
 				ssPp.add(nearestPointId);
 				double t = getTravelTime(shortestDis, maxSpeedms);
-				timeAllow += t;
+				//timeAllow += t;
 				prePoint = nearestPointId;
 			}
-		}
+		//}
 		return ssPp;
 	}
 	
@@ -2398,7 +2400,7 @@ public class Simulator {
 		
 		//add popular point to itinerary
 		ArrayList<Integer> ss_popular = computeSequenceOfPopularPoints(curPos, late, taxi);
-		for(int i = 0; i < ss_popular.size(); i++){
+		for(int i = 0; i < ss_popular.size()-1; i++){
 			int nextPopularPpoint = ss_popular.get(i);
 			Itinerary I = dijkstra.queryShortestPath(curPos,
 					nextPopularPpoint);
@@ -2429,9 +2431,27 @@ public class Simulator {
 			curPos = nextPopularPpoint;
 		}
 		
+		ArrayList<Integer> parkings = collectAvailableParkings(taxi);
+		int sel_pk = -1;
+		double minD = 100000000;
+		//Compute distance from last point in remain request to parking. Then,the nearest parking is inserted.
+		LatLng endLL = map.mLatLng.get(curPos);
+		for(int k = 0; k < parkings.size(); k++){
+			int pk = parkings.get(k);
+			LatLng pkLL = map.mLatLng.get(pk);
+			if(pkLL == null){
+				System.out.println(name() + "::computePeopleInsertionSequence, pkLL is NULL");
+			}
+			double Dpark = G.computeDistanceHaversine(endLL.lat, endLL.lng, pkLL.lat, pkLL.lng);
+			if(Dpark < minD){
+				minD = Dpark;
+				sel_pk = pk;
+			}
+		}
+		
 		//add parking point to itinerary.
 		Itinerary I = dijkstra.queryShortestPath(curPos,
-				ss.parkingLocationPoint);
+				sel_pk);
 		int t = getTravelTime(I.getDistance(), maxSpeedms);
 		double d = I.getDistance();
 		int v0 = I.get(0);
@@ -2456,6 +2476,7 @@ public class Simulator {
 		td = td + t;
 		retI.setArrivalTime(retI.size() - 1, td);
 		
+		retI.setDistance(minD);
 		return retI;
 	}
 	

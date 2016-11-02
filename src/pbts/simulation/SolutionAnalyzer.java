@@ -435,6 +435,8 @@ public class SolutionAnalyzer {
 		System.out.println("analyze solution --> total revenue parcel = " + AT.revenueParcels);
 		System.out.println("analyze solution --> total revenue people = " + AT.revenuePassengers);
 		System.out.println("analyze solution --> number of shared people services = " + AT.nbSharedPeopleService);
+		System.out.println("analyze solution --> number of taxis pick up people when on board = " + sim.nbTaxisPickUpPeopleOnBoard);
+		System.out.println("analyze solution --> number of taxis pick up parcel when on board = " + sim.nbTaxisPickUpParcelOnBoard);
 		
 		return AT;
 	}
@@ -506,6 +508,8 @@ public class SolutionAnalyzer {
 		System.out.println("analyze solution --> total revenue parcel = " + AT.revenueParcels);
 		System.out.println("analyze solution --> total revenue people = " + AT.revenuePassengers);
 		System.out.println("analyze solution --> number of shared people services = " + AT.nbSharedPeopleService);
+		System.out.println("analyze solution --> number of taxis pick up people when on board = " + sim.nbTaxisPickUpPeopleOnBoard);
+		System.out.println("analyze solution --> number of taxis pick up parcel when on board = " + sim.nbTaxisPickUpParcelOnBoard);
 		
 		try{
 			PrintWriter out= new PrintWriter(filename);
@@ -520,6 +524,8 @@ public class SolutionAnalyzer {
 			out.println("<revenue-parcel>" + AT.revenueParcels + "</revenue-parcel>");
 			out.println("<revenue-people>" + AT.revenuePassengers + "</revenue-people>");
 			out.println("<shared-people-services>" + AT.nbSharedPeopleService + "</shared-people-services>");
+			out.println("<nbTaxisPickUpOnBoard-people>" + sim.nbTaxisPickUpPeopleOnBoard + "</nbTaxisPickUpOnBoard-people>");
+			out.println("<nbTaxisPickUpOnBoard-parcel>" + sim.nbTaxisPickUpParcelOnBoard + "</nbTaxisPickUpOnBoard-parcel>");
 			out.println("</results>");
 			out.close();
 		}catch(Exception ex){

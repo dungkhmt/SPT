@@ -28,7 +28,7 @@ public class ParcelInsertionBasedOnPopularPoint implements OnlineParcelInsertion
 		this.log = sim.log;
 	}
 	public String name(){
-		return "ParcelInsertionLastSequenceNotChangeDecisionTimeLimit";
+		return "ParcelInsertionBasedOnPopularPoint";
 	}
 	
 	/****[SonNV]
@@ -82,44 +82,11 @@ public class ParcelInsertionBasedOnPopularPoint implements OnlineParcelInsertion
 		if(taxi.ID == sim.debugTaxiID){
 			log.println(name() + "::computeParcelInsertionSequence, taxi " + taxi.ID + ", pr = " + pr.id + " tpi = " + tpi.toString() + 
 					", keptReq = " + Utility.arr2String(keptReq) + ", remainrequestIDs = "
-				+ Utility.arr2String(remainRequestIDs) + ", taxi.requestStatus = " + taxi.requestStatus());		
+				+ Utility.arr2String(remainRequestIDs) + ", taxi.requestStatus = " + taxi.requestStatus());
 		}
 		ArrayList<Integer> parkings = sim.collectAvailableParkings(taxi);
 		ServiceSequence ss = null;
-		/****[SonNV]Remove this block, because sel_nod array consist of remainRequests array and pr request at the end.
-		//[SonNV] Create new remainRequests array consist of remain request and pr (pickup and delivery).
-		int[] r = new int[remainRequestIDs.size() + 2];
-		for(int i = 0; i < remainRequestIDs.size(); i++)
-			r[i] = remainRequestIDs.get(i);
-		//insert into end of array.
-		r[r.length-2] = pr.id;
-		r[r.length-1] = -pr.id;
 		
-		//[SonNV] Kept requests and new remainRequests arrays are concatenated.
-		int[] t_sel_nod = new int[r.length + keptReq.size()];//seqOptimizer.computeShortestSequence(taxi, nextStartPoint, keptReq, r);
-		for(int i = 0; i < keptReq.size(); i++)
-			t_sel_nod[i] = keptReq.get(i);
-		for(int i = 0; i < r.length; i++)
-			t_sel_nod[i + keptReq.size()] = r[i];
-		
-		if(t_sel_nod == null){
-			log.println(name() + "::computeParcelInsertionSequence taxi = " + taxi.ID + ", sel_nod = NULL NO SOLUTION?? " + 
-		", taxi.requestStatus = " + taxi.requestStatus());
-			return null;
-		}
-		
-		int[] sel_nod = new int[t_sel_nod.length - keptReq.size()];
-		for(int i = keptReq.size(); i < t_sel_nod.length; i++){
-			sel_nod[i-keptReq.size()] = t_sel_nod[i];
-		}
-		
-		if(taxi.ID == sim.debugTaxiID){
-			log.println(name() + "::computeParcelInsertionSequence, taxi " + taxi.ID + ", pr = " + pr.id + 
-					", OBTAIN sel_nod = " + Utility.arr2String(sel_nod));
-			System.out.println(name() + "::computeParcelInsertionSequence, taxi " + taxi.ID + ", pr = " + pr.id + 
-					", OBTAIN sel_nod = " + Utility.arr2String(sel_nod));
-			
-		}**/
 		//[SonNV] Create new remainRequests array consist of remain request and pr (pickup and delivery).
 		int[] sel_nod = new int[remainRequestIDs.size() + 2];
 		for(int i = 0; i <= idx; i++)
@@ -132,17 +99,7 @@ public class ParcelInsertionBasedOnPopularPoint implements OnlineParcelInsertion
 		
 		int sel_pk = -1;
 		double minD = 100000000;
-		/***[SonNV] endReq is pr request.
-		int endReq = sel_nod[sel_nod.length-1];
-		int endLocID = -1;
-		PeopleRequest peoR = sim.mPeopleRequest.get(Math.abs(endReq));
-		if(peoR != null){
-			if(endReq < 0) endLocID = peoR.deliveryLocationID; else endLocID = peoR.pickupLocationID;
-		}else{
-			ParcelRequest parR = sim.mParcelRequest.get(Math.abs(endReq));
-			if(endReq < 0) endLocID = parR.deliveryLocationID; else endLocID = parR.pickupLocationID;
-		}
-		***/
+		
 		//[SonNV] Get location id of last point in remain requests. In remain requests array, the last element is new parcel request.
 		ParcelRequest parR = sim.mParcelRequest.get(Math.abs(pr.id));
 		int endLocID = parR.deliveryLocationID;
@@ -287,12 +244,18 @@ public class ParcelInsertionBasedOnPopularPoint implements OnlineParcelInsertion
 			}
 			ParcelRequest pr = parReq.get(i);
 			TaxiTimePointIndex ttpi = findTaxiForParcelInsertion(pr,sim.maxTimeAllowedFindingBestTaxiForParcel);
-			System.out.println(name() + "::processParcelRequests(pr = " + pr.id + " --> found taxi " + ttpi.taxi.ID + ")");
+			if(ttpi.taxi.status == VehicleStatus.TRAVEL_WITHOUT_LOAD)
+				sim.nbTaxisPickUpParcelOnBoard++;
+			//System.out.println(name() + "::processParcelRequests(pr = " + pr.id + " --> found taxi " + ttpi.taxi.ID + ")");
 			double t0 = System.currentTimeMillis();
 			if(ttpi == null){
+				sim.nbParcelRejects++;
 				System.out.println(name() + "::processParcelRequests, nbParcelRejects = " + sim.nbParcelRejects + 
 						"DUE TO no available taxi found");
 			}else{
+				if(ttpi.taxi.status == VehicleStatus.TRAVEL_WITHOUT_LOAD)
+					sim.nbTaxisPickUpParcelOnBoard++;
+				System.out.println(name() + "::processParcelRequests: nbTaxisPickUpParcelOnBoard = " + sim.nbTaxisPickUpParcelOnBoard);
 				insertParcelRequest(pr,ttpi.taxi,ttpi.tpi,ttpi.keptRequestIDs, ttpi.remainRequestIDs, ttpi.idx,
 					sim.maxTimeAllowedInsertOneParcel);
 			}

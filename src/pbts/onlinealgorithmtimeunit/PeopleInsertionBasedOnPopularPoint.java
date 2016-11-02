@@ -40,7 +40,7 @@ public class PeopleInsertionBasedOnPopularPoint implements OnlinePeopleInsertion
 					", keptReq = " + Utility.arr2String(keptReq) + ", remainrequestIDs = "
 				+ Utility.arr2String(remainRequestIDs) + ", taxi.requestStatus = " + taxi.requestStatus());		
 		}
-		ArrayList<Integer> parkings = sim.collectAvailableParkings(taxi);
+		//ArrayList<Integer> parkings = sim.collectAvailableParkings(taxi);
 		ServiceSequence ss = null;
 		
 		//[SonNV] Create new sequence consist of pr (pickup and delivery) and remain requests.
@@ -54,7 +54,7 @@ public class PeopleInsertionBasedOnPopularPoint implements OnlinePeopleInsertion
 		for(int i = 0; i < remainRequestIDs.size(); i++)
 			sel_nod[i + 2] = remainRequestIDs.get(i);
 		
-		int sel_pk = -1;
+		/*int sel_pk = -1;
 		double minD = 100000000;
 		//Get location id of last point in remain requests.
 		int endLocID = -1;
@@ -81,8 +81,8 @@ public class PeopleInsertionBasedOnPopularPoint implements OnlinePeopleInsertion
 				minD = D;
 				sel_pk = pk;
 			}
-		}
-		ss = new ServiceSequence(sel_nod, 0, sel_pk, minD);
+		}*/
+		ss = new ServiceSequence(sel_nod, 0, -1, -1);
 		return ss;
 	}
 
@@ -109,7 +109,9 @@ public class PeopleInsertionBasedOnPopularPoint implements OnlinePeopleInsertion
 			sim.log.println(name() + "::computeItineraryPeopleInsertion, taxi = " + taxi.ID + ", establishItinerary I = null");
 			return null;
 		}
-		I.setDistance(ss.distance);
+		//I.setDistance(ss.distance);
+		ss.setDistance(I.getDistance());
+		ss.setParkingLocation(I.get(I.size()-1));
 
 		if (I.getDistance() + taxi.totalTravelDistance > sim.maxTravelDistance){
 			sim.log.println(name() + "::computeItineraryPeopleInsertion, taxi = " + taxi.ID + ", taxi.totalDistance = " + 
@@ -132,6 +134,9 @@ public class PeopleInsertionBasedOnPopularPoint implements OnlinePeopleInsertion
 			sim.nbPeopleRejects++;
 			System.out.println(name() + "::insertPeopleRequest(pr = " + pr.id + "), nbPeopleRejects = " + sim.nbPeopleRejects + " DUE TO no available taxi found");
 		}else{
+			if(ttpi.taxi.status == VehicleStatus.TRAVEL_WITHOUT_LOAD)
+				sim.nbTaxisPickUpPeopleOnBoard++;
+			System.out.println("::getNearestAvailableTaxiForPeople: " + "nbTaxisPickUpPeopleOnBoard = " + sim.nbTaxisPickUpPeopleOnBoard);
 			t0 = System.currentTimeMillis();
 			ItineraryServiceSequence IS = computeItineraryPeopleInsertion(ttpi.taxi, ttpi.tpi, pr, 
 					ttpi.keptRequestIDs, ttpi.remainRequestIDs, maxTime);

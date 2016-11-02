@@ -66,6 +66,7 @@ public class SequenceDecidedBasedOnPopularPointPlanner implements OnlinePlanner 
 	public void processParcelRequests(ArrayList<ParcelRequest> pr) {
 		// TODO Auto-generated method stub
 		double startDecideTime = System.currentTimeMillis();
+		parcelInserter.processParcelRequests(pr, startDecideTime);
 		double t = System.currentTimeMillis() - startDecideTime;
 		t = t * 0.001;
 		if (sim.maxDecideTimeParcelRequests < t)

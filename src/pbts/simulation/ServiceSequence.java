@@ -18,6 +18,12 @@ public class ServiceSequence {
 		this.parkingLocationPoint = parkingLocationPoint;
 		this.distance = distance;
 	}
+	public void setParkingLocation(int locID){
+		this.parkingLocationPoint = locID;
+	}
+	public void setDistance(double dis){
+		this.distance = dis;
+	}
 	public String getSequence(){
 		String s = "";
 		for(int i = 0; i < rids.length; i++)

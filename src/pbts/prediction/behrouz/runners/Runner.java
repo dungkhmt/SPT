@@ -219,10 +219,10 @@ public class Runner {
 		
 		FixedRateSampler frs = new FixedRateSampler();
 		Runner run = new Runner();
-		run.computeShortestDistance(30);
-		run.computeSimilarity();
+		//run.computeShortestDistance(30);
+		//run.computeSimilarity();
 		
-		/*int dayOfWeek = 2;
+		int dayOfWeek = 2;
 		int period = 0;
 		ArrayList<Integer> requests;
 		requests = frs.getRequests(period);
@@ -237,7 +237,7 @@ public class Runner {
 		System.out.println("Pickup locations at period " + period + " on " + weekdays[dayOfWeek] + ":");
 		for (int pickup_point : requests)
 			System.out.print(pickup_point + "\t");
-		System.out.println();*/
+		System.out.println();
 	}
 
 }
