@@ -1,6 +1,7 @@
 package pbts.simulation;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -3024,111 +3025,146 @@ public class SimulatorTimeUnit extends Simulator {
 		String data_dir = "E:\\task2\\git_project\\SPT\\";
 		String mapFileName = data_dir + "SanFrancisco_std\\SanfranciscoRoad-connected-contracted-5-refine-50.txt";
 		String configFileName = data_dir + "SanFrancisco_std\\config-parameters.txt";
-		String requestFileName = data_dir + "SanFrancisco_std\\ins_day_31_minSpd_5_maxSpd_60.txt";
 		String depotParkingFileName = data_dir + "SanFrancisco_std\\depots1000-parkings34.txt";
-		//String plannerName = "NaiveSequentialPlanner";
-		String plannerName = " GreedyPeopleDirectExchangePlanner";
-		String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\output\\ins_day_31_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
-		String itineraryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_31_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
-		String summaryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_31_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
 		int maxNbPendingStops = 10;
-		int maxTimeReceiveRequest = 64800;
-		int startSimulationTime = 21600;
+		int maxTimeReceiveRequest = 86400;
+		int startSimulationTime = 0;
 		int decisionTime = 15;
-		
-		for(int i = 0; i < args.length; i++){
-			if(args[i].equals("--mapFileName"))
-				mapFileName = args[i+1];
-			else if(args[i].equals("--configFileName"))
-				configFileName = args[i+1];
-			else if(args[i].equals("--requestFileName"))
-				requestFileName = args[i+1];
-			else if(args[i].equals("--depotParkingFileName"))
-				depotParkingFileName = args[i+1];
-			else if(args[i].equals("--plannerName"))
-				plannerName = args[i+1];
-			else if(args[i].equals("--progressiveStatisticFileName"))
-				progressiveStatisticFileName = args[i+1];
-			else if(args[i].equals("--itineraryFileName"))
-				itineraryFileName = args[i+1];
-			else if(args[i].equals("--summaryFileName"))
-				summaryFileName = args[i+1];
-			else if(args[i].equals("--maxNbPendingStops"))
-				maxNbPendingStops = Integer.valueOf(args[i+1]);
-			else if(args[i].equals("--maxTimeReceiveRequest"))
-				maxTimeReceiveRequest = Integer.valueOf(args[i+1]);
-			else if(args[i].equals("--startSimulationTime"))
-				startSimulationTime = Integer.valueOf(args[i+1]);
-			else if(args[i].equals("--decisionTime"))
-				decisionTime = Integer.valueOf(args[i+1]);
-			
+		try{
+			PrintWriter out= new PrintWriter("summaryFile.txt");
+			out.println("Day Benefits_Naive Benefits_SequenceBasedOnAPp Benefits_GetManyTimesThenAddAPp Benefits_GetManyTimesThenAddASequencePp Max_Benefits");
+			out.close();
+		}catch(Exception ex){
+			ex.printStackTrace();
 		}
+		for(int day = 1; day <= 31; day++){
+			String requestFileName = data_dir + "SanFrancisco_std\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt";
+			String lineOut = "" + day;
+			double maxBenefits = 0;
+			int plIdx = 0;
+			ArrayList<String> listPlanner = new ArrayList<String>();
+			listPlanner.add("NaiveSequentialDecisionTimeLimitPlanner");
+			listPlanner.add("SequenceDecidedBasedOnAPopularPointPlanner");
+			listPlanner.add("GetManyTimesThenAddAPopularPointPlanner");
+			listPlanner.add("GetManyTimesThenAddASequencePopularPointsPlanner");
+			
+			for(int pl = 0; pl < listPlanner.size(); pl++){
+				String plannerName = listPlanner.get(pl);
+				String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\output\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
+				String itineraryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
+				String summaryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
+				
+				
+				for(int i = 0; i < args.length; i++){
+					if(args[i].equals("--mapFileName"))
+						mapFileName = args[i+1];
+					else if(args[i].equals("--configFileName"))
+						configFileName = args[i+1];
+					else if(args[i].equals("--requestFileName"))
+						requestFileName = args[i+1];
+					else if(args[i].equals("--depotParkingFileName"))
+						depotParkingFileName = args[i+1];
+					else if(args[i].equals("--plannerName"))
+						plannerName = args[i+1];
+					else if(args[i].equals("--progressiveStatisticFileName"))
+						progressiveStatisticFileName = args[i+1];
+					else if(args[i].equals("--itineraryFileName"))
+						itineraryFileName = args[i+1];
+					else if(args[i].equals("--summaryFileName"))
+						summaryFileName = args[i+1];
+					else if(args[i].equals("--maxNbPendingStops"))
+						maxNbPendingStops = Integer.valueOf(args[i+1]);
+					else if(args[i].equals("--maxTimeReceiveRequest"))
+						maxTimeReceiveRequest = Integer.valueOf(args[i+1]);
+					else if(args[i].equals("--startSimulationTime"))
+						startSimulationTime = Integer.valueOf(args[i+1]);
+					else if(args[i].equals("--decisionTime"))
+						decisionTime = Integer.valueOf(args[i+1]);
+					
+				}
+				
+				System.out.println("Parameters:\n" +
+				"mapFileName = " + mapFileName + "\n" + 
+				"configFileName = " + configFileName + "\n" +
+				"requestFileName = " + requestFileName + "\n" +
+				"depotParkingFileName = " + depotParkingFileName + "\n" +
+				"plannerName = " + plannerName + "\n"+
+				"progressiveStatisticFileName = " + progressiveStatisticFileName + "\n" +
+				"itineraryFileName = " + itineraryFileName + "\n" +
+				"summaryFileName = " + summaryFileName + "\n" +
+				"maxNbPendingStops = " + maxNbPendingStops + "\n" +
+				"maxTimeReceiveRequest = " + maxTimeReceiveRequest + "\n" +
+				"startSimulationTime = " + startSimulationTime + "\n" +
+				"decisionTime = " + decisionTime
+						);
+				
+				SimulatorTimeUnit simulator = new SimulatorTimeUnit();
+				
+				simulator.loadMapFromTextFile(mapFileName);
 		
-		System.out.println("Parameters:\n" +
-		"mapFileName = " + mapFileName + "\n" + 
-		"configFileName = " + configFileName + "\n" +
-		"requestFileName = " + requestFileName + "\n" +
-		"depotParkingFileName = " + depotParkingFileName + "\n" +
-		"plannerName = " + plannerName + "\n"+
-		"progressiveStatisticFileName = " + progressiveStatisticFileName + "\n" +
-		"itineraryFileName = " + itineraryFileName + "\n" +
-		"summaryFileName = " + summaryFileName + "\n" +
-		"maxNbPendingStops = " + maxNbPendingStops + "\n" +
-		"maxTimeReceiveRequest = " + maxTimeReceiveRequest + "\n" +
-		"startSimulationTime = " + startSimulationTime + "\n" +
-		"decisionTime = " + decisionTime
-				);
+				simulator.loadParameters(configFileName);
+				simulator.loadDepotParkings(depotParkingFileName);
+				simulator.initialize();
+				simulator.statFilename = progressiveStatisticFileName;
+				simulator.resetLog();
+				
+				OnlinePlanner[] planners = new OnlinePlanner[] { 	new GreedyExchangeSharingPlanner(simulator), 
+																	new GreedyExchangeSharingPlanner(simulator),
+																	new GreedyPeopleDirectExchangePlanner(simulator),
+																	new GreedyPeopleDirectNoExchangePlanner(simulator),
+																	new NaiveSequentialPlanner(simulator),
+																	new GreedyExchangeSharingDecisionTimeLimitPlanner(simulator),
+																	new GreedySharingNoExchangeDecisionTimeLimitPlanner(simulator),
+																	new NaiveSequentialDecisionTimeLimitPlanner(simulator),
+																	new SequenceDecidedBasedOnAPopularPointPlanner(simulator),
+																	new GetManyTimesThenAddAPopularPointPlanner(simulator),
+																	new GetManyTimesThenAddASequencePopularPointsPlanner(simulator)
+																};
+				
+				OnlinePlanner selectedPlanner = null;
+				
+				for(int i = 0; i < planners.length; i++){
+					if(planners[i].name().equals(plannerName)){
+						selectedPlanner = planners[i];
+						break;
+					}
+				}
+				
+				simulator.terminateRequestTime = maxTimeReceiveRequest;
+				simulator.TimePointDuration = decisionTime;
+				simulator.maxPendingStops = maxNbPendingStops;
+				simulator.startWorkingTime = startSimulationTime;
+				
+				simulator.setPlanner(selectedPlanner);
+				
+				simulator.initTimeHorizon();
 		
-		SimulatorTimeUnit simulator = new SimulatorTimeUnit();
+				simulator.simulateDataFromFile(requestFileName, 1, 2);
+				simulator.writeTaxiItineraries(itineraryFileName);
 		
-		simulator.loadMapFromTextFile(mapFileName);
-
-		simulator.loadParameters(configFileName);
-		simulator.loadDepotParkings(depotParkingFileName);
-		simulator.initialize();
-		simulator.statFilename = progressiveStatisticFileName;
-		simulator.resetLog();
+				simulator.initVehicles();
+				simulator.loadRequests(requestFileName);
 		
-		OnlinePlanner[] planners = new OnlinePlanner[] { 	new GreedyExchangeSharingPlanner(simulator), 
-															new GreedyExchangeSharingPlanner(simulator),
-															new GreedyPeopleDirectExchangePlanner(simulator),
-															new GreedyPeopleDirectNoExchangePlanner(simulator),
-															new NaiveSequentialPlanner(simulator),
-															new GreedyExchangeSharingDecisionTimeLimitPlanner(simulator),
-															new GreedySharingNoExchangeDecisionTimeLimitPlanner(simulator),
-															new NaiveSequentialDecisionTimeLimitPlanner(simulator),
-															new SequenceDecidedBasedOnPopularPointPlanner(simulator)
-														};
-		
-		OnlinePlanner selectedPlanner = null;
-		
-		for(int i = 0; i < planners.length; i++){
-			if(planners[i].name().equals(plannerName)){
-				selectedPlanner = planners[i];
-				break;
+				simulator.relaxTimeWindowParcelRequests();
+				HashMap<Integer, ItineraryTravelTime> itineraries = simulator.loadItineraries(itineraryFileName);
+				AnalysisTemplate AT = simulator.analyzeSolution(itineraries, summaryFileName);
+				if(AT.benefits > maxBenefits){
+					maxBenefits = AT.benefits;
+					plIdx = pl+1;
+				}
+				lineOut += " " + AT.benefits;
+				simulator.finalize();
+			}
+			lineOut += " " + plIdx;
+			try{
+				FileOutputStream fos= new FileOutputStream("summaryFile.txt",true);
+				PrintWriter out= new PrintWriter(fos);
+				out.println(lineOut);
+				out.close();
+			}catch(Exception ex){
+				ex.printStackTrace();
 			}
 		}
-		
-		simulator.terminateRequestTime = maxTimeReceiveRequest;
-		simulator.TimePointDuration = decisionTime;
-		simulator.maxPendingStops = maxNbPendingStops;
-		simulator.startWorkingTime = startSimulationTime;
-		
-		simulator.setPlanner(selectedPlanner);
-		
-		simulator.initTimeHorizon();
-
-		simulator.simulateDataFromFile(requestFileName, 1, 2);
-		simulator.writeTaxiItineraries(itineraryFileName);
-
-		simulator.initVehicles();
-		simulator.loadRequests(requestFileName);
-
-		simulator.relaxTimeWindowParcelRequests();
-		HashMap<Integer, ItineraryTravelTime> itineraries = simulator.loadItineraries(itineraryFileName);
-		simulator.analyzeSolution(itineraries, summaryFileName);
-		
-		simulator.finalize();
 		
 		if(true) return;
 		
@@ -3184,7 +3220,9 @@ public class SimulatorTimeUnit extends Simulator {
 		GreedyExchangeSharingDecisionTimeLimitPlanner planner6 = new GreedyExchangeSharingDecisionTimeLimitPlanner(sim);
 		GreedySharingNoExchangeDecisionTimeLimitPlanner planner7 = new GreedySharingNoExchangeDecisionTimeLimitPlanner(sim);
 		NaiveSequentialDecisionTimeLimitPlanner planner8 = new NaiveSequentialDecisionTimeLimitPlanner(sim);
-		SequenceDecidedBasedOnPopularPointPlanner planner9 = new SequenceDecidedBasedOnPopularPointPlanner(sim);
+		SequenceDecidedBasedOnAPopularPointPlanner planner9 = new SequenceDecidedBasedOnAPopularPointPlanner(sim);
+		GetManyTimesThenAddAPopularPointPlanner planner10 = new GetManyTimesThenAddAPopularPointPlanner(sim);
+		GetManyTimesThenAddASequencePopularPointsPlanner planner11 = new GetManyTimesThenAddASequencePopularPointsPlanner(sim);
 		
 		OnlinePlanner[] planner = new OnlinePlanner[] { planner1, planner2,
 				planner3, planner4, planner5, planner6, planner7,planner8};

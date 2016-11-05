@@ -17,18 +17,17 @@ import pbts.simulation.ItineraryServiceSequence;
 import pbts.simulation.ServiceSequence;
 import pbts.simulation.SimulatorTimeUnit;
 import pbts.simulation.Utility;
-import pbts.simulation.SimulatorTimeUnit;
 
-public class ParcelInsertionBasedOnPopularPoint implements OnlineParcelInsertion {
+public class ParcelInsertionBasedOnAPopularPointAfterGetManyTimes implements OnlineParcelInsertion {
 	public SimulatorTimeUnit sim;
 	public PrintWriter log;
 	
-	public ParcelInsertionBasedOnPopularPoint(SimulatorTimeUnit sim){
+	public ParcelInsertionBasedOnAPopularPointAfterGetManyTimes(SimulatorTimeUnit sim){
 		this.sim = sim;
 		this.log = sim.log;
 	}
 	public String name(){
-		return "ParcelInsertionBasedOnPopularPoint";
+		return "ParcelInsertionBasedOnAPopularPointAfterGetManyTimes";
 	}
 	
 	/****[SonNV]
@@ -151,8 +150,9 @@ public class ParcelInsertionBasedOnPopularPoint implements OnlineParcelInsertion
 			sim.log.println(name() + "::computeItineraryParcelInsertion, taxi = " + taxi.ID + ", ss = NULL --> return NULL");
 			return null;
 		}
-		//[SonNV]Establish itinerary based on sequence ss.
-		ItineraryTravelTime I = sim.establishItineraryWithAPopularPoint(taxi, nextStartTimePoint, fromIndex, fromPoint, ss, 1);
+		//[SonNV]Establish itinerary based on sequence ss and a popular point.
+		ItineraryTravelTime I = sim.establishItineraryWithAPopularPoint(taxi,
+				nextStartTimePoint, fromIndex, fromPoint, ss, 5);
 		
 		if (I == null){
 			System.out.println(name() + "::computeItineraryParcelInsertion, establishItinerary I = null");

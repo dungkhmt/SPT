@@ -5,8 +5,6 @@ import java.util.ArrayList;
 
 import pbts.entities.ErrorMSG;
 import pbts.entities.ItineraryTravelTime;
-import pbts.entities.LatLng;
-import pbts.entities.ParcelRequest;
 import pbts.entities.PeopleRequest;
 import pbts.entities.TaxiTimePointIndex;
 import pbts.entities.TimePointIndex;
@@ -19,18 +17,18 @@ import pbts.simulation.ServiceSequence;
 import pbts.simulation.SimulatorTimeUnit;
 import pbts.simulation.Utility;
 
-public class PeopleInsertionBasedOnPopularPoint implements OnlinePeopleInsertion {
+public class PeopleInsertionBasedOnASequencePopularPointsAfterGetManyTimes implements OnlinePeopleInsertion {
 	public SimulatorTimeUnit sim;
 	public PrintWriter log;
 	private FixedRateSampler frs;
 	
-	public PeopleInsertionBasedOnPopularPoint(SimulatorTimeUnit sim){
+	public PeopleInsertionBasedOnAPopularPointAfterGetManyTimes(SimulatorTimeUnit sim){
 		this.sim = sim;
 		this.log = sim.log;
 		this.frs = new FixedRateSampler();
 	}
 	public String name(){
-		return "PeopleInsertionBasedOnPopularPoint";
+		return "PeopleInsertionBasedOnAPopularPointAfterGetManyTimes";
 	}
 
 	public ServiceSequence computePeopleInsertionSequence(Vehicle taxi,
@@ -53,7 +51,7 @@ public class PeopleInsertionBasedOnPopularPoint implements OnlinePeopleInsertion
 		//insert remain request into sequence
 		for(int i = 0; i < remainRequestIDs.size(); i++)
 			sel_nod[i + 2] = remainRequestIDs.get(i);
-		
+
 		ss = new ServiceSequence(sel_nod, 0, -1, -1);
 		return ss;
 	}
@@ -72,9 +70,8 @@ public class PeopleInsertionBasedOnPopularPoint implements OnlinePeopleInsertion
 			sim.log.println(name() + "::computeItineraryPeopleInsertion, taxi = " + taxi.ID + ", ss = NULL --> return NULL");
 			return null;
 		}
-
-		ItineraryTravelTime I = sim.establishItineraryWithAPopularPoint(taxi,
-				nextStartTimePoint, fromIndex, fromPoint, ss, 1);
+		//Establish itinerary based on sequence ss and a sequence popular points.
+		ItineraryTravelTime I = sim.establishItineraryWithAroundPopularPoints(taxi, nextStartTimePoint, fromIndex, fromPoint, ss, 5);
 		
 		if (I == null){
 			System.out.println(name() + "::computeItineraryPeopleInsertion, establishItinerary I = null");

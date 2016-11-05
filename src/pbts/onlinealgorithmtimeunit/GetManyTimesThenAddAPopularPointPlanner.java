@@ -2,22 +2,12 @@ package pbts.onlinealgorithmtimeunit;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 
 import pbts.entities.ParcelRequest;
 import pbts.entities.PeopleRequest;
-import pbts.entities.TaxiTimePointIndex;
-import pbts.entities.TimePointIndex;
-import pbts.entities.Vehicle;
-import pbts.enums.VehicleStatus;
-import pbts.simulation.ItineraryServiceSequence;
 import pbts.simulation.SimulatorTimeUnit;
-import pbts.simulation.Utility;
-import pbts.prediction.*;
-import pbts.prediction.behrouz.fixedrate.FixedRateSampler;
 
-public class SequenceDecidedBasedOnPopularPointPlanner implements OnlinePlanner {
+public class GetManyTimesThenAddAPopularPointPlanner implements OnlinePlanner {
 
 	public PrintWriter log = null;
 	public SimulatorTimeUnit sim = null;
@@ -25,11 +15,11 @@ public class SequenceDecidedBasedOnPopularPointPlanner implements OnlinePlanner 
 	public OnlinePeopleInsertion peopleInserter = null;
 	public OnlineParcelInsertion parcelInserter = null;
 
-	public SequenceDecidedBasedOnPopularPointPlanner(SimulatorTimeUnit sim) {
+	public GetManyTimesThenAddAPopularPointPlanner(SimulatorTimeUnit sim) {
 		this.sim = sim;
 		this.log = sim.log;
-		peopleInserter = new PeopleInsertionBasedOnPopularPoint(sim);
-		parcelInserter = new ParcelInsertionBasedOnPopularPoint(sim);
+		peopleInserter = new PeopleInsertionBasedOnAPopularPointAfterGetManyTimes(sim);
+		parcelInserter = new ParcelInsertionBasedOnAPopularPointAfterGetManyTimes(sim);
 	}
 
 	public void setSimulator(SimulatorTimeUnit sim) {
@@ -40,17 +30,17 @@ public class SequenceDecidedBasedOnPopularPointPlanner implements OnlinePlanner 
 
 	public void processPeopleRequest(PeopleRequest pr) {
 		// TODO Auto-generated method stub
-		System.out.println(name() + "SequenceDecidedBasedOnPopularPointPlanner::processPeopleRequest NOT IMPLEMENTED");
+		System.out.println(name() + "GetManyTimesThenAddAPopularPointPlanner::processPeopleRequest NOT IMPLEMENTED");
 		sim.exit();
 	}
 
 	public String name() {
-		return "SequenceDecidedBasedOnPopularPointPlanner";
+		return "GetManyTimesThenAddAPopularPointPlanner";
 	}
 
 	public void processParcelRequest(ParcelRequest pr) {
 		// TODO Auto-generated method stub
-		System.out.println(name() + "SequenceDecidedBasedOnPopularPointPlanner::processParcelRequest NOT IMPLEMENTED");
+		System.out.println(name() + "GetManyTimesThenAddAPopularPointPlanner::processParcelRequest NOT IMPLEMENTED");
 		sim.exit();
 	}
 
@@ -73,3 +63,4 @@ public class SequenceDecidedBasedOnPopularPointPlanner implements OnlinePlanner 
 			sim.maxDecideTimeParcelRequests = t;
 	}
 }
+
