@@ -18,8 +18,8 @@ public class GetManyTimesThenAddASequencePopularPointsPlanner implements OnlineP
 	public GetManyTimesThenAddASequencePopularPointsPlanner(SimulatorTimeUnit sim) {
 		this.sim = sim;
 		this.log = sim.log;
-		peopleInserter = new PeopleInsertionBasedOnAPopularPointAfterGetManyTimes(sim);
-		parcelInserter = new ParcelInsertionBasedOnAPopularPointAfterGetManyTimes(sim);
+		peopleInserter = new PeopleInsertionBasedOnASequencePopularPointsAfterGetManyTimes(sim);
+		parcelInserter = new ParcelInsertionBasedOnASequencePopularPointsAfterGetManyTimes(sim);
 	}
 
 	public void setSimulator(SimulatorTimeUnit sim) {
@@ -30,7 +30,7 @@ public class GetManyTimesThenAddASequencePopularPointsPlanner implements OnlineP
 
 	public void processPeopleRequest(PeopleRequest pr) {
 		// TODO Auto-generated method stub
-		System.out.println(name() + "GetManyTimesThenAddASequencePopularPointsPlanner::processPeopleRequest NOT IMPLEMENTED");
+		System.out.println(name() + "::processPeopleRequest NOT IMPLEMENTED");
 		sim.exit();
 	}
 
@@ -40,7 +40,7 @@ public class GetManyTimesThenAddASequencePopularPointsPlanner implements OnlineP
 
 	public void processParcelRequest(ParcelRequest pr) {
 		// TODO Auto-generated method stub
-		System.out.println(name() + "GetManyTimesThenAddASequencePopularPointsPlanner::processParcelRequest NOT IMPLEMENTED");
+		System.out.println(name() + "::processParcelRequest NOT IMPLEMENTED");
 		sim.exit();
 	}
 

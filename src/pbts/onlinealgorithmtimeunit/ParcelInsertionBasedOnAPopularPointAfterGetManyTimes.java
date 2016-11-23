@@ -152,7 +152,7 @@ public class ParcelInsertionBasedOnAPopularPointAfterGetManyTimes implements Onl
 		}
 		//[SonNV]Establish itinerary based on sequence ss and a popular point.
 		ItineraryTravelTime I = sim.establishItineraryWithAPopularPoint(taxi,
-				nextStartTimePoint, fromIndex, fromPoint, ss, 5);
+				nextStartTimePoint, fromIndex, fromPoint, ss, 2);
 		
 		if (I == null){
 			System.out.println(name() + "::computeItineraryParcelInsertion, establishItinerary I = null");

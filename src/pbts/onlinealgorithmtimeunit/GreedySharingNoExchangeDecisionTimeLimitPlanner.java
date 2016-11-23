@@ -38,7 +38,7 @@ public class GreedySharingNoExchangeDecisionTimeLimitPlanner implements OnlinePl
 		System.out.println(name() + "::processParcelRequest NOT IMPLEMENTED");
 		sim.exit();
 	}
-	public String name(){ return "GreedySharingNoExchangeDecisionTimeLimit";}
+	public String name(){ return "GreedySharingNoExchangeDecisionTimeLimitPlanner";}
 	
 	public void processPeopleRequests(ArrayList<PeopleRequest> pr) {
 		// TODO Auto-generated method stub

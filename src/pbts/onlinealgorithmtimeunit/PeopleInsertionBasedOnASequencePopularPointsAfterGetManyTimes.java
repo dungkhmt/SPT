@@ -22,13 +22,13 @@ public class PeopleInsertionBasedOnASequencePopularPointsAfterGetManyTimes imple
 	public PrintWriter log;
 	private FixedRateSampler frs;
 	
-	public PeopleInsertionBasedOnAPopularPointAfterGetManyTimes(SimulatorTimeUnit sim){
+	public PeopleInsertionBasedOnASequencePopularPointsAfterGetManyTimes(SimulatorTimeUnit sim){
 		this.sim = sim;
 		this.log = sim.log;
 		this.frs = new FixedRateSampler();
 	}
 	public String name(){
-		return "PeopleInsertionBasedOnAPopularPointAfterGetManyTimes";
+		return "PeopleInsertionBasedOnASequencePopularPointsAfterGetManyTimes";
 	}
 
 	public ServiceSequence computePeopleInsertionSequence(Vehicle taxi,
@@ -71,7 +71,7 @@ public class PeopleInsertionBasedOnASequencePopularPointsAfterGetManyTimes imple
 			return null;
 		}
 		//Establish itinerary based on sequence ss and a sequence popular points.
-		ItineraryTravelTime I = sim.establishItineraryWithAroundPopularPoints(taxi, nextStartTimePoint, fromIndex, fromPoint, ss, 5);
+		ItineraryTravelTime I = sim.establishItineraryWithAroundPopularPoints(taxi, nextStartTimePoint, fromIndex, fromPoint, ss, 2);
 		
 		if (I == null){
 			System.out.println(name() + "::computeItineraryPeopleInsertion, establishItinerary I = null");

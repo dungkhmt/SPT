@@ -3022,7 +3022,7 @@ public class SimulatorTimeUnit extends Simulator {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		//[SonNV] change path selected.
-		String data_dir = "E:\\task2\\git_project\\SPT\\";
+		String data_dir = "E:\\Project\\pbts\\git_project\\SPT\\";
 		String mapFileName = data_dir + "SanFrancisco_std\\SanfranciscoRoad-connected-contracted-5-refine-50.txt";
 		String configFileName = data_dir + "SanFrancisco_std\\config-parameters.txt";
 		String depotParkingFileName = data_dir + "SanFrancisco_std\\depots1000-parkings34.txt";
@@ -3032,7 +3032,7 @@ public class SimulatorTimeUnit extends Simulator {
 		int decisionTime = 15;
 		try{
 			PrintWriter out= new PrintWriter("summaryFile.txt");
-			out.println("Day Benefits_Naive Benefits_SequenceBasedOnAPp Benefits_GetManyTimesThenAddAPp Benefits_GetManyTimesThenAddASequencePp Max_Benefits");
+			out.println("Day 1_GreedyEx 2_GreedyExAddPp 3_GreedyNoEx 4_GreedyNoExAddPp 5_SsAddAPp 6_GetManyTimesAddAPp 7_GetManyTimeAddASsPp BestPlanner");
 			out.close();
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -3042,17 +3042,20 @@ public class SimulatorTimeUnit extends Simulator {
 			String lineOut = "" + day;
 			double maxBenefits = 0;
 			int plIdx = 0;
-			ArrayList<String> listPlanner = new ArrayList<String>();
-			listPlanner.add("NaiveSequentialDecisionTimeLimitPlanner");
+			ArrayList<String> listPlanner = new ArrayList<String>();			
+			listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
+			listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
+			listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitPlanner");
+			listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
 			listPlanner.add("SequenceDecidedBasedOnAPopularPointPlanner");
 			listPlanner.add("GetManyTimesThenAddAPopularPointPlanner");
 			listPlanner.add("GetManyTimesThenAddASequencePopularPointsPlanner");
 			
 			for(int pl = 0; pl < listPlanner.size(); pl++){
 				String plannerName = listPlanner.get(pl);
-				String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\output\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
-				String itineraryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
-				String summaryFileName = data_dir + "SanFrancisco_std\\output\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
+				String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
+				String itineraryFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
+				String summaryFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
 				
 				
 				for(int i = 0; i < args.length; i++){
@@ -3108,14 +3111,16 @@ public class SimulatorTimeUnit extends Simulator {
 				simulator.statFilename = progressiveStatisticFileName;
 				simulator.resetLog();
 				
-				OnlinePlanner[] planners = new OnlinePlanner[] { 	new GreedyExchangeSharingPlanner(simulator), 
-																	new GreedyExchangeSharingPlanner(simulator),
-																	new GreedyPeopleDirectExchangePlanner(simulator),
-																	new GreedyPeopleDirectNoExchangePlanner(simulator),
-																	new NaiveSequentialPlanner(simulator),
+				OnlinePlanner[] planners = new OnlinePlanner[] { 	//new GreedyExchangeSharingPlanner(simulator), 
+																	//new GreedyExchangeSharingPlanner(simulator),
+																	//new GreedyPeopleDirectExchangePlanner(simulator),
+																	//new GreedyPeopleDirectNoExchangePlanner(simulator),
+																	//new NaiveSequentialPlanner(simulator),
 																	new GreedyExchangeSharingDecisionTimeLimitPlanner(simulator),
+																	new GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
 																	new GreedySharingNoExchangeDecisionTimeLimitPlanner(simulator),
-																	new NaiveSequentialDecisionTimeLimitPlanner(simulator),
+																	new GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
+																	//new NaiveSequentialDecisionTimeLimitPlanner(simulator),
 																	new SequenceDecidedBasedOnAPopularPointPlanner(simulator),
 																	new GetManyTimesThenAddAPopularPointPlanner(simulator),
 																	new GetManyTimesThenAddASequencePopularPointsPlanner(simulator)

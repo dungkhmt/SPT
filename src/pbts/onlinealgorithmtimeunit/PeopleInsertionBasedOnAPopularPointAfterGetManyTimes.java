@@ -72,7 +72,7 @@ public class PeopleInsertionBasedOnAPopularPointAfterGetManyTimes implements Onl
 		}
 
 		ItineraryTravelTime I = sim.establishItineraryWithAPopularPoint(taxi,
-				nextStartTimePoint, fromIndex, fromPoint, ss, 5);
+				nextStartTimePoint, fromIndex, fromPoint, ss, 2);
 		
 		if (I == null){
 			System.out.println(name() + "::computeItineraryPeopleInsertion, establishItinerary I = null");

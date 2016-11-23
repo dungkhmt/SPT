@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="E:/task2/git_project/SPT/commons-math3-3.6.1.jar"/>
-	<classpathentry kind="src" path="/pbts"/>
+	<classpathentry exported="true" kind="lib" path="E:/Project/pbts/git_project/SPT/commons-math3-3.6.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

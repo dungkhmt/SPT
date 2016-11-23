@@ -40,7 +40,7 @@ public class SequenceDecidedBasedOnAPopularPointPlanner implements OnlinePlanner
 
 	public void processPeopleRequest(PeopleRequest pr) {
 		// TODO Auto-generated method stub
-		System.out.println(name() + "SequenceDecidedBasedOnPopularPointPlanner::processPeopleRequest NOT IMPLEMENTED");
+		System.out.println(name() + "::processPeopleRequest NOT IMPLEMENTED");
 		sim.exit();
 	}
 
@@ -50,7 +50,7 @@ public class SequenceDecidedBasedOnAPopularPointPlanner implements OnlinePlanner
 
 	public void processParcelRequest(ParcelRequest pr) {
 		// TODO Auto-generated method stub
-		System.out.println(name() + "SequenceDecidedBasedOnPopularPointPlanner::processParcelRequest NOT IMPLEMENTED");
+		System.out.println(name() + "::processParcelRequest NOT IMPLEMENTED");
 		sim.exit();
 	}
 

@@ -39,7 +39,7 @@ public class GreedyExchangeSharingPlanner implements OnlinePlanner {
 		System.out.println(name() + "::processParcelRequest NOT IMPLEMENTED");
 		sim.exit();
 	}
-	public String name(){ return "GreedyExchangeSharing";}
+	public String name(){ return "GreedyExchangeSharingPlanner";}
 	
 	public void processPeopleRequests(ArrayList<PeopleRequest> pr) {
 		// TODO Auto-generated method stub
