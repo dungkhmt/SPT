@@ -157,7 +157,7 @@ public class PeopleInsertionGreedySharingDecisionTimeLimitGetManyTimesAndAddAPop
 				nextStartTimePoint, fromIndex, reqID, fromPoint, ss);
 		*/
 		ItineraryTravelTime I = sim.establishItineraryWithAPopularPoint(taxi,
-				nextStartTimePoint, fromIndex, fromPoint, ss, 2);
+				nextStartTimePoint, fromIndex, fromPoint, ss, 1);
 		
 		
 		if (I == null){
@@ -166,7 +166,7 @@ public class PeopleInsertionGreedySharingDecisionTimeLimitGetManyTimesAndAddAPop
 			return null;
 		}
 		ss.setDistance(I.getDistance());
-		ss.setParkingLocation(I.get(I.size()-1));
+		//ss.setParkingLocation(I.get(I.size()-1));
 		
 		double d = I.getDistance() + taxi.totalTravelDistance;
 		if (I.getDistance() + taxi.totalTravelDistance > sim.maxTravelDistance){

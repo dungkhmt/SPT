@@ -172,7 +172,7 @@ public class ParcelInsertionGreedySharingDecisionTimeLimitAndGetManyTimesAddAPop
 				nextStartTimePoint, fromIndex, reqID, fromPoint, ss);
 		*/
 		ItineraryTravelTime I = sim.establishItineraryWithAPopularPoint(taxi,
-				nextStartTimePoint, fromIndex, fromPoint, ss, 2);
+				nextStartTimePoint, fromIndex, fromPoint, ss, 1);
 		
 		if (I == null){
 			System.out.println(name() + "::computeItineraryParcelInsertion, establishItinerary I = null");

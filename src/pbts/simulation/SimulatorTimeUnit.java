@@ -2014,7 +2014,6 @@ public class SimulatorTimeUnit extends Simulator {
 			Vehicle taxi, ParcelRequest pr) {
 		
 		// find delivery people location
-		//[SonNV] Both of the variables are not used.
 		//LatLng llPickup = map.mLatLng.get(pr.pickupLocationID);
 		//LatLng llDelivery = map.mLatLng.get(pr.deliveryLocationID);
 		int locID = -1;
@@ -2041,6 +2040,8 @@ public class SimulatorTimeUnit extends Simulator {
 							llDelivery.lat, llDelivery.lng);
 			*/
 			//double d = estimateTravelingDistance(tpi.point,pr.pickupLocationID) + estimateTravelingDistance(tpi.point, pr.deliveryLocationID);
+			//LatLng ll = map.mLatLng.get(tpi.point);
+			//double d = G.computeDistanceHaversine(ll.lat, ll.lng, llPickup.lat, llPickup.lng);
 			double d = estimateTravelingDistance(tpi.point,pr.pickupLocationID);
 			
 			TaxiTimePointIndex ttpi = new TaxiTimePointIndex(taxi, tpi,
@@ -2201,9 +2202,9 @@ public class SimulatorTimeUnit extends Simulator {
 				else
 					p = parReq.deliveryLocationID;
 			}
-			LatLng ll = map.mLatLng.get(p);
+			//LatLng ll = map.mLatLng.get(p);
 
-			double dpickup = estimateTravelingDistance(pr.pickupLocationID, p);// G.computeDistanceHaversine(llPickup.lat, llPickup.lng, ll.lat, ll.lng);
+			double dpickup = estimateTravelingDistance(pr.pickupLocationID, p);//G.computeDistanceHaversine(llPickup.lat, llPickup.lng, ll.lat, ll.lng);
 			//double ddelivery = estimateTravelingDistance(pr.deliveryLocationID, p);//G.computeDistanceHaversine(llDelivery.lat, llDelivery.lng, ll.lat, ll.lng);
 
 			if(dpickup < distancePickup){
@@ -3045,11 +3046,11 @@ public class SimulatorTimeUnit extends Simulator {
 			ArrayList<String> listPlanner = new ArrayList<String>();			
 			listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
 			listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
-			listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitPlanner");
-			listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
+			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitPlanner");
+			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
 			listPlanner.add("SequenceDecidedBasedOnAPopularPointPlanner");
-			listPlanner.add("GetManyTimesThenAddAPopularPointPlanner");
-			listPlanner.add("GetManyTimesThenAddASequencePopularPointsPlanner");
+			//listPlanner.add("GetManyTimesThenAddAPopularPointPlanner");
+			//listPlanner.add("GetManyTimesThenAddASequencePopularPointsPlanner");
 			
 			for(int pl = 0; pl < listPlanner.size(); pl++){
 				String plannerName = listPlanner.get(pl);
@@ -3118,12 +3119,12 @@ public class SimulatorTimeUnit extends Simulator {
 																	//new NaiveSequentialPlanner(simulator),
 																	new GreedyExchangeSharingDecisionTimeLimitPlanner(simulator),
 																	new GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
-																	new GreedySharingNoExchangeDecisionTimeLimitPlanner(simulator),
-																	new GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
+																	//new GreedySharingNoExchangeDecisionTimeLimitPlanner(simulator),
+																	//new GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
 																	//new NaiveSequentialDecisionTimeLimitPlanner(simulator),
 																	new SequenceDecidedBasedOnAPopularPointPlanner(simulator),
-																	new GetManyTimesThenAddAPopularPointPlanner(simulator),
-																	new GetManyTimesThenAddASequencePopularPointsPlanner(simulator)
+																	//new GetManyTimesThenAddAPopularPointPlanner(simulator),
+																	//new GetManyTimesThenAddASequencePopularPointsPlanner(simulator)
 																};
 				
 				OnlinePlanner selectedPlanner = null;

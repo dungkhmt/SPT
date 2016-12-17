@@ -678,6 +678,9 @@ public class Simulator {
 			indexPoint = tpi.indexPoint;
 		}
 
+//		LatLng pointLL = map.mLatLng.get(point);
+//		LatLng pickupLL = map.mLatLng.get(pr.pickupLocationID);
+//		double d = G.computeDistanceHaversine(pointLL.lat, pointLL.lng, pickupLL.lat, pickupLL.lng);
 		double d = estimateTravelingDistance(point,  pr.pickupLocationID);
 		
 		//double d = dijkstra.queryDistance(point, pr.pickupLocationID);
@@ -778,7 +781,9 @@ public class Simulator {
 			indexPoint = tpi.indexPoint;
 		}
 
-		double d = estimateTravelingDistance(point,  pr.pickupLocationID);
+		LatLng pointLL = map.mLatLng.get(point);
+		LatLng pickupLL = map.mLatLng.get(pr.pickupLocationID);
+		double d = G.computeDistanceHaversine(pointLL.lat, pointLL.lng, pickupLL.lat, pickupLL.lng);
 		
 		double t = getTravelTime(d, maxSpeedms);
 		if (t + timePoint <= pr.latePickupTime){
@@ -801,7 +806,9 @@ public class Simulator {
 								newTimePoint = taxi.currentItinerary.getArrivalTime(j)
 										+ pr.deliveryDuration;
 							newPoint = taxi.currentItinerary.get(j);
-							double newD = estimateTravelingDistance(newPoint,  pr.pickupLocationID);
+							LatLng newpointLL = map.mLatLng.get(newPoint);
+							double newD = G.computeDistanceHaversine(newpointLL.lat, newpointLL.lng, pickupLL.lat, pickupLL.lng);
+							//double newD = estimateTravelingDistance(newPoint,  pr.pickupLocationID);
 							
 							double newT = getTravelTime(newD, maxSpeedms);
 							if (newT + newTimePoint <= pr.latePickupTime){
@@ -2182,6 +2189,7 @@ public class Simulator {
 		int nearestPointId = -1;
 		int ppId = -1;		
 		double shortestDis = 10000000;
+		LatLng pointLL = map.mLatLng.get(point);
 		for(int t = 0; t < times; t++){
 			//get popular points in this period time.
 			ArrayList<Integer> popularRqIdInPeriod = new ArrayList<Integer>();
@@ -2189,7 +2197,9 @@ public class Simulator {
 			for(int i = 0; i < popularRqIdInPeriod.size(); i++){
 				ppId = popularRqIdInPeriod.get(i);
 				if(ppId != point){
-					double D = estimateTravelingDistance(ppId, point);
+					//double D = estimateTravelingDistance(ppId, point);
+					LatLng ppLL = map.mLatLng.get(ppId);
+					double D = G.computeDistanceHaversine(ppLL.lat, ppLL.lng, pointLL.lat, pointLL.lng);
 					//Find the nearest points in popular points
 					if(shortestDis > D){
 						shortestDis = D;
@@ -2388,36 +2398,45 @@ public class Simulator {
 		
 		//add a popular point to itinerary
 		int popularPoint = computeAPopularPoint(curPos, late, taxi, times);
-		Itinerary pI = dijkstra.queryShortestPath(curPos,
-				popularPoint);
-		int pt = getTravelTime(pI.getDistance(), maxSpeedms);
-		double pd = pI.getDistance();
-		int pv0 = pI.get(0);
-
-		for (int j = 1; j < pI.size() - 1; j++) {
-			int v = pI.get(j);
-			retI.addPoint(v);
+		LatLng curPosLL = map.mLatLng.get(curPos);
+		LatLng ppLL = map.mLatLng.get(popularPoint);
+		LatLng parkingLL = map.mLatLng.get(ss.parkingLocationPoint);
+		double d1 = G.computeDistanceHaversine(curPosLL.lat, curPosLL.lng, parkingLL.lat, parkingLL.lng);
+		double d2 = G.computeDistanceHaversine(curPosLL.lat, curPosLL.lng, ppLL.lat, ppLL.lng);
+		double d3 = G.computeDistanceHaversine(ppLL.lat, ppLL.lng, parkingLL.lat, parkingLL.lng);
+		if((d2 + d3) <= (d1 * 1.5)){
+			Itinerary pI = dijkstra.queryShortestPath(curPos,
+					popularPoint);
+			int pt = getTravelTime(pI.getDistance(), maxSpeedms);
+			double pd = pI.getDistance();
+			int pv0 = pI.get(0);
+	
+			for (int j = 1; j < pI.size() - 1; j++) {
+				int v = pI.get(j);
+				retI.addPoint(v);
+				retI.addAction(VehicleAction.PASS);
+				retI.addRequestID(-1);
+				Arc a = map.getArc(pv0, v);
+				int dt = (int) (pt * a.w / pd);
+				td = td + dt;
+				pt = pt - dt;
+				pd = pd - a.w;
+				pv0 = v;
+				retI.setArrivalTime(retI.size() - 1, td);
+				retI.setDepartureTime(retI.size() - 1, td);
+			}
+			retI.addPoint(pI.get(pI.size() - 1));
+			retI.addRequestID(-1);;
 			retI.addAction(VehicleAction.PASS);
-			retI.addRequestID(-1);
-			Arc a = map.getArc(pv0, v);
-			int dt = (int) (pt * a.w / pd);
-			td = td + dt;
-			pt = pt - dt;
-			pd = pd - a.w;
-			pv0 = v;
+			td = td + pt;
 			retI.setArrivalTime(retI.size() - 1, td);
 			retI.setDepartureTime(retI.size() - 1, td);
+			curPos = popularPoint;
+			System.out.println("==========establishItineraryWithAPopularPoint==============");
 		}
-		retI.addPoint(pI.get(pI.size() - 1));
-		retI.addRequestID(-1);;
-		retI.addAction(VehicleAction.PASS);
-		td = td + pt;
-		retI.setArrivalTime(retI.size() - 1, td);
-		retI.setDepartureTime(retI.size() - 1, td);
-		curPos = popularPoint;
 		
 		//find the nearest parking
-		ArrayList<Integer> parkings = collectAvailableParkings(taxi);
+		/*ArrayList<Integer> parkings = collectAvailableParkings(taxi);
 		int sel_pk = -1;
 		double minD = 100000000;
 		//Compute distance from last point in remain request to parking. Then,the nearest parking is inserted.
@@ -2433,11 +2452,11 @@ public class Simulator {
 				minD = Dpark;
 				sel_pk = pk;
 			}
-		}
+		}*/
 		
 		//add the parking point to itinerary.
 		Itinerary I = dijkstra.queryShortestPath(curPos,
-				sel_pk);
+				ss.parkingLocationPoint);
 		int t = getTravelTime(I.getDistance(), maxSpeedms);
 		double d = I.getDistance();
 		int v0 = I.get(0);
@@ -2462,7 +2481,7 @@ public class Simulator {
 		td = td + t;
 		retI.setArrivalTime(retI.size() - 1, td);
 		
-		retI.setDistance(minD);
+		//retI.setDistance(minD);
 		return retI;
 	}
 	
