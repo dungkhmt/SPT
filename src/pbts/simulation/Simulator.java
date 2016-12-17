@@ -2753,9 +2753,9 @@ public class Simulator {
 		for(int k = 0; k < parkings.size(); k++){
 			int pk = parkings.get(k);
 			//LatLng pkLL = map.mLatLng.get(pk);
-			if(pkLL == null){
-				System.out.println(name() + "::computePeopleInsertionSequence, pkLL is NULL");
-			}
+			//if(pkLL == null){
+			//	System.out.println(name() + "::computePeopleInsertionSequence, pkLL is NULL");
+			//}
 			double Dpark = estimateTravelingDistanceHaversine(curPos, pk);
 			//double Dpark = G.computeDistanceHaversine(endLL.lat, endLL.lng, pkLL.lat, pkLL.lng);
 			if(Dpark < minD){
