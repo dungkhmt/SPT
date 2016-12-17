@@ -781,9 +781,10 @@ public class Simulator {
 			indexPoint = tpi.indexPoint;
 		}
 
-		LatLng pointLL = map.mLatLng.get(point);
-		LatLng pickupLL = map.mLatLng.get(pr.pickupLocationID);
-		double d = G.computeDistanceHaversine(pointLL.lat, pointLL.lng, pickupLL.lat, pickupLL.lng);
+		//LatLng pointLL = map.mLatLng.get(point);
+		//LatLng pickupLL = map.mLatLng.get(pr.pickupLocationID);
+		//double d = G.computeDistanceHaversine(pointLL.lat, pointLL.lng, pickupLL.lat, pickupLL.lng);
+		double d = estimateTravelingDistanceHaversine(point, pr.pickupLocationID);
 		
 		double t = getTravelTime(d, maxSpeedms);
 		if (t + timePoint <= pr.latePickupTime){
@@ -806,9 +807,9 @@ public class Simulator {
 								newTimePoint = taxi.currentItinerary.getArrivalTime(j)
 										+ pr.deliveryDuration;
 							newPoint = taxi.currentItinerary.get(j);
-							LatLng newpointLL = map.mLatLng.get(newPoint);
-							double newD = G.computeDistanceHaversine(newpointLL.lat, newpointLL.lng, pickupLL.lat, pickupLL.lng);
-							//double newD = estimateTravelingDistance(newPoint,  pr.pickupLocationID);
+							//LatLng newpointLL = map.mLatLng.get(newPoint);
+							//double newD = G.computeDistanceHaversine(newpointLL.lat, newpointLL.lng, pickupLL.lat, pickupLL.lng);
+							double newD = estimateTravelingDistanceHaversine(newPoint,  pr.pickupLocationID);
 							
 							double newT = getTravelTime(newD, maxSpeedms);
 							if (newT + newTimePoint <= pr.latePickupTime){
@@ -901,6 +902,13 @@ public class Simulator {
 		return sel_taxi;
 	}
 
+	public double estimateTravelingDistanceHaversine(int u, int v){
+		LatLng lu = map.mLatLng.get(u);
+		LatLng lv = map.mLatLng.get(v);
+		double d = G.computeDistanceHaversine(lu.lat, lu.lng, lv.lat, lv.lng);
+		d = 1.5*d;
+		return d;
+	}
 	public double estimateTravelingDistance(int u, int v){
 		if(dijkstra.distanceAvailable(u, v)) return dijkstra.queryDistance(u, v);
 		
@@ -2189,7 +2197,7 @@ public class Simulator {
 		int nearestPointId = -1;
 		int ppId = -1;		
 		double shortestDis = 10000000;
-		LatLng pointLL = map.mLatLng.get(point);
+		//LatLng pointLL = map.mLatLng.get(point);
 		for(int t = 0; t < times; t++){
 			//get popular points in this period time.
 			ArrayList<Integer> popularRqIdInPeriod = new ArrayList<Integer>();
@@ -2197,9 +2205,7 @@ public class Simulator {
 			for(int i = 0; i < popularRqIdInPeriod.size(); i++){
 				ppId = popularRqIdInPeriod.get(i);
 				if(ppId != point){
-					//double D = estimateTravelingDistance(ppId, point);
-					LatLng ppLL = map.mLatLng.get(ppId);
-					double D = G.computeDistanceHaversine(ppLL.lat, ppLL.lng, pointLL.lat, pointLL.lng);
+					double D = estimateTravelingDistanceHaversine(ppId, point);
 					//Find the nearest points in popular points
 					if(shortestDis > D){
 						shortestDis = D;
@@ -2398,12 +2404,9 @@ public class Simulator {
 		
 		//add a popular point to itinerary
 		int popularPoint = computeAPopularPoint(curPos, late, taxi, times);
-		LatLng curPosLL = map.mLatLng.get(curPos);
-		LatLng ppLL = map.mLatLng.get(popularPoint);
-		LatLng parkingLL = map.mLatLng.get(ss.parkingLocationPoint);
-		double d1 = G.computeDistanceHaversine(curPosLL.lat, curPosLL.lng, parkingLL.lat, parkingLL.lng);
-		double d2 = G.computeDistanceHaversine(curPosLL.lat, curPosLL.lng, ppLL.lat, ppLL.lng);
-		double d3 = G.computeDistanceHaversine(ppLL.lat, ppLL.lng, parkingLL.lat, parkingLL.lng);
+		double d1 = estimateTravelingDistanceHaversine(curPos, ss.parkingLocationPoint);
+		double d2 = estimateTravelingDistanceHaversine(curPos, popularPoint);
+		double d3 = estimateTravelingDistanceHaversine(popularPoint, ss.parkingLocationPoint);
 		if((d2 + d3) <= (d1 * 1.5)){
 			Itinerary pI = dijkstra.queryShortestPath(curPos,
 					popularPoint);
@@ -2746,14 +2749,15 @@ public class Simulator {
 		int sel_pk = -1;
 		double minD = 100000000;
 		//Compute distance from last point in remain request to parking. Then,the nearest parking is inserted.
-		LatLng endLL = map.mLatLng.get(curPos);
+		//LatLng endLL = map.mLatLng.get(curPos);
 		for(int k = 0; k < parkings.size(); k++){
 			int pk = parkings.get(k);
-			LatLng pkLL = map.mLatLng.get(pk);
+			//LatLng pkLL = map.mLatLng.get(pk);
 			if(pkLL == null){
 				System.out.println(name() + "::computePeopleInsertionSequence, pkLL is NULL");
 			}
-			double Dpark = G.computeDistanceHaversine(endLL.lat, endLL.lng, pkLL.lat, pkLL.lng);
+			double Dpark = estimateTravelingDistanceHaversine(curPos, pk);
+			//double Dpark = G.computeDistanceHaversine(endLL.lat, endLL.lng, pkLL.lat, pkLL.lng);
 			if(Dpark < minD){
 				minD = Dpark;
 				sel_pk = pk;
