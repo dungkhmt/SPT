@@ -95,10 +95,11 @@ public class ParcelInsertionBasedOnPopularPoint implements OnlineParcelInsertion
 		sel_nod[idx + 1] = pr.id;
 
 		int newPickLocID = pr.pickupLocationID;
-		LatLng newPickLL = sim.map.mLatLng.get(newPickLocID);
+		//LatLng newPickLL = sim.map.mLatLng.get(newPickLocID);
 		int newDeliveryLocID = pr.deliveryLocationID;
-		LatLng newDeliveryLL = sim.map.mLatLng.get(newDeliveryLocID);
-		double minD = sim.G.computeDistanceHaversine(newPickLL.lat, newPickLL.lng, newDeliveryLL.lat, newDeliveryLL.lng);
+		//LatLng newDeliveryLL = sim.map.mLatLng.get(newDeliveryLocID);
+		double minD = sim.estimateTravelingDistanceHaversine(newPickLocID, newDeliveryLocID);
+		//double minD = sim.G.computeDistanceHaversine(newPickLL.lat, newPickLL.lng, newDeliveryLL.lat, newDeliveryLL.lng);
 		int deliveryIdx = idx;
 		for(int i = idx + 1; i < remainRequestIDs.size(); i++){
 			int rid = remainRequestIDs.get(i);
@@ -121,7 +122,8 @@ public class ParcelInsertionBasedOnPopularPoint implements OnlineParcelInsertion
 			if(curLL == null){
 				System.out.println(name() + "::computeParcelInsertionSequence, curLL is NULL");
 			}
-			double D = sim.G.computeDistanceHaversine(curLL.lat, curLL.lng, newDeliveryLL.lat, newDeliveryLL.lng);
+			double D = sim.estimateTravelingDistanceHaversine(curLocId, newDeliveryLocID);
+			//double D = sim.G.computeDistanceHaversine(curLL.lat, curLL.lng, newDeliveryLL.lat, newDeliveryLL.lng);
 			if(D < minD){
 				minD = D;
 				deliveryIdx = i;
@@ -134,7 +136,36 @@ public class ParcelInsertionBasedOnPopularPoint implements OnlineParcelInsertion
 		for(int i = deliveryIdx + 1; i < remainRequestIDs.size(); i++)
 			sel_nod[i + 2] = remainRequestIDs.get(i);
 		
-		ss = new ServiceSequence(sel_nod, 0, -1, -1);
+		//Compute distance from last point in remain request to parking. Then,the nearest parking is inserted.
+		//Get last delivery point (last element in sel_nod)
+		int endReq = sel_nod[sel_nod.length-1];
+		int endLocID = -1;
+		PeopleRequest peoR = sim.mPeopleRequest.get(Math.abs(endReq));
+		if(peoR != null){
+			if(endReq < 0) endLocID = peoR.deliveryLocationID; else endLocID = peoR.pickupLocationID;
+		}else{
+			ParcelRequest parR = sim.mParcelRequest.get(Math.abs(endReq));
+			if(endReq < 0) endLocID = parR.deliveryLocationID; else endLocID = parR.pickupLocationID;
+		}
+		
+		int sel_pk = -1;
+		minD = 100000000;
+		//LatLng endLL = sim.map.mLatLng.get(endLocID);
+		for(int k = 0; k < parkings.size(); k++){
+			int pk = parkings.get(k);
+			LatLng pkLL = sim.map.mLatLng.get(pk);
+			if(pkLL == null){
+				System.out.println(name() + "::computeParcelInsertionSequence, pkLL is NULL");
+			}
+			double D = sim.estimateTravelingDistanceHaversine(endLocID, pk);
+			//double D = sim.G.computeDistanceHaversine(endLL.lat, endLL.lng, pkLL.lat, pkLL.lng);
+			if(D < minD){
+				minD = D;
+				sel_pk = pk;
+			}
+		}
+		
+		ss = new ServiceSequence(sel_nod, 0, sel_pk, minD);
 		return ss;
 	}
 
@@ -159,8 +190,9 @@ public class ParcelInsertionBasedOnPopularPoint implements OnlineParcelInsertion
 			sim.log.println(name() + "::computeItineraryParcelInsertion, taxi = " + taxi.ID + ", establishItinerary I = null");
 			return null;
 		}
-		ss.setDistance(I.getDistance());
-		ss.setParkingLocation(I.get(I.size()-1));
+		I.setDistance(ss.distance);
+		//ss.setDistance(I.getDistance());
+		//ss.setParkingLocation(I.get(I.size()-1));
 
 		if (I.getDistance() + taxi.totalTravelDistance > sim.maxTravelDistance){
 			sim.log.println(name() + "::computeItineraryParcelInsertion, taxi = " + taxi.ID + ", taxi.totalDistance = " + 

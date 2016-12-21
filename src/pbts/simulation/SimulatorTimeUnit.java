@@ -3044,12 +3044,12 @@ public class SimulatorTimeUnit extends Simulator {
 			double maxBenefits = 0;
 			int plIdx = 0;
 			ArrayList<String> listPlanner = new ArrayList<String>();			
-			listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
-			listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
+			//listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
+			//listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
-			listPlanner.add("SequenceDecidedBasedOnAPopularPointPlanner");
-			//listPlanner.add("GetManyTimesThenAddAPopularPointPlanner");
+			//listPlanner.add("SequenceDecidedBasedOnAPopularPointPlanner");
+			listPlanner.add("GetManyTimesThenAddAPopularPointPlanner");
 			//listPlanner.add("GetManyTimesThenAddASequencePopularPointsPlanner");
 			
 			for(int pl = 0; pl < listPlanner.size(); pl++){
@@ -3123,7 +3123,7 @@ public class SimulatorTimeUnit extends Simulator {
 																	//new GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
 																	//new NaiveSequentialDecisionTimeLimitPlanner(simulator),
 																	new SequenceDecidedBasedOnAPopularPointPlanner(simulator),
-																	//new GetManyTimesThenAddAPopularPointPlanner(simulator),
+																	new GetManyTimesThenAddAPopularPointPlanner(simulator),
 																	//new GetManyTimesThenAddASequencePopularPointsPlanner(simulator)
 																};
 				

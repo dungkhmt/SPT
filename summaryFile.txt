@@ -1,1 +1,1 @@
-Day Benefits_Naive Benefits_SequenceBasedOnAPp Benefits_GetManyTimesThenAddAPp Benefits_GetManyTimesThenAddASequencePp Max_Benefits
+Day 1_GreedyEx 2_GreedyExAddPp 3_GreedyNoEx 4_GreedyNoExAddPp 5_SsAddAPp 6_GetManyTimesAddAPp 7_GetManyTimeAddASsPp BestPlanner

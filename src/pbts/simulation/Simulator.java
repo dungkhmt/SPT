@@ -784,7 +784,8 @@ public class Simulator {
 		//LatLng pointLL = map.mLatLng.get(point);
 		//LatLng pickupLL = map.mLatLng.get(pr.pickupLocationID);
 		//double d = G.computeDistanceHaversine(pointLL.lat, pointLL.lng, pickupLL.lat, pickupLL.lng);
-		double d = estimateTravelingDistanceHaversine(point, pr.pickupLocationID);
+		//double d = estimateTravelingDistanceHaversine(point, pr.pickupLocationID);
+		double d = estimateTravelingDistance(point,  pr.pickupLocationID);
 		
 		double t = getTravelTime(d, maxSpeedms);
 		if (t + timePoint <= pr.latePickupTime){
@@ -809,7 +810,7 @@ public class Simulator {
 							newPoint = taxi.currentItinerary.get(j);
 							//LatLng newpointLL = map.mLatLng.get(newPoint);
 							//double newD = G.computeDistanceHaversine(newpointLL.lat, newpointLL.lng, pickupLL.lat, pickupLL.lng);
-							double newD = estimateTravelingDistanceHaversine(newPoint,  pr.pickupLocationID);
+							double newD = estimateTravelingDistance(newPoint,  pr.pickupLocationID);
 							
 							double newT = getTravelTime(newD, maxSpeedms);
 							if (newT + newTimePoint <= pr.latePickupTime){

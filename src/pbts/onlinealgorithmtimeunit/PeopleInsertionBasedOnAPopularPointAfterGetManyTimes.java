@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import pbts.entities.ErrorMSG;
 import pbts.entities.ItineraryTravelTime;
+import pbts.entities.LatLng;
+import pbts.entities.ParcelRequest;
 import pbts.entities.PeopleRequest;
 import pbts.entities.TaxiTimePointIndex;
 import pbts.entities.TimePointIndex;
@@ -52,7 +54,39 @@ public class PeopleInsertionBasedOnAPopularPointAfterGetManyTimes implements Onl
 		for(int i = 0; i < remainRequestIDs.size(); i++)
 			sel_nod[i + 2] = remainRequestIDs.get(i);
 
-		ss = new ServiceSequence(sel_nod, 0, -1, -1);
+		//Compute distance from last point in remain request to parking. Then,the nearest parking is inserted.
+		//Get last delivery point (last element in sel_nod)
+		int endReq = sel_nod[sel_nod.length-1];
+		int endLocID = -1;
+		PeopleRequest peoR = sim.mPeopleRequest.get(Math.abs(endReq));
+		if(peoR != null){
+			if(endReq < 0) endLocID = peoR.deliveryLocationID; 
+			else endLocID = peoR.pickupLocationID;
+		}else{
+			ParcelRequest parR = sim.mParcelRequest.get(Math.abs(endReq));
+			if(endReq < 0) endLocID = parR.deliveryLocationID; 
+			else endLocID = parR.pickupLocationID;
+		}
+		
+		ArrayList<Integer> parkings = sim.collectAvailableParkings(taxi);
+		int sel_pk = -1;
+		double minD = 100000000;
+		//LatLng endLL = sim.map.mLatLng.get(endLocID);
+		for(int k = 0; k < parkings.size(); k++){
+			int pk = parkings.get(k);
+			LatLng pkLL = sim.map.mLatLng.get(pk);
+			if(pkLL == null){
+				System.out.println(name() + "::computeParcelInsertionSequence, pkLL is NULL");
+			}
+			double D = sim.estimateTravelingDistanceHaversine(endLocID, pk);
+			//double D = sim.G.computeDistanceHaversine(endLL.lat, endLL.lng, pkLL.lat, pkLL.lng);
+			if(D < minD){
+				minD = D;
+				sel_pk = pk;
+			}
+		}
+		
+		ss = new ServiceSequence(sel_nod, 0, sel_pk, minD);
 		return ss;
 	}
 
@@ -79,9 +113,9 @@ public class PeopleInsertionBasedOnAPopularPointAfterGetManyTimes implements Onl
 			sim.log.println(name() + "::computeItineraryPeopleInsertion, taxi = " + taxi.ID + ", establishItinerary I = null");
 			return null;
 		}
-		//I.setDistance(ss.distance);
-		ss.setDistance(I.getDistance());
-		ss.setParkingLocation(I.get(I.size()-1));
+		I.setDistance(ss.distance);
+		//ss.setDistance(I.getDistance());
+		//ss.setParkingLocation(I.get(I.size()-1));
 
 		if (I.getDistance() + taxi.totalTravelDistance > sim.maxTravelDistance){
 			sim.log.println(name() + "::computeItineraryPeopleInsertion, taxi = " + taxi.ID + ", taxi.totalDistance = " + 
