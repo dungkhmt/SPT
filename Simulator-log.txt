@@ -2,267 +2,677 @@ SimulatorTimeUnit::simulateDataFromFile --> At 0:0:2[0], parcel request 288075 a
 SimulatorTimeUnit::simulateDataFromFile --> At 0:0:12[0], parcel request 83956 arrives
 SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(288075,60)
 SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-288075,100)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(288075,60)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(83956,124)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-83956,153)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-288075,224)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(83956,128)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-83956,157)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(288075,188)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-288075,228)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 157, point01 = 4245, startTime1 = 323
 SimulatorTimeUnit::simulateDataFromFile --> At 0:0:10[0], people request 178000 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:0:14[0], people request 67150 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 117  -> mRequestID2Index.put(178000,83)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 117  -> mRequestID2Index.put(-178000,138)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(67150,85)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(-67150,142)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(178000,193)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(-178000,248)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(67150,396)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(-67150,453)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 248, point01 = 128753, startTime1 = 497
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 157, point01 = 4245, startTime1 = 323
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1 -> mRequestID2Index.put(83956,138)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1 -> mRequestID2Index.put(-83956,167)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1 -> mRequestID2Index.put(288075,198)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1 -> mRequestID2Index.put(-288075,238)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(178000,84)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(-178000,139)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(67150,287)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(-67150,344)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:0:17[15], parcel request 187000 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:0:23[15], parcel request 220051 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:0:25[15], parcel request 145362 arrives
 SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(187000,57)
 SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-187000,139)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(220051,71)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-220051,164)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(220051,71)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-220051,164)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(145362,173)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-145362,248)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(220051,71)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-220051,164)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(220051,71)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(145362,155)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-220051,164)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-145362,248)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 346
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 139, point01 = 128753, startTime1 = 309
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(67150,102)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(-67150,159)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(83956,199)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-83956,228)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(288075,259)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-288075,299)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:0:19[15], people request 81988 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:0:24[15], people request 201472 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:0:26[15], people request 43911 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 119  -> mRequestID2Index.put(81988,154)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 119  -> mRequestID2Index.put(-81988,597)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 117  -> mRequestID2Index.put(201472,189)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 117  -> mRequestID2Index.put(-201472,218)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 120  -> mRequestID2Index.put(43911,3)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 120  -> mRequestID2Index.put(-43911,85)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(81988,363)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(-81988,806)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(201472,146)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-201472,175)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(43911,243)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-43911,325)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 175, point01 = 95434, startTime1 = 385
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 228, point01 = 4245, startTime1 = 524
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 139, point01 = 128753, startTime1 = 309
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2 -> mRequestID2Index.put(187000,82)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2 -> mRequestID2Index.put(-187000,164)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436  -> mRequestID2Index.put(201472,59)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436  -> mRequestID2Index.put(-201472,88)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436  -> mRequestID2Index.put(43911,156)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436  -> mRequestID2Index.put(-43911,238)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:0:35[30], parcel request 97701 arrives
 SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(97701,29)
 SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(-97701,64)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 228, point01 = 4245, startTime1 = 524
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 139, point01 = 128753, startTime1 = 309
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 88, point01 = 95434, startTime1 = 239
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(43911,39)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(-43911,121)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436  -> mRequestID2Index.put(178000,138)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436  -> mRequestID2Index.put(-178000,193)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(83956,253)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-83956,282)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(288075,313)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-288075,353)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:0:47[45], people request 241609 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 120  -> mRequestID2Index.put(241609,126)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 120  -> mRequestID2Index.put(-241609,178)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(241609,194)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-241609,246)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 282, point01 = 4245, startTime1 = 728
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 193, point01 = 128753, startTime1 = 513
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 88, point01 = 95434, startTime1 = 239
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:5[60], parcel request 221426 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(220051,71)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(221426,222)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-221426,418)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-220051,585)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(145362,594)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-145362,669)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(220051,71)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(221426,222)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-221426,418)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-220051,585)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(145362,594)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-145362,669)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 585, point01 = 130823, startTime1 = 1019
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 282, point01 = 4245, startTime1 = 728
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 193, point01 = 128753, startTime1 = 513
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 88, point01 = 95434, startTime1 = 239
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:12[60], people request 60530 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(60530,277)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(-60530,329)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(60530,278)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-60530,330)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 246, point01 = 513, startTime1 = 553
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 585, point01 = 130823, startTime1 = 1019
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 282, point01 = 4245, startTime1 = 728
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 193, point01 = 128753, startTime1 = 513
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 88, point01 = 95434, startTime1 = 239
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(178000,299)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-178000,354)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2 -> mRequestID2Index.put(83956,414)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2 -> mRequestID2Index.put(-83956,443)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2 -> mRequestID2Index.put(288075,474)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2 -> mRequestID2Index.put(-288075,514)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436  -> mRequestID2Index.put(60530,95)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 436  -> mRequestID2Index.put(-60530,147)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:24[75], parcel request 122301 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:27[75], parcel request 95637 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(220051,71)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(221426,222)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-221426,418)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-220051,585)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(145362,594)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(122301,627)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-122301,681)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-145362,745)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(187000,57)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-187000,139)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(95637,158)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-95637,217)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(220051,71)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(221426,222)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-221426,418)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(122301,560)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(145362,592)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-220051,601)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-122301,633)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-145362,697)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(97701,29)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(-97701,64)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(95637,125)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(-95637,184)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 8 -> update idx1 = 443, point01 = 4245, startTime1 = 1033
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 354, point01 = 128753, startTime1 = 818
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 246, point01 = 513, startTime1 = 553
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 88, point01 = 95434, startTime1 = 239
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 64, point01 = 2868, startTime1 = 219
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1 -> mRequestID2Index.put(95637,208)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1 -> mRequestID2Index.put(-95637,267)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 437  -> mRequestID2Index.put(81988,265)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 437  -> mRequestID2Index.put(-81988,708)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:25[75], people request 236600 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:28[75], people request 200788 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(236600,353)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 175  -> mRequestID2Index.put(-236600,392)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 176  -> mRequestID2Index.put(200788,44)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 176  -> mRequestID2Index.put(-200788,131)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(236600,299)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(-236600,338)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3  -> mRequestID2Index.put(200788,237)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3  -> mRequestID2Index.put(-200788,324)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 8 -> update idx1 = 443, point01 = 4245, startTime1 = 1033
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 354, point01 = 128753, startTime1 = 818
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 246, point01 = 513, startTime1 = 553
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 88, point01 = 95434, startTime1 = 239
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 64, point01 = 2868, startTime1 = 219
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(200788,435)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-200788,522)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(83956,138)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-83956,167)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(288075,198)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-288075,238)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:31[90], parcel request 92962 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:41[90], parcel request 179532 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:45[90], parcel request 137676 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(220051,71)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(92962,98)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(221426,189)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-92962,301)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-221426,578)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-220051,745)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(145362,754)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(122301,787)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-122301,841)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-145362,905)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(187000,57)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-187000,139)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(95637,158)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-95637,217)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(179532,245)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-179532,401)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(187000,57)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-187000,139)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(95637,158)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-95637,217)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(179532,245)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-179532,401)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(137676,435)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-137676,559)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(220051,71)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(92962,98)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-92962,237)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(221426,347)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-221426,543)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(122301,685)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(145362,717)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-220051,726)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-122301,758)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-145362,822)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(83956,138)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-83956,167)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(179532,180)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(288075,213)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-288075,253)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-179532,422)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(83956,138)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-83956,167)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(179532,180)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(288075,213)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(137676,346)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-179532,377)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-137676,507)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-288075,533)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 354, point01 = 128753, startTime1 = 818
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 246, point01 = 513, startTime1 = 553
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 88, point01 = 95434, startTime1 = 239
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 64, point01 = 2868, startTime1 = 219
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:39[90], people request 53440 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:44[90], people request 79030 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 88  -> mRequestID2Index.put(53440,370)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 88  -> mRequestID2Index.put(-53440,1079)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 176  -> mRequestID2Index.put(79030,185)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 176  -> mRequestID2Index.put(-79030,263)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 30  -> mRequestID2Index.put(53440,576)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 30  -> mRequestID2Index.put(-53440,1285)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3  -> mRequestID2Index.put(79030,208)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(179532,240)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(288075,273)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3  -> mRequestID2Index.put(-79030,317)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(137676,428)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-179532,459)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-137676,589)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3 -> mRequestID2Index.put(-288075,615)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 354, point01 = 128753, startTime1 = 818
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 246, point01 = 513, startTime1 = 553
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 88, point01 = 95434, startTime1 = 239
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 64, point01 = 2868, startTime1 = 219
 SimulatorTimeUnit::simulateDataFromFile --> At 0:1:52[105], people request 69660 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 121  -> mRequestID2Index.put(69660,10)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 121  -> mRequestID2Index.put(-69660,55)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4  -> mRequestID2Index.put(69660,226)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4  -> mRequestID2Index.put(-69660,271)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 354, point01 = 128753, startTime1 = 818
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 246, point01 = 513, startTime1 = 553
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 88, point01 = 95434, startTime1 = 239
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 64, point01 = 2868, startTime1 = 219
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(69660,298)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-69660,343)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4  -> mRequestID2Index.put(178000,193)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4  -> mRequestID2Index.put(-178000,248)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4  -> mRequestID2Index.put(200788,329)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4  -> mRequestID2Index.put(-200788,416)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:3[120], parcel request 198003 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:13[120], parcel request 223568 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-187000,139)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(95637,158)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-95637,217)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(179532,245)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-179532,401)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(198003,447)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(137676,532)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-137676,656)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 436 -> mRequestID2Index.put(-198003,690)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(223568,84)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(-223568,367)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(198003,183)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-198003,357)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(223568,84)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-223568,367)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 246, point01 = 513, startTime1 = 553
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 248, point01 = 128753, startTime1 = 602
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2 -> mRequestID2Index.put(223568,319)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2 -> mRequestID2Index.put(-223568,602)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 118  -> mRequestID2Index.put(69660,10)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 118  -> mRequestID2Index.put(-69660,55)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:8[120], people request 323480 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 121  -> mRequestID2Index.put(323480,187)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 121  -> mRequestID2Index.put(-323480,257)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2 -> mRequestID2Index.put(223568,319)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(323480,374)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-323480,444)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2 -> mRequestID2Index.put(-223568,777)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 246, point01 = 513, startTime1 = 553
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 248, point01 = 128753, startTime1 = 602
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 88, point01 = 95434, startTime1 = 239
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 64, point01 = 2868, startTime1 = 219
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(178000,220)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-178000,275)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(200788,356)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-200788,443)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4  -> mRequestID2Index.put(241609,144)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4  -> mRequestID2Index.put(-241609,196)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4 -> mRequestID2Index.put(223568,269)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4  -> mRequestID2Index.put(323480,324)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4  -> mRequestID2Index.put(-323480,394)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 4 -> mRequestID2Index.put(-223568,727)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:24[135], parcel request 151426 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:28[135], parcel request 322431 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 177 -> mRequestID2Index.put(151426,57)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 177 -> mRequestID2Index.put(-151426,118)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(223568,84)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(322431,169)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(-223568,532)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(-322431,838)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(198003,183)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-198003,357)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(151426,390)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-151426,451)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(198003,183)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(322431,204)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-198003,348)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(151426,381)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-151426,442)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-322431,874)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:20[135], people request 308016 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:25[135], people request 209064 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122  -> mRequestID2Index.put(308016,138)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122  -> mRequestID2Index.put(-308016,244)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(223568,352)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(322431,437)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(-223568,800)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(-322431,1106)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122  -> mRequestID2Index.put(209064,295)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122  -> mRequestID2Index.put(-209064,351)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(223568,478)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(322431,563)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(-223568,926)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(-322431,1232)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(308016,260)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(-308016,366)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(209064,417)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(-209064,473)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 196, point01 = 513, startTime1 = 498
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 366, point01 = 130090, startTime1 = 851
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 88, point01 = 95434, startTime1 = 239
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 64, point01 = 2868, startTime1 = 219
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:34[150], parcel request 184748 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:38[150], parcel request 303297 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:41[150], parcel request 123565 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:43[150], parcel request 314533 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(184748,367)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-184748,1044)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 177 -> mRequestID2Index.put(151426,57)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 177 -> mRequestID2Index.put(-151426,118)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 177 -> mRequestID2Index.put(303297,164)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 177 -> mRequestID2Index.put(-303297,288)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(184748,367)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-184748,1044)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(123565,1051)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-123565,1080)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(184748,367)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-184748,1044)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(123565,1051)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-123565,1080)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(314533,1103)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-314533,1246)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(184748,161)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-184748,838)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(198003,183)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(322431,204)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-198003,348)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(151426,381)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(303297,459)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-151426,505)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-303297,603)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-322431,1075)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(184748,161)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-184748,838)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(123565,845)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-123565,874)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(184748,161)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-184748,838)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(123565,845)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(314533,894)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-123565,918)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-314533,1057)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:33[150], people request 329368 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:36[150], people request 83957 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:39[150], people request 183366 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:42[150], people request 103960 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:45[150], people request 331785 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 178  -> mRequestID2Index.put(329368,39)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 178  -> mRequestID2Index.put(-329368,116)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 179  -> mRequestID2Index.put(83957,95)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 179  -> mRequestID2Index.put(-83957,179)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89  -> mRequestID2Index.put(183366,362)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89  -> mRequestID2Index.put(-183366,923)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(184748,1513)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-184748,2190)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(123565,2197)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-123565,2226)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(314533,2249)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-314533,2392)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 123  -> mRequestID2Index.put(103960,87)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 123  -> mRequestID2Index.put(-103960,158)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 177  -> mRequestID2Index.put(331785,314)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 177  -> mRequestID2Index.put(-331785,433)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 6  -> mRequestID2Index.put(329368,155)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 6  -> mRequestID2Index.put(-329368,232)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 6  -> mRequestID2Index.put(83957,346)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 6  -> mRequestID2Index.put(-83957,430)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 31  -> mRequestID2Index.put(183366,568)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 31  -> mRequestID2Index.put(-183366,1129)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 7  -> mRequestID2Index.put(103960,332)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 7  -> mRequestID2Index.put(-103960,403)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 7  -> mRequestID2Index.put(331785,498)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 7  -> mRequestID2Index.put(-331785,617)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(331785,344)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-331785,463)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 7  -> mRequestID2Index.put(200788,414)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 7  -> mRequestID2Index.put(-200788,501)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:46[165], parcel request 104351 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:53[165], parcel request 284072 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(223568,478)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(104351,564)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(-104351,723)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(322431,895)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(-223568,1258)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 122 -> mRequestID2Index.put(-322431,1564)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(-97701,64)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(284072,91)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(-284072,164)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(104351,98)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-104351,257)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(184748,161)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-184748,838)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(123565,845)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(314533,894)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-123565,918)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-314533,1057)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(284072,1148)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-284072,1221)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(83957,308)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-83957,392)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 6  -> mRequestID2Index.put(331785,355)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 6  -> mRequestID2Index.put(-331785,474)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:48[165], people request 81066 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:2:58[165], people request 126279 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 123  -> mRequestID2Index.put(81066,179)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 123  -> mRequestID2Index.put(-81066,259)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 124  -> mRequestID2Index.put(126279,58)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 124  -> mRequestID2Index.put(-126279,175)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(81066,242)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(-81066,322)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(126279,421)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(-126279,538)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 196, point01 = 513, startTime1 = 498
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 366, point01 = 130090, startTime1 = 851
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 232, point01 = 9434, startTime1 = 618
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(126279,448)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(-126279,565)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(209064,353)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(-209064,409)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:12[180], parcel request 227239 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:14[180], parcel request 82512 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(184748,1513)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-184748,2190)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(123565,2197)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-123565,2226)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(314533,2249)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(227239,2261)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-314533,2406)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 89 -> mRequestID2Index.put(-227239,2604)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(284072,91)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(82512,115)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(-82512,176)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 437 -> mRequestID2Index.put(-284072,330)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(184748,161)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(227239,867)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-227239,1039)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-184748,1175)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(123565,1182)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(314533,1231)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-123565,1255)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-314533,1394)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(284072,1485)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 262 -> mRequestID2Index.put(-284072,1558)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 439 -> mRequestID2Index.put(82512,42)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 439 -> mRequestID2Index.put(-82512,103)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(81066,348)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-81066,428)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(209064,459)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-209064,515)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(83957,162)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(-83957,246)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:13[180], people request 110485 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:15[180], people request 244119 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 120  -> mRequestID2Index.put(110485,238)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 120  -> mRequestID2Index.put(-110485,279)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(244119,217)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 1  -> mRequestID2Index.put(-244119,303)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(110485,314)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(-110485,355)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 9  -> mRequestID2Index.put(244119,109)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 9  -> mRequestID2Index.put(-244119,195)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 5 -> update idx1 = 428, point01 = 5454, startTime1 = 942
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 196, point01 = 513, startTime1 = 498
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 366, point01 = 130090, startTime1 = 851
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 232, point01 = 9434, startTime1 = 618
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 403, point01 = 10058, startTime1 = 853
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(110485,301)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-110485,342)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(81066,277)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(-81066,357)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(209064,388)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(-209064,444)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:20[195], parcel request 148404 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:28[195], parcel request 211763 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(221426,189)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-92962,301)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-221426,578)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-220051,745)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(145362,754)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(122301,787)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-122301,841)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(148404,852)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-148404,905)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 118 -> mRequestID2Index.put(-145362,996)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(211763,38)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(-211763,89)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-92962,237)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(221426,347)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-221426,543)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(122301,685)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(145362,717)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-220051,726)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-122301,758)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(148404,769)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-148404,822)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 117 -> mRequestID2Index.put(-145362,913)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(198003,183)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(322431,204)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(211763,335)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-211763,386)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-198003,407)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(151426,440)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(303297,518)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-151426,564)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-303297,662)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 438 -> mRequestID2Index.put(-322431,1134)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3  -> mRequestID2Index.put(83957,168)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3  -> mRequestID2Index.put(-83957,252)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3  -> mRequestID2Index.put(81066,283)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3  -> mRequestID2Index.put(-81066,363)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3  -> mRequestID2Index.put(209064,394)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 3  -> mRequestID2Index.put(-209064,450)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(79030,176)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8 -> mRequestID2Index.put(179532,208)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8 -> mRequestID2Index.put(288075,241)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(-79030,285)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8 -> mRequestID2Index.put(137676,396)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8 -> mRequestID2Index.put(-179532,427)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8 -> mRequestID2Index.put(-137676,557)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8 -> mRequestID2Index.put(-288075,583)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:25[195], people request 18791 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 125  -> mRequestID2Index.put(18791,45)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 125  -> mRequestID2Index.put(-18791,165)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(18791,411)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8 -> mRequestID2Index.put(-179532,529)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8 -> mRequestID2Index.put(137676,563)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8  -> mRequestID2Index.put(-18791,719)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8 -> mRequestID2Index.put(-288075,770)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 8 -> mRequestID2Index.put(-137676,796)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 363, point01 = 5454, startTime1 = 867
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 252, point01 = 104183, startTime1 = 617
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 196, point01 = 513, startTime1 = 498
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 366, point01 = 130090, startTime1 = 851
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 232, point01 = 9434, startTime1 = 618
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 403, point01 = 10058, startTime1 = 853
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 6 -> mRequestID2Index.put(82512,260)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 6 -> mRequestID2Index.put(-82512,321)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 439  -> mRequestID2Index.put(331785,119)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 439  -> mRequestID2Index.put(-331785,238)
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:36[210], parcel request 227558 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:39[210], parcel request 280751 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:42[210], parcel request 259722 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(211763,38)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(-211763,89)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(227558,133)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(-227558,208)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(211763,38)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(280751,59)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(-211763,103)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(-280751,132)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(227558,167)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(-227558,242)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(211763,38)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(280751,59)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(-211763,103)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(-280751,132)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(227558,167)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(259722,195)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(-259722,261)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 180 -> mRequestID2Index.put(-227558,393)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(104351,98)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(227558,247)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-104351,281)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-227558,325)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(104351,98)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(280751,273)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-280751,336)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(227558,371)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-104351,405)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-227558,449)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(104351,98)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(280751,273)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(227558,344)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(259722,372)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-280751,406)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-259722,451)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-104351,537)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-227558,581)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:32[210], people request 225886 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:37[210], people request 11470 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:41[210], people request 108456 arrives
 SimulatorTimeUnit::simulateDataFromFile --> At 0:3:44[210], people request 13554 arrives
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 125  -> mRequestID2Index.put(225886,205)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 125  -> mRequestID2Index.put(-225886,309)
-SimulatorTimeUnit::admitItineraryTravelTime taxi = 179  -> mRequestID2Index.put(11470,224)
-SimulatorTimeUnit::admitItineraryTravelTime taxi =
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 6  -> mRequestID2Index.put(225886,404)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 6  -> mRequestID2Index.put(-225886,508)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 9  -> mRequestID2Index.put(11470,274)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 9  -> mRequestID2Index.put(-11470,375)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 10  -> mRequestID2Index.put(108456,196)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 10  -> mRequestID2Index.put(-108456,282)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 10  -> mRequestID2Index.put(13554,370)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 10  -> mRequestID2Index.put(-13554,497)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 363, point01 = 5454, startTime1 = 867
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 252, point01 = 104183, startTime1 = 617
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 196, point01 = 513, startTime1 = 498
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 366, point01 = 130090, startTime1 = 851
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(11470,436)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(-11470,537)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 9  -> mRequestID2Index.put(126279,234)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 9  -> mRequestID2Index.put(-126279,351)
+SimulatorTimeUnit::simulateDataFromFile --> At 0:3:52[225], parcel request 142931 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(104351,98)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(280751,273)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(142931,299)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-104351,338)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-142931,349)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(227558,379)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(259722,407)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-280751,441)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-259722,486)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 119 -> mRequestID2Index.put(-227558,618)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 363, point01 = 5454, startTime1 = 867
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 252, point01 = 104183, startTime1 = 617
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+SimulatorTimeUnit::simulateDataFromFile --> At 0:3:56[225], people request 92247 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 11  -> mRequestID2Index.put(92247,183)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 11  -> mRequestID2Index.put(-92247,233)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 363, point01 = 5454, startTime1 = 867
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 252, point01 = 104183, startTime1 = 617
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 196, point01 = 513, startTime1 = 498
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 366, point01 = 130090, startTime1 = 851
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 321, point01 = 2151, startTime1 = 828
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 232, point01 = 9434, startTime1 = 618
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 403, point01 = 10058, startTime1 = 853
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(92247,290)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 2  -> mRequestID2Index.put(-92247,340)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 11  -> mRequestID2Index.put(110485,176)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 11  -> mRequestID2Index.put(-110485,217)
+SimulatorTimeUnit::simulateDataFromFile --> At 0:4:2[240], parcel request 193810 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 0:4:9[240], parcel request 26640 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 0:4:11[240], parcel request 97001 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(193810,141)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-193810,262)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(26640,61)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(-26640,159)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(97001,133)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(193810,143)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-97001,183)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-193810,279)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+SimulatorTimeUnit::simulateDataFromFile --> At 0:4:8[240], people request 257113 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 0:4:10[240], people request 247765 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 11  -> mRequestID2Index.put(257113,262)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 11  -> mRequestID2Index.put(-257113,300)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 12  -> mRequestID2Index.put(247765,216)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 12  -> mRequestID2Index.put(-247765,391)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 363, point01 = 5454, startTime1 = 867
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 252, point01 = 104183, startTime1 = 617
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 196, point01 = 513, startTime1 = 498
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 366, point01 = 130090, startTime1 = 851
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(257113,419)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(-257113,457)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 11  -> mRequestID2Index.put(11470,220)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 11  -> mRequestID2Index.put(-11470,321)
+SimulatorTimeUnit::simulateDataFromFile --> At 0:4:28[255], parcel request 273179 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(97001,133)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(193810,143)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(273179,163)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-273179,201)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-97001,272)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-193810,368)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 363, point01 = 5454, startTime1 = 867
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 252, point01 = 104183, startTime1 = 617
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+SimulatorTimeUnit::simulateDataFromFile --> At 0:4:17[255], people request 222142 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 0:4:30[255], people request 87831 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 13  -> mRequestID2Index.put(222142,178)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 13  -> mRequestID2Index.put(-222142,231)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 13  -> mRequestID2Index.put(87831,287)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 13  -> mRequestID2Index.put(-87831,386)
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 267, point01 = 87663, startTime1 = 584
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 159, point01 = 8238, startTime1 = 340
+ItineraryOptimizer::getBestDistanceExchange, i1 = 3 -> update idx1 = 275, point01 = 128753, startTime1 = 621
+ItineraryOptimizer::getBestDistanceExchange, i1 = 1 -> update idx1 = 164, point01 = 11450, startTime1 = 362
+ItineraryOptimizer::getBestDistanceExchange, i1 = 6 -> update idx1 = 363, point01 = 5454, startTime1 = 867
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 252, point01 = 104183, startTime1 = 617
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 167, point01 = 4245, startTime1 = 412
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 196, point01 = 513, startTime1 = 498
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 366, point01 = 130090, startTime1 = 851
+ItineraryOptimizer::getBestDistanceExchange, i1 = 4 -> update idx1 = 321, point01 = 2151, startTime1 = 828
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 232, point01 = 9434, startTime1 = 618
+ItineraryOptimizer::getBestDistanceExchange, i1 = 2 -> update idx1 = 403, point01 = 10058, startTime1 = 853
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(87831,393)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 5  -> mRequestID2Index.put(-87831,492)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 13  -> mRequestID2Index.put(257113,264)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 13  -> mRequestID2Index.put(-257113,302)
+SimulatorTimeUnit::simulateDataFromFile --> At 0:4:32[270], parcel request 215434 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 0:4:34[270], parcel request 216872 arrives
+SimulatorTimeUnit::simulateDataFromFile --> At 0:4:40[270], parcel request 150626 arrives
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(215434,63)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(26640,76)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(-215434,153)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(-26640,180)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(215434,63)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(26640,76)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(-215434,153)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(-26640,180)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(216872,207)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 176 -> mRequestID2Index.put(-216872,356)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(97001,133)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(193810,143)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(273179,163)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(150626,169)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-273179,205)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-150626,276)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-97001,344)
+SimulatorTimeUnit::admitItineraryTravelTime taxi = 175 -> mRequestID2Index.put(-193810,440)
+ItineraryOptimizer::getBestDistanceExchang

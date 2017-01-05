@@ -18,7 +18,7 @@ public class Runner {
 	public Runner(){
 		frs = new FixedRateSampler();
 		sim = new SimulatorTimeUnit();
-		dir = "E:\\task2\\git_project\\SPT\\";
+		dir = "E:\\Project\\pbts\\git_project\\SPT\\";
 		String mapFileName = dir + "SanFrancisco_std\\SanfranciscoRoad-connected-contracted-5-refine-50.txt";
 		sim.loadMapFromTextFile(mapFileName);
 		
@@ -45,6 +45,8 @@ public class Runner {
 		String fileName = dir + "predictionInfo.txt";
 		try{
 			PrintWriter out= new PrintWriter(fileName);
+			
+			int avgPer = 0;
 			out.println("Period TotalRequest TotalPopularRequest Occurences Percent");
 			for(int period = 0;period < 96; period++){
 				
@@ -53,7 +55,7 @@ public class Runner {
 				popularRqId = getRequestInPeriod(period);
 				ArrayList<Integer> allRqIdAtPeriod = new ArrayList<Integer>();
 				
-				for(int i = 1; i <= 30; i++){
+				for(int i = 1; i <= 31; i++){
 					String rqFileName = dir + "SanFrancisco_std\\ins_day_" + i + "_minSpd_5_maxSpd_60.txt";
 					try {
 						Scanner in = new Scanner(new File(rqFileName));
@@ -92,8 +94,9 @@ public class Runner {
 					}
 				}
 				int occurences = percentageAppears(popularRqId, allRqIdAtPeriod);
-				out.println(period + " " + allRqIdAtPeriod.size() + " " + popularRqId.size() + " " + occurences + " " + occurences*100/popularRqId.size());
-				
+				int per = occurences*100/popularRqId.size();
+				out.println(period + " " + allRqIdAtPeriod.size() + " " + popularRqId.size() + " " + occurences + " " + per);
+				avgPer += per;
 				/*System.out.println("\n");
 				System.out.println("Popular Pickup locations at period " + period + ":");
 				for (int pickup_point : PopularRequestsId)
@@ -106,109 +109,215 @@ public class Runner {
 				System.out.println("Percentage of appearance at " + period + ": " + per + "%");
 				System.out.println("\n");*/
 			}
-			out.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-	
-	public void computeShortestDistance(int day){
-		String str;
-		int id;
-		int timePoint;
-		int pickupLocationID;
-		int deliveryLocationID;
-		double travelDis;
-		int period;
-		double shortestDis = 1000000;
-		int nearestPointId = -1;
-		int ppId;
-		double D;
-		ArrayList<Integer> popularRqId;
-		
-		ArrayList<ArrayList<Integer>> listRqPeriod = new ArrayList<ArrayList<Integer>>();
-		for(int i = 0; i < 96; i++){
-			listRqPeriod.add(getRequestInPeriod(i));
-		}
-		
-		String fileName = dir + "shortestDistanceDay-" + day + ".txt";
-		try{
-			PrintWriter out= new PrintWriter(fileName);
-			out.println("period rqPointId travelDistance popularPointId distance");
-			
-			String rqFileName = dir + "SanFrancisco_std\\ins_day_" + day + "_minSpd_5_maxSpd_60.txt";
-			try {
-				Scanner in = new Scanner(new File(rqFileName));
-				str = in.nextLine();
-				
-				while (true) {
-					id = in.nextInt();
-					// System.out.println("people id = " + id);
-					if (id == -1)
-						break;
-					timePoint = in.nextInt();
-					pickupLocationID = in.nextInt();
-					deliveryLocationID = in.nextInt();
-					travelDis = sim.estimateTravelingDistance(pickupLocationID, deliveryLocationID);
-					//double travelDis = sim.dijkstra.queryDistance(pickupLocationID, deliveryLocationID);
-					
-					period = timePoint / 900;
-					popularRqId = listRqPeriod.get(period);
-					shortestDis = 1000000;
-					nearestPointId = -1;
-					for(int i = 0; i < popularRqId.size(); i++){
-						ppId = popularRqId.get(i);
-						D = sim.estimateTravelingDistance(ppId, pickupLocationID);
-						//double D = sim.dijkstra.queryDistance(ppId, pickupLocationID);
-						if(shortestDis > D){
-							shortestDis = D;
-							nearestPointId = ppId;
-						}
-						//System.out.println(i);
-					}
-					out.println(period + " " + pickupLocationID + " " + travelDis + " " + nearestPointId + " " + shortestDis);
-					System.out.println("period: " + period + " , pickupId: " + pickupLocationID + " , travel distance: " + travelDis + " , nearest Point: " + nearestPointId + " , distance: " + shortestDis);
-					str = in.nextLine();
-				}
-				str = in.nextLine();
-				str = in.nextLine();
-				System.out.println("people request");
-				/*while (true) {
-					int id = in.nextInt();
-					// System.out.println("parcel request id = " + id);
-					if (id == -1)
-						break;
-					int timePoint = in.nextInt();
-					int pickupLocationID = in.nextInt();
-					int deliveryLocationID = in.nextInt();
-					double travelDis = sim.dijkstra.queryDistance(pickupLocationID, deliveryLocationID);
-					
-					int period = timePoint / 900;
-					ArrayList<Integer> popularRqId;
-					popularRqId = getRequestInPeriod(period);
-					double shortestDis = 1000000;
-					int nearestPointId = -1;
-					for(int i = 0; i < popularRqId.size(); i++){
-						int ppId = popularRqId.get(i);
-						double D = sim.dijkstra.queryDistance(ppId, pickupLocationID);
-						if(shortestDis > D){
-							shortestDis = D;
-							nearestPointId = ppId;
-						}
-					}
-					out.println(period + " " + pickupLocationID + " " + travelDis + " " + nearestPointId + " " + shortestDis);
-					str = in.nextLine();
-				}*/
-				in.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+			avgPer = avgPer / 96;
+			out.println("average of percentage: " + avgPer);
 			out.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
+	/****
+	 * Trong khung thoi gian t, new request co nam gan nhung diem trong du doan hay ko
+	 * Ket qua: ti le new request nam gan nhung diem du doan la 92%
+	 */
+	public void ShortestDistanceStatistics(){
+		String fileName = dir + "shortestDistanceStatistic.txt";
+		try{
+			PrintWriter out= new PrintWriter(fileName);
+			out.println("Day TotalReq nReqInPopularArea Percentage");
+			int perMonth = 0;
+			for(int i = 1; i <= 31; i++){
+				String rqFileName = dir + "SanFrancisco_std\\ins_day_" + i + "_minSpd_5_maxSpd_60.txt";
+				int sum = 0;
+				int nReq = 0;
+				try {
+					Scanner in = new Scanner(new File(rqFileName));
+					String str = in.nextLine();
+					// System.out.println("people request str = " + str);
+					while (true) {
+						int id = in.nextInt();
+						// System.out.println("people id = " + id);
+						if (id == -1)
+							break;
+						int timePoint = in.nextInt();
+						int peoplePickupLocId = in.nextInt();
+						sum++;
+						int period = timePoint/900;
+						ArrayList<Integer> ppIdInPeriod = new ArrayList<Integer>();
+						ppIdInPeriod = frs.getRequests(period);
+						double shortestDis = 1000000;
+						for(int k = 0; k < ppIdInPeriod.size(); k++){
+							double D = sim.estimateTravelingDistanceHaversine(peoplePickupLocId, ppIdInPeriod.get(k));
+							//Find the nearest points in popular points
+							if(shortestDis > D)
+								shortestDis = D;
+						}
+						if(shortestDis <= 5)
+							nReq++;
+						str = in.nextLine();
+					}
+					str = in.nextLine();
+					str = in.nextLine();
+					// System.out.println("parcel request str = " + str);
+					while (true) {
+						int id = in.nextInt();
+						// System.out.println("parcel request id = " + id);
+						if (id == -1)
+							break;
+						int timePoint = in.nextInt();
+						int parcelPickupLocId = in.nextInt();
+						sum++;
+						int period = timePoint/900;
+						ArrayList<Integer> ppIdInPeriod = new ArrayList<Integer>();
+						ppIdInPeriod = frs.getRequests(period);
+						double shortestDis = 1000000;
+						for(int k = 0; k < ppIdInPeriod.size(); k++){
+							double D = sim.estimateTravelingDistanceHaversine(parcelPickupLocId, ppIdInPeriod.get(k));
+							//Find the nearest points in popular points
+							if(shortestDis > D)
+								shortestDis = D;
+						}
+						if(shortestDis <= 5)
+							nReq++;
+						str = in.nextLine();
+					}
+					in.close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				System.out.println("Day: " + i);
+				if(sum != 0){
+					out.println(i + " " + sum + " " + nReq + " " + nReq*100/sum);
+					perMonth += nReq*100/sum;
+				}
+			}
+			out.println("Percentage of the popular: " + perMonth/31);
+			out.close();
+			System.out.println("Done!");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	/*********
+	 * Kiem tra tai nhung diem du doan co bao nhieu phan tram new request xuat hien.
+	 * @param args
+	 */
+	public void popularPointAcceptedInPeriod(){
+		String fileName = dir + "popularPointAcceptedStatistic-Day3.txt";
+		try{
+			PrintWriter out= new PrintWriter(fileName);
+			
+			int avgPer = 0;
+			out.println("Period TotalPp PpAccepted Percent");
+			for(int period = 0;period < 96; period++){
+				ArrayList<Integer> popularRqId;
+				popularRqId = getRequestInPeriod(period);
+				ArrayList<Integer> allRqIdAtPeriod = new ArrayList<Integer>();
+				int acceptPoint = 0;
+				for(int i = 3; i <= 3; i++){
+					String rqFileName = dir + "SanFrancisco_std\\ins_day_" + i + "_minSpd_5_maxSpd_60.txt";
+					try {
+						Scanner in = new Scanner(new File(rqFileName));
+						String str = in.nextLine();
+						// System.out.println("people request str = " + str);
+						while (true) {
+							int id = in.nextInt();
+							// System.out.println("people id = " + id);
+							if (id == -1)
+								break;
+							int timePoint = in.nextInt();
+							if(timePoint >= period*900 && timePoint < (period + 1)*900){
+								int parcelPickupLocId = in.nextInt();
+								allRqIdAtPeriod.add(parcelPickupLocId);
+							}
+							str = in.nextLine();
+						}
+						str = in.nextLine();
+						str = in.nextLine();
+						// System.out.println("parcel request str = " + str);
+						while (true) {
+							int id = in.nextInt();
+							// System.out.println("parcel request id = " + id);
+							if (id == -1)
+								break;
+							int timePoint = in.nextInt();
+							if(timePoint >= period*900 && timePoint < (period + 1)*900){
+								int peoplePickupLocId = in.nextInt();
+								allRqIdAtPeriod.add(peoplePickupLocId);
+							}
+							str = in.nextLine();
+						}
+						in.close();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+				
+				for(int k = 0; k < popularRqId.size(); k++){
+					for(int j = 0; j < allRqIdAtPeriod.size(); j++){
+						if(sim.estimateTravelingDistanceHaversine(popularRqId.get(k), allRqIdAtPeriod.get(j)) <= 5){
+							acceptPoint++;
+							break;
+						}
+					}
+				}
+				System.out.println("Period: " + period);
+				out.println(period + " " + popularRqId.size() + " " + acceptPoint + " " + acceptPoint*100 / popularRqId.size());
+				avgPer += acceptPoint*100 / popularRqId.size();
+			}
+			avgPer = avgPer / 96;
+			out.println("Average of percentage: " + avgPer);
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public void compareTwoListPopularPoint(){
+		String fileName = dir + "compareTwoListPp.txt";
+		try{
+			PrintWriter out= new PrintWriter(fileName);
+			out.println("Period FirstGet SecondGet Percentage");
+			for(int period = 0; period < 95; period++){
+				ArrayList<Integer> popularRqId_1;
+				popularRqId_1 = getRequestInPeriod(period);
+				ArrayList<Integer> popularRqId_2;
+				popularRqId_2 = getRequestInPeriod(period);
+				if(popularRqId_1.size() < popularRqId_2.size()){
+					ArrayList<Integer> popularRqId_temp = new ArrayList<Integer>();
+					for(int i = 0; i < popularRqId_2.size(); i++)
+						popularRqId_temp.add(popularRqId_2.get(i));
+					for(int i = 0; i < popularRqId_1.size(); i++){
+						for(int j = 0; j < popularRqId_2.size(); j++){
+							if(sim.estimateTravelingDistanceHaversine(popularRqId_1.get(i), popularRqId_2.get(j)) <= 5){
+								popularRqId_temp.remove(popularRqId_2.get(j));
+							}
+						}
+					}
+					out.println(popularRqId_1.size() + " " + popularRqId_2.size() + " " + popularRqId_temp.size()*100 / popularRqId_2.size());
+				}
+				else{
+					ArrayList<Integer> popularRqId_temp = new ArrayList<Integer>();
+					for(int i = 0; i < popularRqId_1.size(); i++)
+						popularRqId_temp.add(popularRqId_1.get(i));
+					for(int i = 0; i < popularRqId_2.size(); i++){
+						for(int j = 0; j < popularRqId_1.size(); j++){
+							if(sim.estimateTravelingDistanceHaversine(popularRqId_1.get(j), popularRqId_2.get(i)) <= 5){
+								popularRqId_temp.remove(popularRqId_1.get(j));
+							}
+						}
+					}
+					out.println(popularRqId_1.size() + " " + popularRqId_2.size() + " " + popularRqId_temp.size()*100 / popularRqId_1.size());
+				}
+			}
+			System.out.println("Done!");
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 	public static void main(String[] args) {
 		
 		String[] weekdays = {
@@ -221,8 +330,10 @@ public class Runner {
 		Runner run = new Runner();
 		//run.computeShortestDistance(30);
 		//run.computeSimilarity();
-		
-		int dayOfWeek = 2;
+		//run.ShortestDistanceStatistics();
+		//run.popularPointAcceptedInPeriod();
+		run.compareTwoListPopularPoint();
+		/*int dayOfWeek = 2;
 		int period = 0;
 		ArrayList<Integer> requests;
 		requests = frs.getRequests(period);
@@ -237,7 +348,7 @@ public class Runner {
 		System.out.println("Pickup locations at period " + period + " on " + weekdays[dayOfWeek] + ":");
 		for (int pickup_point : requests)
 			System.out.print(pickup_point + "\t");
-		System.out.println();
+		System.out.println();*/
 	}
 
 }

@@ -159,6 +159,7 @@ public class Simulator {
 	public RoadMap map;
 	public TimeHorizon T;
 	public FixedRateSampler frs;
+	public HashMap<Integer, ArrayList<Integer>> listPredictedPoints;
 
 	public int nbTaxis;// number of taxis
 	public int nbPeopleRequests;
@@ -819,6 +820,7 @@ public class Simulator {
 								timePoint = newTimePoint;
 								idxLocID = i;
 								d = newD;
+								System.out.println("==================Found nearest point====================");
 							}
 							break;
 						}
@@ -2194,27 +2196,39 @@ public class Simulator {
 	 * 		times		:		the number of times which the taxi goes around.
 	 */
 	public Integer computeAPopularPoint(int point, int timePoint, Vehicle taxi, int times){
-		int period = timePoint / 900;
+		int timePointNew = 0;
+		if(timePoint < 86400)//timepoint = 86400 => period = 0
+			timePointNew = timePoint;
+		int period = timePointNew / 900;
 		int nearestPointId = -1;
 		int ppId = -1;		
 		double shortestDis = 10000000;
-		//LatLng pointLL = map.mLatLng.get(point);
-		for(int t = 0; t < times; t++){
-			//get popular points in this period time.
-			ArrayList<Integer> popularRqIdInPeriod = new ArrayList<Integer>();
-			popularRqIdInPeriod = frs.getRequests(period);		
-			for(int i = 0; i < popularRqIdInPeriod.size(); i++){
-				ppId = popularRqIdInPeriod.get(i);
-				if(ppId != point){
-					double D = estimateTravelingDistanceHaversine(ppId, point);
-					//Find the nearest points in popular points
-					if(shortestDis > D){
-						shortestDis = D;
-						nearestPointId = ppId;
-					}
+
+		//get popular points in this period time.
+		ArrayList<Integer> popularRqIdInPeriod = listPredictedPoints.get(period);	
+		for(int i = 0; i < popularRqIdInPeriod.size(); i++){
+			ppId = popularRqIdInPeriod.get(i);
+			if(ppId != point){
+				double D = estimateTravelingDistanceHaversine(ppId, point);
+				//Find the nearest points in popular points
+				if(shortestDis > D){
+					shortestDis = D;
+					nearestPointId = ppId;
 				}
 			}
 		}
+		if(nearestPointId != -1){
+			ArrayList<Integer> popularRqIdInPeriod2 = listPredictedPoints.get(period);
+			for(int i = 0; i < popularRqIdInPeriod.size(); i++){
+				ppId = popularRqIdInPeriod.get(i);
+				double D = estimateTravelingDistanceHaversine(ppId, nearestPointId);
+				if(D < 5)
+					popularRqIdInPeriod2.remove(i);
+			}
+			//update list predicted points: remove popular area is used
+			listPredictedPoints.put(period, popularRqIdInPeriod2);
+		}
+		
 		return nearestPointId;
 	}
 	
@@ -2405,38 +2419,40 @@ public class Simulator {
 		
 		//add a popular point to itinerary
 		int popularPoint = computeAPopularPoint(curPos, late, taxi, times);
-		double d1 = estimateTravelingDistanceHaversine(curPos, ss.parkingLocationPoint);
-		double d2 = estimateTravelingDistanceHaversine(curPos, popularPoint);
-		double d3 = estimateTravelingDistanceHaversine(popularPoint, ss.parkingLocationPoint);
-		if((d2 + d3) <= (d1 * 1.5)){
-			Itinerary pI = dijkstra.queryShortestPath(curPos,
-					popularPoint);
-			int pt = getTravelTime(pI.getDistance(), maxSpeedms);
-			double pd = pI.getDistance();
-			int pv0 = pI.get(0);
-	
-			for (int j = 1; j < pI.size() - 1; j++) {
-				int v = pI.get(j);
-				retI.addPoint(v);
+		if(popularPoint != -1){
+			double d1 = estimateTravelingDistanceHaversine(curPos, ss.parkingLocationPoint);
+			double d2 = estimateTravelingDistanceHaversine(curPos, popularPoint);
+			double d3 = estimateTravelingDistanceHaversine(popularPoint, ss.parkingLocationPoint);
+			if((d2 + d3) <= (d1 * 1.5)){
+				Itinerary pI = dijkstra.queryShortestPath(curPos,
+						popularPoint);
+				int pt = getTravelTime(pI.getDistance(), maxSpeedms);
+				double pd = pI.getDistance();
+				int pv0 = pI.get(0);
+		
+				for (int j = 1; j < pI.size() - 1; j++) {
+					int v = pI.get(j);
+					retI.addPoint(v);
+					retI.addAction(VehicleAction.PASS);
+					retI.addRequestID(-1);
+					Arc a = map.getArc(pv0, v);
+					int dt = (int) (pt * a.w / pd);
+					td = td + dt;
+					pt = pt - dt;
+					pd = pd - a.w;
+					pv0 = v;
+					retI.setArrivalTime(retI.size() - 1, td);
+					retI.setDepartureTime(retI.size() - 1, td);
+				}
+				retI.addPoint(pI.get(pI.size() - 1));
+				retI.addRequestID(-1);;
 				retI.addAction(VehicleAction.PASS);
-				retI.addRequestID(-1);
-				Arc a = map.getArc(pv0, v);
-				int dt = (int) (pt * a.w / pd);
-				td = td + dt;
-				pt = pt - dt;
-				pd = pd - a.w;
-				pv0 = v;
+				td = td + pt;
 				retI.setArrivalTime(retI.size() - 1, td);
 				retI.setDepartureTime(retI.size() - 1, td);
+				curPos = popularPoint;
+				System.out.println("==========establishItineraryWithAPopularPoint==============");
 			}
-			retI.addPoint(pI.get(pI.size() - 1));
-			retI.addRequestID(-1);;
-			retI.addAction(VehicleAction.PASS);
-			td = td + pt;
-			retI.setArrivalTime(retI.size() - 1, td);
-			retI.setDepartureTime(retI.size() - 1, td);
-			curPos = popularPoint;
-			System.out.println("==========establishItineraryWithAPopularPoint==============");
 		}
 		
 		//find the nearest parking

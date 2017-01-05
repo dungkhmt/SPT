@@ -42,7 +42,7 @@ public class SimulatorTimeUnit extends Simulator {
 		double t0 = System.currentTimeMillis();
 		for(int k = 0; k < vehicles.size(); k++){
 			Vehicle taxi = vehicles.get(k);
-			TaxiTimePointIndex tpi = availableTaxi(taxi, pr);
+			TaxiTimePointIndex tpi = availableTaxiWithTimePriority(taxi, pr);//availableTaxi(taxi, pr);
 			if(tpi != null) return tpi;
 			if((System.currentTimeMillis()-t0)*0.001 > maxTime) break;
 		}
@@ -3019,6 +3019,13 @@ public class SimulatorTimeUnit extends Simulator {
 			ex.printStackTrace();
 		}
 	}
+	
+	public void getPredictionInfo(){
+		listPredictedPoints = new HashMap<Integer, ArrayList<Integer>>();
+		for(int period = 0; period < 96; period++){
+			listPredictedPoints.put(period, frs.getRequests(period));
+		}
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -3045,11 +3052,11 @@ public class SimulatorTimeUnit extends Simulator {
 			int plIdx = 0;
 			ArrayList<String> listPlanner = new ArrayList<String>();			
 			//listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
-			//listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
+			listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
 			//listPlanner.add("SequenceDecidedBasedOnAPopularPointPlanner");
-			listPlanner.add("GetManyTimesThenAddAPopularPointPlanner");
+			//listPlanner.add("GetManyTimesThenAddAPopularPointPlanner");
 			//listPlanner.add("GetManyTimesThenAddASequencePopularPointsPlanner");
 			
 			for(int pl = 0; pl < listPlanner.size(); pl++){
@@ -3105,7 +3112,7 @@ public class SimulatorTimeUnit extends Simulator {
 				SimulatorTimeUnit simulator = new SimulatorTimeUnit();
 				
 				simulator.loadMapFromTextFile(mapFileName);
-		
+				simulator.getPredictionInfo();
 				simulator.loadParameters(configFileName);
 				simulator.loadDepotParkings(depotParkingFileName);
 				simulator.initialize();
@@ -3144,7 +3151,7 @@ public class SimulatorTimeUnit extends Simulator {
 				simulator.setPlanner(selectedPlanner);
 				
 				simulator.initTimeHorizon();
-		
+				
 				simulator.simulateDataFromFile(requestFileName, 1, 2);
 				simulator.writeTaxiItineraries(itineraryFileName);
 		
