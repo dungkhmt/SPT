@@ -389,7 +389,7 @@ public class dynamicSARP {
 			int maxNbParcelsInserted, int maxNbStops){
 
 		double t0 = System.currentTimeMillis();
-		sim.loadRequests(requestFilename);
+		sim.loadRequestsSARP2014(requestFilename);
 
 		sim.pendingParcelRequests = new ArrayList<ParcelRequest>();
 

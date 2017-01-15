@@ -249,7 +249,7 @@ public class dynamicSARPplanner {
 								Utility.arr2String(remainRequestIDs) + ", taxi.remainRequestIDs  " + Utility.arr2String(taxi.remainRequestIDs));
 				*/
 				//sim.admitNewItinerary(taxi, tpi.timePoint, tpi.indexPoint, tpi.point, IS.I, IS.ss);
-				sim.admitNewItineraryWithoutStatus(ttpi.taxi, ttpi.tpi.timePoint, ttpi.tpi.indexPoint, ttpi.tpi.point, IS.I, IS.ss);
+				sim.admitNewItineraryWithoutStatusSARP2014(ttpi.taxi, ttpi.tpi.timePoint, ttpi.tpi.indexPoint, ttpi.tpi.point, IS.I, IS.ss);
 				sim.nbPeopleWaitBoarding++;
 				if(ttpi.taxi.ID == sim.debugTaxiID){
 					sim.log.println(name() + "::insertParcelRequest, AFTER admit itinerary, currentItinerary = " + ttpi.taxi.currentItinerary.toString());
@@ -291,6 +291,6 @@ public class dynamicSARPplanner {
 		double t1 = System.currentTimeMillis() - startDecideTime;
 		t1 = t1*0.001;
 		if(sim.maxDecideTimePeopleRequests < t1) sim.maxDecideTimePeopleRequests = t1;
-		IO.moveGreedyExchange(startDecideTime);
+		IO.moveGreedyExchangeSARP2014(startDecideTime);
 	}
 }

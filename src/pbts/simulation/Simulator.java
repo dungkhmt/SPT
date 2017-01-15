@@ -5289,6 +5289,118 @@ public TaxiTimePointIndex availableTaxiSARP2014(Vehicle taxi, PeopleRequest pr) 
 			parcelReq.add(t[i]);
 	}
 
+	public void loadRequestsSARP2014(String fn) {
+		System.out.println(name() + "::loadRequest, filename = " + fn);
+		try {
+			Scanner in = new Scanner(new File(fn));
+			allPeopleRequests = new ArrayList<PeopleRequest>();
+			allParcelRequests = new ArrayList<ParcelRequest>();
+			mPeopleRequest = new HashMap<Integer, PeopleRequest>();
+			mParcelRequest = new HashMap<Integer, ParcelRequest>();
+
+			String str = in.nextLine();
+			// System.out.println("people request str = " + str);
+			while (true) {
+				int id = in.nextInt();
+				// System.out.println("people id = " + id);
+				if (id == -1)
+					break;
+				int timePoint = in.nextInt();
+				int pickupLocationID = in.nextInt();
+				int deliveryLocationID = in.nextInt();
+				int earlyPickupTime = in.nextInt();
+				int latePickupTime = in.nextInt();
+				int earlyDeliveryTime = in.nextInt();
+				int lateDeliveryTime = in.nextInt();
+				double maxDistance = in.nextDouble();
+				int maxNbStops = in.nextInt();
+				maxNbStops = 12;
+
+				if (timePoint < 0)
+					continue;
+				if(timePoint < T.start) continue;
+				
+				// timePoint = earlyPickupTime;
+
+				PeopleRequest pr = new PeopleRequest(pickupLocationID,
+						deliveryLocationID);
+				pr.id = id;
+				pr.timePoint = timePoint;
+				pr.earlyPickupTime = earlyPickupTime;
+				pr.latePickupTime = latePickupTime;
+				pr.earlyDeliveryTime = earlyDeliveryTime;
+				pr.lateDeliveryTime = lateDeliveryTime;
+				pr.maxTravelDistance = maxDistance;
+				pr.maxNbStops = maxNbStops;
+				allPeopleRequests.add(pr);
+				mPeopleRequest.put(pr.id, pr);
+			}
+			str = in.nextLine();
+			str = in.nextLine();
+			// System.out.println("parcel request str = " + str);
+			while (true) {
+				int id = in.nextInt();
+				// System.out.println("parcel request id = " + id);
+				if (id == -1)
+					break;
+				int timePoint = in.nextInt();
+				int pickupLocationID = in.nextInt();
+				int deliveryLocationID = in.nextInt();
+				int earlyPickupTime = in.nextInt();
+				int latePickupTime = in.nextInt();
+				int earlyDeliveryTime = in.nextInt();
+				int lateDeliveryTime = in.nextInt();
+
+				if (timePoint < 0)
+					continue;
+				if(timePoint < T.start) continue;
+				
+				// timePoint = earlyPickupTime;
+
+				ParcelRequest pr = new ParcelRequest(pickupLocationID,
+						deliveryLocationID);
+				pr.id = id;
+				pr.timePoint = timePoint;
+				pr.earlyPickupTime = earlyPickupTime;
+				pr.latePickupTime = latePickupTime;
+				pr.earlyDeliveryTime = earlyDeliveryTime;
+				pr.lateDeliveryTime = lateDeliveryTime;
+
+				allParcelRequests.add(pr);
+				mParcelRequest.put(pr.id, pr);
+			}
+			in.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		preprocessTimeCallPeopleRequest(allPeopleRequests);
+		preprocessTimeCallParcelRequest(allParcelRequests);
+
+		double min_lat = 1000000;
+		double max_lat = -min_lat;
+		double min_lng = 1000000;
+		double max_lng = -min_lng;
+
+		for (int i = 0; i < allPeopleRequests.size(); i++) {
+			PeopleRequest r = allPeopleRequests.get(i);
+			LatLng ll = map.mLatLng.get(r.pickupLocationID);
+			min_lat = min_lat < ll.lat ? min_lat : ll.lat;
+			min_lng = min_lng < ll.lng ? min_lng : ll.lng;
+			max_lat = max_lat > ll.lat ? max_lat : ll.lat;
+			max_lng = max_lng > ll.lng ? max_lng : ll.lng;
+
+			ll = map.mLatLng.get(r.deliveryLocationID);
+			min_lat = min_lat < ll.lat ? min_lat : ll.lat;
+			min_lng = min_lng < ll.lng ? min_lng : ll.lng;
+			max_lat = max_lat > ll.lat ? max_lat : ll.lat;
+			max_lng = max_lng > ll.lng ? max_lng : ll.lng;
+		}
+		System.out.println("Simulator::loadRequests -> windows request = "
+				+ min_lat + "," + min_lng + "\t" + max_lat + "," + max_lng);
+		// System.exit(-1);
+	}
+	
 	public void loadRequests(String fn) {
 		System.out.println(name() + "::loadRequest, filename = " + fn);
 		try {

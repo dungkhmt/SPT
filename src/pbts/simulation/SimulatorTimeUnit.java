@@ -811,7 +811,7 @@ public class SimulatorTimeUnit extends Simulator {
 		
 	}
 
-	public void admitNewItineraryWithoutStatus(Vehicle taxi,
+	public void admitNewItineraryWithoutStatusSARP2014(Vehicle taxi,
 			int nextStartTimePoint, int fromIndex, int fromPoint,
 			ItineraryTravelTime I, ServiceSequence ss) {
 		
@@ -1027,6 +1027,223 @@ public class SimulatorTimeUnit extends Simulator {
 
 		taxi.establishCompletePickupDeliveryPoints();
 		updatePendingParcelReqsSARP2014(taxi);
+	}
+	
+	public void admitNewItineraryWithoutStatus(Vehicle taxi,
+			int nextStartTimePoint, int fromIndex, int fromPoint,
+			ItineraryTravelTime I, ServiceSequence ss) {
+		
+		int taxiID = debugTaxiID;// 47;
+		if (taxiID == taxi.ID) {
+			String Is = "null";
+			if (taxi.currentItinerary != null)
+				Is = taxi.currentItinerary.toString();
+			log.println(name() + "::admitNewItinerary, BEFORE admit taxi "
+					+ taxi.ID + " DEBUG " + "curPos = lastPoint = "
+					+ taxi.lastPoint + ", nextStartTimePoint = "
+					+ nextStartTimePoint + ", fromPoint = " + fromPoint
+					+ ", fromIndex = " + fromIndex + ", status = "
+					+ taxi.getStatusDescription(taxi.status) + ", T.current = "
+					+ T.currentTimePoint + ", currentItinerary = " + Is);
+			System.out.println(name() + "::admitNewItinerary, taxi " + taxi.ID
+					+ " DEBUG " + "curPos = lastPoint = " + taxi.lastPoint
+					+ ", nextStartTimePoint = " + nextStartTimePoint
+					+ ", fromPoint = " + fromPoint + ", fromIndex = "
+					+ fromIndex + ", status = "
+					+ taxi.getStatusDescription(taxi.status) + ", T.current = "
+					+ T.currentTimePoint);
+		}
+		// if (taxi.status == VehicleStatus.REST_AT_PARKING) {
+		// if(taxi.currentItinerary == null){
+		// System.out.println("currentItinerary NULL");
+		// }
+		if (taxi.currentItinerary.size() == 0) {// rest at parking
+			if (taxi.ID == taxiID) {
+				// System.out.println("SimulatorBookedRequest::insertParcelRequest, taxi 161 REST AT PARKING, curPos = lastPoint = "
+				// + curPos);
+				// log.println("SimulatorBookedRequest::insertParcelRequest, taxi "
+				// + taxi.ID + " REST AT PARKING, " +
+				// "curPos = lastPoint = " + taxi.lastPoint +
+				// ", nextStartTimePoint = " + nextStartTimePoint +
+				// ", fromPoint = " + fromPoint + ", fromIndex = " + fromIndex);
+				// System.exit(-1);
+			}
+			taxi.mStatus.clear();
+			taxi.mStatus.put(0, VehicleStatus.GOING_TO_PICKUP_PARCEL);
+			taxi.status = VehicleStatus.GOING_TO_PICKUP_PARCEL;
+			// int[] path = new int[1];
+			ArrayList<Integer> path = new ArrayList<Integer>();
+			ArrayList<Integer> requestID = new ArrayList<Integer>();
+			ArrayList<VehicleAction> actions = new ArrayList<VehicleAction>();
+			// path[0] = fromPoint;
+			path.add(fromPoint);
+			requestID.add(-1);
+			actions.add(VehicleAction.PASS);
+			// taxi.currentItinerary = new ItineraryTravelTime(path, requestID,
+			// actions);
+			taxi.currentItinerary.path = path;
+			taxi.currentItinerary.requestID = requestID;
+			taxi.currentItinerary.actions = actions;
+			taxi.currentItinerary.setDepartureTime(
+					taxi.currentItinerary.size() - 1, nextStartTimePoint);
+			taxi.lastIndexPoint = 0;
+
+			taxi.addItinerary(taxi.currentItinerary);
+
+			if (taxi.ID == debugTaxiID)
+				log.println(name() + "::admitNewItinerary, taxi " + taxi.ID
+						+ " DEBUG --> REST AT PARKING "
+						+ "curPos = lastPoint = " + taxi.lastPoint
+						+ ", nextStartTimePoint = " + nextStartTimePoint
+						+ ", fromPoint = " + fromPoint + ", fromIndex = "
+						+ fromIndex + ", status = "
+						+ taxi.getStatusDescription(taxi.status)
+						+ ", T.current = " + T.currentTimePoint
+						+ ", new currentItinerary, sz = 1, "
+						+ ", departureTime at point 0 = " + fromPoint + " = "
+						+ nextStartTimePoint);
+		}
+
+		pbts.entities.Parking P = taxi.getFinalParking();
+		if (P != null) {
+			P.load--;
+			P.nTaxisDeparture++;
+		}
+
+		/*
+		 * If fromIndex is the last index of current itinerary and that last
+		 * index is a parking, then departure time is preassigned = -1 -> set
+		 * new departure time by nextStartTimePoint
+		 */
+		if (taxi.currentItinerary.getDepartureTime(fromIndex) < 0) {
+			taxi.currentItinerary.setDepartureTime(fromIndex,
+					nextStartTimePoint);
+		}
+
+		// store first request point from fromIndex
+		int firstReqID = taxi.findFirstRequestID(fromIndex);
+		
+		taxi.cancelSubItinerary(fromIndex + 1);
+
+		ItineraryTravelTime CI = taxi.currentItinerary;
+		for (int i = 0; i < I.size(); i++) {
+			CI.addPoint(I.get(i));
+			CI.addAction(I.getAction(i));
+			CI.addRequestID(I.getRequestID(i));
+			if (i < I.size() - 1)
+				if (I.getArrivalTime(i) > I.getDepartureTime(i)) { //[SonNV] don't understand: arrival time i > departure time i (i+1)?
+					System.out.println(name()
+							+ "::admitItinerary EXCEPTION I.arrTime(" + i
+							+ ") = " + I.getArrivalTime(i) + " > I.depTime("
+							+ i + ") = " + I.getDepartureTime(i) + "	CI = "
+							+ CI.toString() + ", CI.sz = " + CI.size() + "\n"
+							+ " I(0," + i + ") = " + I.toString(0, i));
+
+					System.out.println(name() + "::admitItinerary taxi "
+							+ taxi.ID + ", I.arrTime(" + i + ") = "
+							+ I.getArrivalTime(i) + " > I.deparTime(" + i
+							+ ") = " + I.getDepartureTime(i));
+
+					log.println(name() + "::admitItinerary EXCEPTION CI = "
+							+ CI.toString() + ", CI.sz = " + CI.size() + "\n"
+							+ " I(0," + i + ") = " + I.toString(0, i));
+
+					log.println(name() + "::admitItinerary taxi " + taxi.ID
+							+ ", I.arrTime(" + i + ") = " + I.getArrivalTime(i)
+							+ " > I.deparTime(" + i + ") = "
+							+ I.getDepartureTime(i));
+					log.close();
+					System.exit(-1);
+				}
+			if (CI.getDepartureTime(CI.size() - 2) > I.getArrivalTime(i)) {
+				System.out.println(name() + "::admitItinerary EXCEPTION CI = "
+						+ CI.toString() + ", CI.sz = " + CI.size() + "\n"
+						+ " I(0," + i + ") = " + I.toString(0, i));
+
+				int sz = CI.size() - 2;
+				System.out.println(name() + "::admitItinerary taxi " + taxi.ID
+						+ ", CI.departTime(" + sz + ") = "
+						+ CI.getDepartureTime(CI.size() - 2) + " > I.arrTime("
+						+ i + ") = " + I.getArrivalTime(i));
+
+				log.println(name() + "::admitItinerary EXCEPTION CI = "
+						+ CI.toString() + ", CI.sz = " + CI.size() + "\n"
+						+ " I(0," + i + ") = " + I.toString(0, i));
+
+				log.println(name() + "::admitItinerary taxi " + taxi.ID
+						+ ", CI.departTime(" + sz + ") = "
+						+ CI.getDepartureTime(CI.size() - 2) + " > I.arrTime("
+						+ i + ") = " + I.getArrivalTime(i));
+
+				log.close();
+				System.exit(-1);
+			}
+			CI.setArrivalTime(CI.size() - 1, I.getArrivalTime(i));
+			CI.setDepartureTime(CI.size() - 1, I.getDepartureTime(i));
+			if (I.getAction(i) == VehicleAction.PICKUP_PARCEL){
+				taxi.mStatus.put(CI.size() - 1, VehicleStatus.PICKUP_PARCEL);
+				int idx = CI.size()-1;
+				int rid = CI.getRequestID(idx);
+				taxi.mRequestID2Index.put(rid,idx);
+				log.println(name() + "::admitItineraryTravelTime taxi = " + taxi.ID + " -> mRequestID2Index.put(" + rid + "," + idx + ")");
+			}else if (I.getAction(i) == VehicleAction.DELIVERY_PARCEL){
+				taxi.mStatus.put(CI.size() - 1, VehicleStatus.DELIVERY_PARCEL);
+				int idx = CI.size()-1;
+				int rid = -CI.getRequestID(idx);
+				taxi.mRequestID2Index.put(rid,idx);
+				log.println(name() + "::admitItineraryTravelTime taxi = " + taxi.ID + " -> mRequestID2Index.put(" + rid + "," + idx + ")");
+			}else if (I.getAction(i) == VehicleAction.PICKUP_PEOPLE){
+				taxi.mStatus.put(CI.size() - 1, VehicleStatus.PICKUP_PEOPLE);
+				int idx = CI.size()-1;
+				int rid = CI.getRequestID(idx);
+				taxi.mRequestID2Index.put(rid,idx);
+				log.println(name() + "::admitItineraryTravelTime taxi = " + taxi.ID + "  -> mRequestID2Index.put(" + rid + "," + idx + ")");
+			}else if (I.getAction(i) == VehicleAction.DELIVERY_PEOPLE){
+				taxi.mStatus.put(CI.size() - 1, VehicleStatus.DELIVERY_PEOPLE);
+				int idx = CI.size()-1;
+				int rid = -CI.getRequestID(idx);
+				taxi.mRequestID2Index.put(rid,idx);
+				log.println(name() + "::admitItineraryTravelTime taxi = " + taxi.ID + "  -> mRequestID2Index.put(" + rid + "," + idx + ")");
+			}else if (I.getAction(i) == VehicleAction.STOP){
+				taxi.mStatus.put(CI.size() - 1, VehicleStatus.REST_AT_PARKING);
+			}
+		}
+		
+		ArrayList<Integer> L = new ArrayList<Integer>();
+		for(int i= 0; i < taxi.remainRequestIDs.size(); i++){
+			int rid = taxi.remainRequestIDs.get(i);
+			if(rid == firstReqID) break;
+			L.add(rid);
+		}
+		for (int i = 0; i < ss.rids.length; i++)
+			L.add(ss.rids[i]);
+		
+		/*
+		HashSet<Integer> S = new HashSet<Integer>();
+		for (int i = 0; i < ss.rids.length; i++)
+			S.add(ss.rids[i]);
+
+		ArrayList<Integer> L = new ArrayList<Integer>();
+
+		for (int i = 0; i < taxi.remainRequestIDs.size(); i++) {
+			int rid = taxi.remainRequestIDs.get(i);
+			if (!S.contains(rid))
+				L.add(rid);
+		}
+		// taxi.remainRequestIDs = new ArrayList<Integer>();
+		for (int i = 0; i < ss.rids.length; i++)
+			L.add(ss.rids[i]);
+		
+		*/
+		taxi.remainRequestIDs = L;
+		taxi.remainDistance = ss.distance;
+
+		P = taxi.getFinalParking();
+		if (P != null) {
+			P.load++;
+		}
+
+		taxi.establishCompletePickupDeliveryPoints();
 	}
 
 	public boolean checkCapacity(int parcelsOnBoard, int[] rids, int Q) {
