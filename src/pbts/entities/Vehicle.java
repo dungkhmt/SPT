@@ -1,6 +1,9 @@
 package pbts.entities;
 
 import java.util.*;
+
+import SARP2014.Stop;
+
 import java.io.*;
 
 import pbts.enums.ErrorType;
@@ -27,7 +30,11 @@ public class Vehicle {
 
 	public ArrayList<ItineraryTravelTime> LI;// list of itineraries during the
 												// working session
-
+	
+	public ArrayList<Stop> stopSequence;//use to SARP2014
+	public ArrayList<Integer> pendingParcelReqs;//use to SARP2014
+	public int nComeBackDepot;
+	
 	public ItineraryTravelTime currentItinerary;// the pre-computed itinerary of
 												// the vehicle,
 	/*
@@ -105,6 +112,9 @@ public class Vehicle {
 		nbRequestsServed = 0;
 		mRequestID2Index = new HashMap<Integer, Integer>();
 		indicesCompleteServiceSequence = new ArrayList<Integer>();	
+		nComeBackDepot = 0;
+		stopSequence = new ArrayList<Stop>();
+		pendingParcelReqs = new ArrayList<Integer>();
 	}
 
 	public String nextItinerary2String() {
@@ -206,7 +216,7 @@ public class Vehicle {
 			s = "TRAVEL_WITHOUT_LOAD";
 		else if (status == VehicleStatus.GOING_TO_DELIVERY_PARCEL)
 			s = "GOING_TO_DELIVERY_PARCEL";
-		else if (status == VehicleStatus.GOING_TO_DELIVERY_PEOPEL)
+		else if (status == VehicleStatus.GOING_TO_DELIVERY_PEOPLE)
 			s = "GOING_TO_DELIVERY_PEOPEL";
 		else if (status == VehicleStatus.GOING_TO_PICKUP_PARCEL)
 			s = "GOING_TO_PICKUP_PARCEL";
@@ -227,7 +237,7 @@ public class Vehicle {
 			s = "TRAVEL_WITHOUT_LOAD";
 		else if (status == VehicleStatus.GOING_TO_DELIVERY_PARCEL)
 			s = "GOING_TO_DELIVERY_PARCEL";
-		else if (status == VehicleStatus.GOING_TO_DELIVERY_PEOPEL)
+		else if (status == VehicleStatus.GOING_TO_DELIVERY_PEOPLE)
 			s = "GOING_TO_DELIVERY_PEOPEL";
 		else if (status == VehicleStatus.GOING_TO_PICKUP_PARCEL)
 			s = "GOING_TO_PICKUP_PARCEL";
@@ -896,7 +906,7 @@ public class Vehicle {
 			else if (a == VehicleAction.PICKUP_PEOPLE)
 				status = VehicleStatus.GOING_TO_PICKUP_PEOPLE;
 			else if (a == VehicleAction.DELIVERY_PEOPLE)
-				status = VehicleStatus.GOING_TO_DELIVERY_PEOPEL;
+				status = VehicleStatus.GOING_TO_DELIVERY_PEOPLE;
 			else if (a == VehicleAction.FINISH_WORK)
 				status = VehicleStatus.GO_BACK_DEPOT_FINISH_WORK;
 		}

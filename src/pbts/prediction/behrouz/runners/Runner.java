@@ -122,7 +122,7 @@ public class Runner {
 	 * Ket qua: ti le new request nam gan nhung diem du doan la 92%
 	 */
 	public void ShortestDistanceStatistics(){
-		String fileName = dir + "shortestDistanceStatistic.txt";
+		String fileName = dir + "shortestDistanceStatistic-1km.txt";
 		try{
 			PrintWriter out= new PrintWriter(fileName);
 			out.println("Day TotalReq nReqInPopularArea Percentage");
@@ -153,7 +153,7 @@ public class Runner {
 							if(shortestDis > D)
 								shortestDis = D;
 						}
-						if(shortestDis <= 5)
+						if(shortestDis <= 1)
 							nReq++;
 						str = in.nextLine();
 					}
@@ -178,7 +178,7 @@ public class Runner {
 							if(shortestDis > D)
 								shortestDis = D;
 						}
-						if(shortestDis <= 5)
+						if(shortestDis <= 1)
 							nReq++;
 						str = in.nextLine();
 					}
@@ -205,7 +205,7 @@ public class Runner {
 	 * @param args
 	 */
 	public void popularPointAcceptedInPeriod(){
-		String fileName = dir + "popularPointAcceptedStatistic-Day3.txt";
+		String fileName = dir + "popularPointAcceptedStatistic-Day3-1km.txt";
 		try{
 			PrintWriter out= new PrintWriter(fileName);
 			
@@ -257,7 +257,7 @@ public class Runner {
 				
 				for(int k = 0; k < popularRqId.size(); k++){
 					for(int j = 0; j < allRqIdAtPeriod.size(); j++){
-						if(sim.estimateTravelingDistanceHaversine(popularRqId.get(k), allRqIdAtPeriod.get(j)) <= 5){
+						if(sim.estimateTravelingDistanceHaversine(popularRqId.get(k), allRqIdAtPeriod.get(j)) <= 1){
 							acceptPoint++;
 							break;
 						}
@@ -276,7 +276,7 @@ public class Runner {
 	}
 	
 	public void compareTwoListPopularPoint(){
-		String fileName = dir + "compareTwoListPp.txt";
+		String fileName = dir + "compareTwoListPp-1km.txt";
 		try{
 			PrintWriter out= new PrintWriter(fileName);
 			out.println("Period FirstGet SecondGet Percentage");
@@ -291,7 +291,7 @@ public class Runner {
 						popularRqId_temp.add(popularRqId_2.get(i));
 					for(int i = 0; i < popularRqId_1.size(); i++){
 						for(int j = 0; j < popularRqId_2.size(); j++){
-							if(sim.estimateTravelingDistanceHaversine(popularRqId_1.get(i), popularRqId_2.get(j)) <= 5){
+							if(sim.estimateTravelingDistanceHaversine(popularRqId_1.get(i), popularRqId_2.get(j)) <= 1){
 								popularRqId_temp.remove(popularRqId_2.get(j));
 							}
 						}
@@ -304,7 +304,7 @@ public class Runner {
 						popularRqId_temp.add(popularRqId_1.get(i));
 					for(int i = 0; i < popularRqId_2.size(); i++){
 						for(int j = 0; j < popularRqId_1.size(); j++){
-							if(sim.estimateTravelingDistanceHaversine(popularRqId_1.get(j), popularRqId_2.get(i)) <= 5){
+							if(sim.estimateTravelingDistanceHaversine(popularRqId_1.get(j), popularRqId_2.get(i)) <= 1){
 								popularRqId_temp.remove(popularRqId_1.get(j));
 							}
 						}
@@ -330,8 +330,8 @@ public class Runner {
 		Runner run = new Runner();
 		//run.computeShortestDistance(30);
 		//run.computeSimilarity();
-		//run.ShortestDistanceStatistics();
-		//run.popularPointAcceptedInPeriod();
+		run.ShortestDistanceStatistics();
+		run.popularPointAcceptedInPeriod();
 		run.compareTwoListPopularPoint();
 		/*int dayOfWeek = 2;
 		int period = 0;

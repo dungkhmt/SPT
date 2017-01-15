@@ -9,6 +9,8 @@ public class Parking {
 	public int capacity;
 	public int load;
 	public int lastUpdateTimePoint;
+	public HashMap<Integer, Integer> nPpNearInPeriod;
+	public int nTaxisDeparture;
 	
 	public ArrayList<TaxiArrivalDepartureTime> taxisParking;
 	
@@ -16,6 +18,8 @@ public class Parking {
 		this.locationID = loc;
 		this.capacity = cap;
 		this.load = 0;
+		this.nPpNearInPeriod = new  HashMap<Integer, Integer>();
+		this.nTaxisDeparture = 0;
 	}
 	
 	public void admitTaxiParking(int taxiID, int arrivalTimePoint, int departureTimePoint){

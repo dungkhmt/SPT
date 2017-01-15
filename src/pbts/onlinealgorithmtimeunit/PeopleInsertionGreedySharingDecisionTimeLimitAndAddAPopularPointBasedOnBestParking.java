@@ -18,19 +18,19 @@ import pbts.simulation.ServiceSequence;
 import pbts.simulation.SimulatorTimeUnit;
 import pbts.simulation.Utility;
 
-public class PeopleInsertionGreedySharingDecisionTimeLimitGetManyTimesAndAddAPopularPoint implements OnlinePeopleInsertion {
+public class PeopleInsertionGreedySharingDecisionTimeLimitAndAddAPopularPointBasedOnBestParking implements OnlinePeopleInsertion {
 
 	public SimulatorTimeUnit sim;
 	public PrintWriter log;
 	public SequenceOptimizer seqOptimizer = null;
 	
-	public PeopleInsertionGreedySharingDecisionTimeLimitGetManyTimesAndAddAPopularPoint(SimulatorTimeUnit sim){
+	public PeopleInsertionGreedySharingDecisionTimeLimitAndAddAPopularPointBasedOnBestParking(SimulatorTimeUnit sim){
 		this.sim = sim;
 		this.log = sim.log;
 		seqOptimizer = new SequenceOptimizer(sim, sim.maxPendingStops + 10);
 	}
 	public String name(){
-		return "PeopleInsertionGreedySharingDecisionTimeLimitGetManyTimesAndAddAPopularPoint";
+		return "PeopleInsertionGreedySharingDecisionTimeLimitAndAddAPopularPointBasedOnBestParking";
 	}
 	
 	public ServiceSequence computePeopleInsertionSequence(Vehicle taxi,
@@ -183,7 +183,7 @@ public class PeopleInsertionGreedySharingDecisionTimeLimitGetManyTimesAndAddAPop
 	
 	public void insertPeopleRequest(PeopleRequest pr, double maxTime){
 		double t0 = System.currentTimeMillis();
-		TaxiTimePointIndex ttpi = sim.getNearestAvailableTaxiForPeople(pr, maxTime);
+		TaxiTimePointIndex ttpi = sim.getFirstAvailableTaxiForPeople(pr, maxTime);
 		double t= System.currentTimeMillis() - t0;
 		t = t *0.001;
 		if(t > sim.maxTimeCollectAvailableTaxisPeopleInsertion) sim.maxTimeCollectAvailableTaxisPeopleInsertion = t;

@@ -83,6 +83,34 @@ public class SimulatorTimeUnit extends Simulator {
 		return sel_tpi;
 	}
 	
+	public TaxiTimePointIndex getNearestAvailableTaxiForPeopleSARP2014(PeopleRequest pr, double maxTime){
+		double t0 = System.currentTimeMillis();
+		TaxiTimePointIndex sel_tpi = null;
+		double minDis = 1000000000;
+		for(int k = 0; k < vehicles.size(); k++){
+			Vehicle taxi = vehicles.get(k);
+			if (taxi.status == VehicleStatus.STOP_WORK)
+				continue;
+			if (taxi.totalTravelDistance > maxTravelDistance)
+				continue;
+			if (taxi.remainRequestIDs.size()+2 > maxPendingStops)// consider also pickup and delivery points of pr
+				continue;
+			TaxiTimePointIndex tpi = availableTaxiSARP2014(taxi, pr);
+			if(tpi != null){
+				if(tpi.estimation < minDis){
+					sel_tpi = tpi;
+					minDis = sel_tpi.estimation;
+				}
+			}
+			if((System.currentTimeMillis()-t0)*0.001 > maxTime) break;
+		}
+		
+		double t = System.currentTimeMillis() - t0;
+		t = t * 0.001;
+		if(t > maxTimeFindTaxiParcelInsertion) maxTimeFindTaxiParcelInsertion = t;
+		return sel_tpi;
+	}
+	
 	public TaxiTimePointIndex availableTaxiForPeople(Vehicle taxi, PeopleRequest pr) {
 		// find delivery people location
 		int locID = -1;
@@ -861,6 +889,7 @@ public class SimulatorTimeUnit extends Simulator {
 		pbts.entities.Parking P = taxi.getFinalParking();
 		if (P != null) {
 			P.load--;
+			P.nTaxisDeparture++;
 		}
 
 		/*
@@ -997,6 +1026,7 @@ public class SimulatorTimeUnit extends Simulator {
 		}
 
 		taxi.establishCompletePickupDeliveryPoints();
+		updatePendingParcelReqsSARP2014(taxi);
 	}
 
 	public boolean checkCapacity(int parcelsOnBoard, int[] rids, int Q) {
@@ -3026,6 +3056,23 @@ public class SimulatorTimeUnit extends Simulator {
 			listPredictedPoints.put(period, frs.getRequests(period));
 		}
 	}
+	
+	//calculate the number of popular points near parking p at all periods.
+	public void initilizeParkingScore(){
+		for(int i = 0; i < lstParkings.size(); i++){
+			Parking p = lstParkings.get(i);
+			for(int period = 0; period < 96; period++){
+				int nPp = 0;//the number of popular points
+				ArrayList<Integer> PpList = listPredictedPoints.get(period);
+				for(int j = 0; j < PpList.size(); j++){
+					if(estimateTravelingDistanceHaversine(PpList.get(j), p.locationID) < 5)
+						nPp++;
+				}
+				p.nPpNearInPeriod.put(period, nPp);
+			}
+			lstParkings.set(i, p);
+		}
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -3038,21 +3085,15 @@ public class SimulatorTimeUnit extends Simulator {
 		int maxTimeReceiveRequest = 86400;
 		int startSimulationTime = 0;
 		int decisionTime = 15;
-		try{
-			PrintWriter out= new PrintWriter("summaryFile.txt");
-			out.println("Day 1_GreedyEx 2_GreedyExAddPp 3_GreedyNoEx 4_GreedyNoExAddPp 5_SsAddAPp 6_GetManyTimesAddAPp 7_GetManyTimeAddASsPp BestPlanner");
-			out.close();
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
+		
 		for(int day = 1; day <= 31; day++){
 			String requestFileName = data_dir + "SanFrancisco_std\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt";
-			String lineOut = "" + day;
 			double maxBenefits = 0;
 			int plIdx = 0;
 			ArrayList<String> listPlanner = new ArrayList<String>();			
-			//listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
-			listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
+			listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
+			//listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
+			listPlanner.add("GreedyExSharingDecisionTimeLimitAndBestParkingPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
 			//listPlanner.add("SequenceDecidedBasedOnAPopularPointPlanner");
@@ -3112,12 +3153,13 @@ public class SimulatorTimeUnit extends Simulator {
 				SimulatorTimeUnit simulator = new SimulatorTimeUnit();
 				
 				simulator.loadMapFromTextFile(mapFileName);
-				simulator.getPredictionInfo();
 				simulator.loadParameters(configFileName);
 				simulator.loadDepotParkings(depotParkingFileName);
 				simulator.initialize();
 				simulator.statFilename = progressiveStatisticFileName;
 				simulator.resetLog();
+				simulator.getPredictionInfo();
+				simulator.initilizeParkingScore();
 				
 				OnlinePlanner[] planners = new OnlinePlanner[] { 	//new GreedyExchangeSharingPlanner(simulator), 
 																	//new GreedyExchangeSharingPlanner(simulator),
@@ -3126,6 +3168,7 @@ public class SimulatorTimeUnit extends Simulator {
 																	//new NaiveSequentialPlanner(simulator),
 																	new GreedyExchangeSharingDecisionTimeLimitPlanner(simulator),
 																	new GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
+																	new GreedyExSharingDecisionTimeLimitAndBestParkingPlanner(simulator),
 																	//new GreedySharingNoExchangeDecisionTimeLimitPlanner(simulator),
 																	//new GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
 																	//new NaiveSequentialDecisionTimeLimitPlanner(simulator),
@@ -3165,17 +3208,7 @@ public class SimulatorTimeUnit extends Simulator {
 					maxBenefits = AT.benefits;
 					plIdx = pl+1;
 				}
-				lineOut += " " + AT.benefits;
 				simulator.finalize();
-			}
-			lineOut += " " + plIdx;
-			try{
-				FileOutputStream fos= new FileOutputStream("summaryFile.txt",true);
-				PrintWriter out= new PrintWriter(fos);
-				out.println(lineOut);
-				out.close();
-			}catch(Exception ex){
-				ex.printStackTrace();
 			}
 		}
 		

@@ -8,6 +8,7 @@ import pbts.entities.ErrorMSG;
 import pbts.entities.ItineraryTravelTime;
 import pbts.entities.LatLng;
 import pbts.entities.ParcelRequest;
+import pbts.entities.Parking;
 import pbts.entities.PeopleRequest;
 import pbts.entities.TaxiTimePointIndex;
 import pbts.entities.TimePointIndex;
@@ -18,19 +19,19 @@ import pbts.simulation.ServiceSequence;
 import pbts.simulation.SimulatorTimeUnit;
 import pbts.simulation.Utility;
 
-public class PeopleInsertionGreedySharingDecisionTimeLimitGetManyTimesAndAddAPopularPoint implements OnlinePeopleInsertion {
+public class PeopleInsertionGreedySharingDecisionTimeLimitAndComeBackBestParking implements OnlinePeopleInsertion {
 
 	public SimulatorTimeUnit sim;
 	public PrintWriter log;
 	public SequenceOptimizer seqOptimizer = null;
 	
-	public PeopleInsertionGreedySharingDecisionTimeLimitGetManyTimesAndAddAPopularPoint(SimulatorTimeUnit sim){
+	public PeopleInsertionGreedySharingDecisionTimeLimitAndComeBackBestParking(SimulatorTimeUnit sim){
 		this.sim = sim;
 		this.log = sim.log;
 		seqOptimizer = new SequenceOptimizer(sim, sim.maxPendingStops + 10);
 	}
 	public String name(){
-		return "PeopleInsertionGreedySharingDecisionTimeLimitGetManyTimesAndAddAPopularPoint";
+		return "PeopleInsertionGreedySharingDecisionTimeLimitAndComeBackBestParking";
 	}
 	
 	public ServiceSequence computePeopleInsertionSequence(Vehicle taxi,
@@ -54,7 +55,7 @@ public class PeopleInsertionGreedySharingDecisionTimeLimitGetManyTimesAndAddAPop
 					", keptReq = " + Utility.arr2String(keptReq) + ", remainrequestIDs = "
 				+ Utility.arr2String(remainRequestIDs) + ", taxi.requestStatus = " + taxi.requestStatus());		
 		}
-		ArrayList<Integer> parkings = sim.collectAvailableParkings(taxi);
+		//ArrayList<Integer> parkings = sim.collectAvailableParkings(taxi);
 		ServiceSequence ss = null;
 		
 		ArrayList<Integer> L = new ArrayList<Integer>();
@@ -98,30 +99,77 @@ public class PeopleInsertionGreedySharingDecisionTimeLimitGetManyTimesAndAddAPop
 		}
 		int sel_pk = -1;
 		double minD = 100000000;
+		double rate = 0;
 		int endReq = sel_nod[sel_nod.length-1];
 		//System.out.println(name() + "::computePeopleInsertionSequence, endReq = " + endReq);
 		int endLocID = -1;
+		int lastTime = -1;
 		PeopleRequest peoR = sim.mPeopleRequest.get(Math.abs(endReq));
 		if(peoR != null){
-			if(endReq < 0) endLocID = peoR.deliveryLocationID; else endLocID = peoR.pickupLocationID;
+			if(endReq < 0){
+				endLocID = peoR.deliveryLocationID;
+				lastTime = peoR.lateDeliveryTime;
+			}
+			else{
+				endLocID = peoR.pickupLocationID;
+				lastTime = peoR.latePickupTime;
+			}
 		}else{
 			ParcelRequest parR = sim.mParcelRequest.get(Math.abs(endReq));
-			if(endReq < 0) endLocID = parR.deliveryLocationID; else endLocID = parR.pickupLocationID;
+			if(endReq < 0){
+				endLocID = parR.deliveryLocationID;
+				lastTime = parR.lateDeliveryTime;
+			}
+			else{ 
+				endLocID = parR.pickupLocationID;
+				lastTime = parR.latePickupTime;
+			}
 		}
 		
 		LatLng endLL = sim.map.mLatLng.get(endLocID);
-		for(int k = 0; k < parkings.size(); k++){
-			int pk = parkings.get(k);
-			LatLng pkLL = sim.map.mLatLng.get(pk);
-			if(pkLL == null){
-				System.out.println(name() + "::computePeopleInsertionSequence, pkLL is NULL");
-			}
-			double D = sim.G.computeDistanceHaversine(endLL.lat, endLL.lng, pkLL.lat, pkLL.lng);
-			if(D < minD){
-				minD = D;
-				sel_pk = pk;
+		int nPp = 0;
+		int nDeparture = 0;
+		for(int i = 0; i < sim.lstParkings.size(); i++){
+			Parking park = sim.lstParkings.get(i);
+			if(park.load < park.capacity){
+				LatLng pkLL = sim.map.mLatLng.get(park.locationID);
+				double D = sim.G.computeDistanceHaversine(endLL.lat, endLL.lng, pkLL.lat, pkLL.lng);
+				if(D < minD){
+					minD = D;
+					sel_pk = park.locationID;
+					nDeparture = park.nTaxisDeparture;
+				}
 			}
 		}
+		for(int i = 0; i < sim.lstParkings.size(); i++){
+			Parking park = sim.lstParkings.get(i);
+			if(park.load < park.capacity){
+				LatLng pkLL = sim.map.mLatLng.get(park.locationID);
+				double D = sim.G.computeDistanceHaversine(endLL.lat, endLL.lng, pkLL.lat, pkLL.lng);
+				for(int period = lastTime / 900 + 1; period < 96; period++){
+					nPp += park.nPpNearInPeriod.get(period);
+				}
+
+				if((double)(park.nTaxisDeparture / nPp) > rate && D <= minD * 1.5){
+					sel_pk = park.locationID;
+					rate = (double)(park.nTaxisDeparture / nPp);
+					nDeparture = park.nTaxisDeparture;
+				}
+			}
+		}
+		int depotId = sim.mTaxi2Depot.get(taxi.ID);
+		if(depotId != sel_pk){
+			LatLng depotLL = sim.map.mLatLng.get(depotId);
+			double d2 = sim.G.computeDistanceHaversine(endLL.lat, endLL.lng, depotLL.lat, depotLL.lng);
+			if(taxi.nComeBackDepot > nDeparture && d2 <= minD * 1.5){
+				sel_pk = depotId;
+				minD = d2;
+			}
+		}
+		
+		if(depotId == sel_pk)
+			taxi.nComeBackDepot++;
+		
 		ss = new ServiceSequence(sel_nod, 0, sel_pk, minD);
 		return ss;
 	}

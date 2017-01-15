@@ -1,13 +1,6 @@
 package pbts.simulation;
 
 import pbts.algorithms.AllDifferencer;
-import pbts.entities.Arc;
-import pbts.entities.LatLng;
-import pbts.entities.ItineraryTravelTime;
-import pbts.entities.ParcelRequest;
-import pbts.entities.Parking;
-import pbts.entities.PeopleRequest;
-import pbts.entities.Vehicle;
 import pbts.gismap.*;
 import pbts.gismap.googlemaps.GoogleMapsQuery;
 import pbts.prediction.behrouz.fixedrate.FixedRateSampler;
@@ -172,6 +165,7 @@ public class Simulator {
 	public ArrayList<ParcelRequest> allParcelRequests;
 	public ArrayList<PeopleRequest> runningPeopleRequests = new ArrayList<PeopleRequest>();
 	public ArrayList<ParcelRequest> runningParcelRequests = new ArrayList<ParcelRequest>();
+	public ArrayList<ParcelRequest> rejectedParcelRequests = new ArrayList<ParcelRequest>();
 
 	public HashMap<Integer, PeopleRequest> mPeopleRequest;	//Integer: people request ID.
 	public HashMap<Integer, ParcelRequest> mParcelRequest;	//Integer: parcel request ID.
@@ -586,7 +580,121 @@ public class Simulator {
 		return L;
 	}
 
-	
+public TaxiTimePointIndex availableTaxiSARP2014(Vehicle taxi, PeopleRequest pr) {
+		
+		if(taxi.remainRequestIDs.size() + 2 > maxPendingStops) return null;
+		if(taxi.totalTravelDistance > maxTravelDistance) return null;
+		
+		// find delivery people location
+		int locID = -1;
+		int idxLocID = -1;
+		TimePointIndex tpi = taxi.getNextTimePointIndex(taxi.lastIndexPoint,
+				T.currentTimePoint, TimePointDuration);
+		if (taxi.ID == debugTaxiID) {
+			System.out.println(name() + "::availableTaxi, taxi = " + taxi.ID
+					+ ", pr = " + pr.id + ", T.currentTimePoint = "
+					+ T.currentTimePoint + ", tpi = " + tpi.toString());
+			log.println(name() + "::availableTaxi, taxi = " + taxi.ID
+					+ ", pr = " + pr.id + ", T.currentTimePoint = "
+					+ T.currentTimePoint + ", tpi = " + tpi.toString());
+		}
+		int countPeopleDelivery = 0;
+		int lastPeopleDeliveryRequestID = -1;
+		for (int i = 0; i < taxi.remainRequestIDs.size(); i++) {
+			int rid = taxi.remainRequestIDs.get(i);
+			if (rid > 0)
+				continue;
+			PeopleRequest r = mPeopleRequest.get(Math.abs(rid));
+			if (r != null) {
+				locID = r.deliveryLocationID;
+				idxLocID = i;
+				lastPeopleDeliveryRequestID = r.id;
+				countPeopleDelivery++;
+				//break;
+			}
+		}
+		//String Is = "null";
+		//if(taxi.currentItinerary != null) Is = taxi.currentItinerary.toString();
+		//System.out.println(name() + "::availableTaxi, T.currentTimePoint = " + T.currentTimePoint + ", tpi = " + 
+	//	tpi.toString() + ", taxi = " + taxi.ID + ", STATUS = " + taxi.requestStatus() + ", idxLocID = " + idxLocID + 
+	//	", tpi.indexRemainRequestID = " + tpi.indexRemainRequestIDs + ", taxi.currentItinerary = " + 
+	//			Is);
+		idxLocID = idxLocID > tpi.indexRemainRequestIDs ? idxLocID : tpi.indexRemainRequestIDs;
+		
+		if(countPeopleDelivery > 1){
+			return null;// do not consider itinerary having more than one people being deliveried
+		}
+		
+		int timePoint = -1;
+		int point = -1;
+		int indexPoint = -1;
+
+		ArrayList<Integer> R = new ArrayList<Integer>();// new remain requestIDs
+		ArrayList<Integer> KR = new ArrayList<Integer>();// kept remain request sequences
+		idxLocID = idxLocID < taxi.remainRequestIDs.size()-1 ? idxLocID : taxi.remainRequestIDs.size()-1;
+		
+		if (locID >= 0) {
+			//for (int i = idxLocID + 1; i < taxi.remainRequestIDs.size(); i++)
+				//R.add(taxi.remainRequestIDs.get(i));
+
+			for (int i = taxi.lastIndexPoint; i < taxi.currentItinerary.size(); i++) {
+				if (taxi.currentItinerary.getAction(i) == VehicleAction.DELIVERY_PEOPLE
+						//&& taxi.currentItinerary.get(i) == locID) { replaced by
+						&& taxi.currentItinerary.getRequestID(i) == lastPeopleDeliveryRequestID){
+					// return new
+					// TimePointIndex(taxi.currentItinerary.getDepartureTime(i),taxi.currentItinerary.get(i),i);
+					timePoint = taxi.currentItinerary.getDepartureTime(i);
+					if (timePoint < 0)// ith position is not only delivery
+										// location but also parking location
+						timePoint = taxi.currentItinerary.getArrivalTime(i)
+								+ pr.deliveryDuration;
+					point = taxi.currentItinerary.get(i);
+					indexPoint = i;
+					if (taxi.ID == debugTaxiID) {
+						//System.out.println(name()
+							//	+ "::availableTaxi, timePoint delivery = "
+								//+ timePoint);
+						//log.println(name()
+							//	+ "::availableTaxi, timePoint delivery = "
+								//+ timePoint);
+					}
+					break;
+				}
+			}
+
+		} else {
+
+		}
+
+		if (timePoint < tpi.timePoint) {
+			timePoint = tpi.timePoint;
+			point = tpi.point;
+			indexPoint = tpi.indexPoint;
+		}
+
+//		LatLng pointLL = map.mLatLng.get(point);
+//		LatLng pickupLL = map.mLatLng.get(pr.pickupLocationID);
+//		double d = G.computeDistanceHaversine(pointLL.lat, pointLL.lng, pickupLL.lat, pickupLL.lng);
+		double d = estimateTravelingDistanceManhattan(point,  pr.pickupLocationID);
+		
+		//double d = dijkstra.queryDistance(point, pr.pickupLocationID);
+		double t = getTravelTime(d, maxSpeedms);
+
+		if (t + timePoint <= pr.latePickupTime){
+			for(int i = 0; i <= idxLocID; i++)
+				KR.add(taxi.remainRequestIDs.get(i));
+			for(int i = idxLocID+1; i < taxi.remainRequestIDs.size(); i++)
+				R.add(taxi.remainRequestIDs.get(i));
+			//[SonNV]Distance from current point of this taxi to pickup point is saved.
+			tpi = new TimePointIndex(timePoint, point, indexPoint);
+			TaxiTimePointIndex sel_ttpi = new TaxiTimePointIndex(taxi, tpi, R, KR);
+			sel_ttpi.estimation = d;
+			return sel_ttpi;
+		}
+
+		return null;
+	}
+
 	public TaxiTimePointIndex availableTaxi(Vehicle taxi, PeopleRequest pr) {
 		
 		if(taxi.remainRequestIDs.size() + 2 > maxPendingStops) return null;
@@ -840,6 +948,7 @@ public class Simulator {
 
 		return null;
 	}
+	
 	public int findAvailableTaxi(int t, int src, int des) {
 		// TODO
 		// System.out.println("MapBasedDataGenerator::findAvailableTaxi not implemented");
@@ -905,6 +1014,70 @@ public class Simulator {
 		return sel_taxi;
 	}
 
+	public double estimateTravelingDistanceManhattan(int u, int v){
+		LatLng ull = map.mLatLng.get(u);
+		LatLng vll = map.mLatLng.get(v);
+		return Math.abs(ull.lat - vll.lat) + Math.abs(ull.lng - vll.lng);
+	}
+	
+	public double calculateTotalTravelManhattanDistance(ArrayList<Integer> stSequence){
+		double D = 0;
+		for(int i = 1; i < stSequence.size(); i++){
+			int point1 = -1;
+			PeopleRequest peoR = mPeopleRequest.get(Math.abs(stSequence.get(i-1)));
+			if(peoR != null){
+				if(stSequence.get(i-1) < 0) point1 = peoR.deliveryLocationID; else point1 = peoR.pickupLocationID;
+			}else{
+				ParcelRequest parR = mParcelRequest.get(Math.abs(stSequence.get(i-1)));
+				if(stSequence.get(i-1) < 0) point1 = parR.deliveryLocationID; else point1 = parR.pickupLocationID;
+			}
+			
+			int point2 = -1;
+			PeopleRequest peoR2 = mPeopleRequest.get(Math.abs(stSequence.get(i)));
+			if(peoR2 != null){
+				if(stSequence.get(i) < 0) point2 = peoR2.deliveryLocationID; else point2 = peoR2.pickupLocationID;
+			}else{
+				ParcelRequest parR2 = mParcelRequest.get(Math.abs(stSequence.get(i)));
+				if(stSequence.get(i) < 0) point2 = parR2.deliveryLocationID; else point2 = parR2.pickupLocationID;
+			}
+			
+			D += estimateTravelingDistanceManhattan(point1, point2);
+		}
+		return D;
+	}
+	
+	public ArrayList<Integer> checkAllThePositionToInsertParcel(Vehicle taxi, ParcelRequest parcelReq){
+		double bestDistance = 1000000;
+		int length = taxi.pendingParcelReqs.size();
+		ArrayList<Integer> stSq = new ArrayList<Integer>(taxi.pendingParcelReqs);
+		ArrayList<Integer> stSq2 = new ArrayList<Integer>(taxi.pendingParcelReqs);
+		ArrayList<Integer> bestSq = null;
+		
+		for(int i = 0; i <= length; i++){
+			stSq = new ArrayList<Integer>(taxi.pendingParcelReqs);
+			if(i == length)
+				stSq.add(parcelReq.id);
+			else
+				stSq.add(i, parcelReq.id);
+			for(int j = i + 1; j <= length + 1; j++){
+				stSq2 = new ArrayList<Integer>(stSq);
+				if(j == length + 1)
+					stSq2.add(-parcelReq.id);
+				else
+					stSq2.add(j, -parcelReq.id);
+				double D = calculateTotalTravelManhattanDistance(stSq2);
+				ErrorMSG err = checkServiceSequenceSARP2014(taxi, stSq2);
+				if(err.err == ErrorType.NO_ERROR){
+					if(bestDistance > D){
+						bestDistance = D;
+						bestSq = new ArrayList<Integer>(stSq2);
+					}
+				}
+			}
+		}
+		
+		return bestSq;
+	}
 	public double estimateTravelingDistanceHaversine(int u, int v){
 		LatLng lu = map.mLatLng.get(u);
 		LatLng lv = map.mLatLng.get(v);
@@ -1865,6 +2038,25 @@ public class Simulator {
 		return I;
 	}
 	
+	public void updatePendingParcelReqsSARP2014(Vehicle taxi){
+		for(int i = 0; i < vehicles.size(); i++){
+			Vehicle tx = vehicles.get(i);
+			if(tx.ID == taxi.ID){
+				tx.pendingParcelReqs.clear();
+				for(int k = 0; k < taxi.remainRequestIDs.size(); k++){
+					int rqId = taxi.remainRequestIDs.get(k);
+					PeopleRequest peoReq = mPeopleRequest.get(Math.abs(rqId));
+					if(peoReq != null)
+						tx.pendingParcelReqs.clear();
+					else
+						tx.pendingParcelReqs.add(rqId);
+				}
+				vehicles.set(i, tx);
+				break;
+			}
+		}
+	}
+	
 	/****[SonNV]
 	 * Establish itinerary based on sequence ss: 
 	 * 		+ Establish subs itinerary from i-point to j-point (i, j in ss, i-index < j-index). 
@@ -2200,8 +2392,9 @@ public class Simulator {
 		if(timePoint < 86400)//timepoint = 86400 => period = 0
 			timePointNew = timePoint;
 		int period = timePointNew / 900;
+		period++;
 		int nearestPointId = -1;
-		int ppId = -1;		
+		int ppId = -1;
 		double shortestDis = 10000000;
 
 		//get popular points in this period time.
@@ -5785,6 +5978,17 @@ public class Simulator {
 				sz + keptReq.size());
 		
 	}
+	
+	public ErrorMSG checkServiceSequenceSARP2014(Vehicle taxi,
+			ArrayList<Integer> seq) {
+		int[] t = new int[seq.size()];
+		for (int i = 0; i < seq.size(); i++)
+			t[i] = seq.get(i);
+
+		return checkLegalPermutationServiceSequence(taxi, t,
+				seq.size());
+	}
+
 
 	public ErrorMSG checkServiceSequence(Vehicle taxi, TimePointIndex tpi, int[] seq, int fromIndex, int sz) {
 

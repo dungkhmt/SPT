@@ -313,9 +313,11 @@ public class SequenceOptimizer {
 				if (k == n - 1) {
 					ErrorMSG err = sim.checkServiceSequence(taxi, tpi, x, keptReq.size(), n);
 
+					if(taxi.ID == 2){
+						int ab = 0;
+					}
 					if (err.err == ErrorType.NO_ERROR) {
 						if (cost < best) {
-
 							best = cost;
 							for (int i = 0; i < n; i++)
 								opt_x[i] = x[i];
@@ -348,6 +350,85 @@ public class SequenceOptimizer {
 			}
 		}
 	}
+	
+	private void TRYMANHATTAN(int k) {
+		double t = (System.currentTimeMillis() - t0)*0.001; 
+		if(t > maxTime){
+			//System.out.println(name() + "::TRY(" + k + ") t = " + t + " EXPIRED maxTime = " + maxTime);// + " System.exit(-1)");
+			//System.exit(-1);
+			return;
+		}
+		
+		// try values for x[k]
+		for (int v = 0; v < reqSeq.size(); v++) {
+			if (!mark[v]) {
+				x[k] = reqSeq.get(v);
+				//if (taxi.ID == sim.debugTaxiID)
+					//sim.log.println(name() + "::TRY(" + k + ") seq = "
+						//	+ partialSolution(k));
+					//System.out.println(name() + "::TRY(" + k + ") seq = "
+						//+ partialSolution(k));
+				if (!checkLegalServiceSequenceForRequest(taxi, x[k], k)) {
+					//if (taxi.ID == sim.debugTaxiID)
+						//sim.log.println(name() + "::TRY(" + k + ") seq = "
+							//	+ partialSolution(k)
+								//+ " checkLegalServiceSequenceForRequest(x[" + k + "] = " + x[k] + ") -> NOT LEGAL --> continue");
+						//System.out.println(name() + "::TRY(" + k + ") seq = "
+							//+ partialSolution(k)
+							//+ " checkLegalServiceSequenceForRequest(x[" + k + "] = " + x[k] + ") -> NOT LEGAL --> continue");
+					continue;
+				}
+
+				// if(!checkMaxDistanceOfPeopleOnBoard(taxi, x, k+1,
+				// startPoint)) continue;
+				// if(!checkMaxStopPeopleOnBoard(taxi, x, k+1)) continue;
+				// if(!checkMaxStopPeopleRequest(x, k+1)) continue;
+				// if(!checkNotPeoplePeopleSharing(taxi, x, k+1)) continue;
+
+				point[k + 1] = sim.getLocationID(x[k]);
+				cost = cost + cost(point[k], point[k + 1]);
+				mark[v] = true;
+				if (k == n - 1) {
+					ErrorMSG err = sim.checkServiceSequence(taxi, tpi, x, keptReq.size(), n);
+
+					if(taxi.ID == 2){
+						int ab = 0;
+					}
+					if (err.err == ErrorType.NO_ERROR) {
+						if (cost < best) {
+							best = cost;
+							for (int i = 0; i < n; i++)
+								opt_x[i] = x[i];
+							foundSolution = true;
+							//System.out.println(name() + "::TRY(" + k
+							//		+ ") UPDATE BEST " + best);
+							if (taxi.ID == sim.debugTaxiID) {
+								sim.log.println(name() + "::TRY(" + k
+										+ ") UPDATE BEST " + best
+										+ ", opt_x = "
+									+ Utility.arr2String(opt_x, n));
+							}
+						}
+					} else {
+						if (taxi.ID == sim.debugTaxiID) {
+							//sim.log.println(name()	+ "::TRY("+ k+ ") --> checkServiceSequence FAILED, taxi.requestStatus = "
+									//+ taxi.requestStatus() + ", x = "
+									//+ Utility.arr2String(x, n));
+						}
+					}
+				} else {
+					if (cost < best){
+						TRYMANHATTAN(k + 1);
+					}
+					else{
+						//System.out.println(name() + "::TRY(" + k + ") --> BOUND!!!!!!!!!!!!!!");
+					}
+				}
+				cost -= cost(point[k], point[k + 1]);
+				mark[v] = false;
+			}
+		}
+	}
 
 	public int[] computeShortestSequence(Vehicle taxi, TimePointIndex tpi,
 			ArrayList<Integer> keptReq, int[] reqSeq, double maxTime) {
@@ -363,6 +444,15 @@ public class SequenceOptimizer {
 		for (int i = 0; i < keptReq.length; i++)
 			r.add(keptReq[i]);
 		return computeShortestSequence(taxi, tpi, r, reqSeq, maxTime);
+
+	}
+	
+	public int[] computeShortestSequenceManhattan(Vehicle taxi, TimePointIndex tpi,
+			int[] keptReq, ArrayList<Integer> reqSeq, double maxTime) {
+		ArrayList<Integer> r = new ArrayList<Integer>();
+		for (int i = 0; i < keptReq.length; i++)
+			r.add(keptReq[i]);
+		return computeShortestSequenceManhattan(taxi, tpi, r, reqSeq, maxTime);
 
 	}
 
@@ -419,6 +509,81 @@ public class SequenceOptimizer {
 		}
 		t0 = System.currentTimeMillis();
 		TRY(k);
+		if (!foundSolution) {
+			System.out.println(name() + "::computeShortestSequence(taxi = "
+					+ taxi.ID + ", startPoint = " + startPoint + ", seq = "
+					+ arr2String(reqSeq) + " NO SOLUTION");
+			System.out.println("People on boards = "
+					+ arr2String(taxi.peopleReqIDonBoard));
+			System.out.println("Parcel on boards = "
+					+ arr2String(taxi.parcelReqIDonBoard));
+
+			sim.log.println(name() + "::computeShortestSequence(taxi = "
+					+ taxi.ID + ", startPoint = " + startPoint + ", kept = "
+					+ Utility.arr2String(keptReq) + ", remain = "
+					+ arr2String(reqSeq) + " NO SOLUTION"
+					+ ", taxi.requestStatus = " + taxi.requestStatus());
+			sim.log.println("People on boards = "
+					+ arr2String(taxi.peopleReqIDonBoard));
+			sim.log.println("Parcel on boards = "
+					+ arr2String(taxi.parcelReqIDonBoard));
+			// sim.log.close();
+			// System.exit(-1);
+			return null;
+		}
+		int[] s = new int[n];
+		for (int i = 0; i < n; i++)
+			s[i] = opt_x[i];
+		return s;
+
+	}
+	
+	public int[] computeShortestSequenceManhattan(Vehicle taxi, TimePointIndex tpi,
+			ArrayList<Integer> keptReq, ArrayList<Integer> reqSeq, double maxTime) {
+		// input: keptReq: list of requests kept (do not change this order)
+		// input: reqSeq is the input sequence requests id, reqSeq[i] < 0 means
+		// delivery, reqSeq[i] > 0 means pickup
+		// output: re-order reqSeq so that that path from startPoint go through
+		// reqSeq is minimal
+		this.maxTime = maxTime;
+		this.tpi = tpi;
+		int startPoint = tpi.point;
+		System.out.println(name() + "::computeShortestSequence(taxi = "
+				+ taxi.ID + ", startPoint = " + startPoint + ", kept = " + Utility.arr2String(keptReq) + ", reqSeq = "
+				+ arr2String(reqSeq) + ", maxTime = " + maxTime);
+		if (taxi.ID == sim.debugTaxiID) {
+			sim.log.println(name() + "::computeShortestSequence(taxi = "
+					+ taxi.ID + ") requestStarus = " + taxi.requestStatus()
+					+ ", kept = " + Utility.arr2String(keptReq) + ", remain = "
+					+ Utility.arr2String(reqSeq) + ", tpi = " + tpi.toString());
+		}
+		this.keptReq = keptReq;
+		this.reqSeq = reqSeq;
+		nbKept = keptReq.size();
+		n = reqSeq.size() + keptReq.size();
+		
+		this.startPoint = startPoint;
+		this.taxi = taxi;
+		for (int i = 0; i < reqSeq.size(); i++)
+			mark[i] = false;
+		best = 1000000000;
+		cost = 0;
+		foundSolution = false;
+		point[0] = startPoint;
+		for (int i = 0; i < keptReq.size(); i++) {// keep all elements of
+													// keptReq in the resulting
+													// sequence
+			x[i] = keptReq.get(i);
+			point[i + 1] = sim.getLocationID(x[i]);
+			cost += cost(point[i], point[i + 1]);
+		}
+		int k = keptReq.size();
+		if(reqSeq.size() == 0){
+			foundSolution = true;
+			for(int i = 0; i < n; i++) opt_x[i] = x[i];
+		}
+		t0 = System.currentTimeMillis();
+		TRYMANHATTAN(k);
 		if (!foundSolution) {
 			System.out.println(name() + "::computeShortestSequence(taxi = "
 					+ taxi.ID + ", startPoint = " + startPoint + ", seq = "
