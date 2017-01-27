@@ -95,7 +95,7 @@ public class SimulatorTimeUnit extends Simulator {
 				continue;
 			if (taxi.remainRequestIDs.size()+2 > maxPendingStops)// consider also pickup and delivery points of pr
 				continue;
-			TaxiTimePointIndex tpi = availableTaxiSARP2014(taxi, pr);
+			TaxiTimePointIndex tpi = availableTaxiWithTimePrioriySARP2014(taxi, pr);
 			if(tpi != null){
 				if(tpi.estimation < minDis){
 					sel_tpi = tpi;
@@ -3308,9 +3308,9 @@ public class SimulatorTimeUnit extends Simulator {
 			double maxBenefits = 0;
 			int plIdx = 0;
 			ArrayList<String> listPlanner = new ArrayList<String>();			
-			//listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
+			listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
 			listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
-			//listPlanner.add("GreedyExSharingDecisionTimeLimitAndBestParkingPlanner");
+			listPlanner.add("GreedyExSharingDecisionTimeLimitAndBestParkingPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
 			//listPlanner.add("SequenceDecidedBasedOnAPopularPointPlanner");
@@ -3385,7 +3385,7 @@ public class SimulatorTimeUnit extends Simulator {
 																	//new NaiveSequentialPlanner(simulator),
 																	new GreedyExchangeSharingDecisionTimeLimitPlanner(simulator),
 																	new GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
-																	//new GreedyExSharingDecisionTimeLimitAndBestParkingPlanner(simulator),
+																	new GreedyExSharingDecisionTimeLimitAndBestParkingPlanner(simulator),
 																	//new GreedySharingNoExchangeDecisionTimeLimitPlanner(simulator),
 																	//new GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
 																	//new NaiveSequentialDecisionTimeLimitPlanner(simulator),

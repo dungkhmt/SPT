@@ -5336,6 +5336,9 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 					continue;
 				if(timePoint < T.start) continue;
 				
+				if(timePoint > 68400)
+					continue;
+				
 				// timePoint = earlyPickupTime;
 
 				PeopleRequest pr = new PeopleRequest(pickupLocationID,
@@ -5371,6 +5374,10 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 					continue;
 				if(timePoint < T.start) continue;
 				
+				if(timePoint > 68400)
+					continue;
+				if(earlyPickupTime < 28800 || earlyPickupTime > 57600)
+					continue;
 				// timePoint = earlyPickupTime;
 
 				ParcelRequest pr = new ParcelRequest(pickupLocationID,
@@ -5378,9 +5385,9 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 				pr.id = id;
 				pr.timePoint = timePoint;
 				pr.earlyPickupTime = earlyPickupTime;
-				pr.latePickupTime = latePickupTime;
-				pr.earlyDeliveryTime = earlyDeliveryTime;
-				pr.lateDeliveryTime = lateDeliveryTime;
+				pr.latePickupTime = 67500;
+				pr.earlyDeliveryTime = 67500;
+				pr.lateDeliveryTime = 68400;
 
 				allParcelRequests.add(pr);
 				mParcelRequest.put(pr.id, pr);
