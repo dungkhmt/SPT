@@ -3308,9 +3308,9 @@ public class SimulatorTimeUnit extends Simulator {
 			double maxBenefits = 0;
 			int plIdx = 0;
 			ArrayList<String> listPlanner = new ArrayList<String>();			
-			listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
-			//listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
-			listPlanner.add("GreedyExSharingDecisionTimeLimitAndBestParkingPlanner");
+			//listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
+			listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
+			//listPlanner.add("GreedyExSharingDecisionTimeLimitAndBestParkingPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
 			//listPlanner.add("SequenceDecidedBasedOnAPopularPointPlanner");
@@ -3319,9 +3319,9 @@ public class SimulatorTimeUnit extends Simulator {
 			
 			for(int pl = 0; pl < listPlanner.size(); pl++){
 				String plannerName = listPlanner.get(pl);
-				String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
-				String itineraryFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
-				String summaryFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
+				String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\outputUpdatePlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
+				String itineraryFileName = data_dir + "SanFrancisco_std\\outputUpdatePlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
+				String summaryFileName = data_dir + "SanFrancisco_std\\outputUpdatePlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
 				
 				
 				for(int i = 0; i < args.length; i++){
@@ -3385,12 +3385,12 @@ public class SimulatorTimeUnit extends Simulator {
 																	//new NaiveSequentialPlanner(simulator),
 																	new GreedyExchangeSharingDecisionTimeLimitPlanner(simulator),
 																	new GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
-																	new GreedyExSharingDecisionTimeLimitAndBestParkingPlanner(simulator),
+																	//new GreedyExSharingDecisionTimeLimitAndBestParkingPlanner(simulator),
 																	//new GreedySharingNoExchangeDecisionTimeLimitPlanner(simulator),
 																	//new GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
 																	//new NaiveSequentialDecisionTimeLimitPlanner(simulator),
-																	new SequenceDecidedBasedOnAPopularPointPlanner(simulator),
-																	new GetManyTimesThenAddAPopularPointPlanner(simulator),
+																	//new SequenceDecidedBasedOnAPopularPointPlanner(simulator),
+																	//new GetManyTimesThenAddAPopularPointPlanner(simulator),
 																	//new GetManyTimesThenAddASequencePopularPointsPlanner(simulator)
 																};
 				

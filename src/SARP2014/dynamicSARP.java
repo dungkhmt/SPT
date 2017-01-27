@@ -28,13 +28,14 @@ import pbts.simulation.SimulatorTimeUnit;
 
 public class dynamicSARP {
 	SimulatorTimeUnit sim;
-	dynamicSARPplanner planner;
+	dynamicSARPandPredictionPlanner planner;
 	ArrayList<Stop> parcelRequests;
 	ArrayList<Stop> peopleRequests;
 	
 	public dynamicSARP(){
 		sim = new SimulatorTimeUnit();
-		planner = new dynamicSARPplanner(sim);
+		//planner = new dynamicSARPplanner(sim);
+		planner = new dynamicSARPandPredictionPlanner(sim);
 		parcelRequests = new ArrayList<Stop>();
 		peopleRequests = new ArrayList<Stop>();
 	}
@@ -388,6 +389,7 @@ public class dynamicSARP {
 	public void simulateDataFromFile(String requestFilename,
 			int maxNbParcelsInserted, int maxNbStops){
 
+		
 		double t0 = System.currentTimeMillis();
 		sim.loadRequestsSARP2014(requestFilename);
 
@@ -421,7 +423,22 @@ public class dynamicSARP {
 		sim.insertedParcelRequests = new ArrayList<ParcelRequest>();
 		sim.insertedPeopleRequests = new ArrayList<PeopleRequest>();
 
+		String fileName = "E:\\Project\\pbts\\git_project\\SPT\\Li2014Info.txt";
+		String fileName2 = "E:\\Project\\pbts\\git_project\\SPT\\Li2014InfoOneTaxi.txt";
+		double t1 = 0;
+		t1 = System.currentTimeMillis();
+		t1 = t1 * 0.001;
+		
 		generateInitialRoutes();
+		try{
+			PrintWriter out= new PrintWriter(fileName);
+			double t2 = System.currentTimeMillis();
+			t2 = t2 * 0.001;
+			out.println("End init: " + (t2-t1));
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		sim.totalParcelRequests = sim.allParcelRequests.size();
 		while (!sim.T.finished()) {
 			if((sim.T.currentTimePoint - sim.T.start)%10 == 0 && sim.T.currentTimePoint > sim.T.start){
@@ -467,7 +484,19 @@ public class dynamicSARP {
 				for(int k = 0; k < sim.vehicles.size(); k++){
 					Vehicle taxi = sim.vehicles.get(k);
 					if(!sim.T.stopRequest() && taxi.pendingParcelReqs.size() == 0){
+						double t3 = System.currentTimeMillis();
+						t3 = t3 * 0.001;
+						
 						taxi = greedyInsertionRoute(taxi);
+						try{
+							PrintWriter out= new PrintWriter(fileName2);
+							double t2 = System.currentTimeMillis();
+							t2 = t2 * 0.001;
+							out.println("End init of a taxi: " + (t2- t3));
+							out.close();
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
 						sim.vehicles.set(k, taxi);
 					}
 				}
@@ -578,90 +607,91 @@ public class dynamicSARP {
 		String data_dir = "E:\\Project\\pbts\\git_project\\SPT\\";
 		String mapFileName = data_dir + "SanFrancisco_std\\SanfranciscoRoad-connected-contracted-5-refine-50.txt";
 		String configFileName = data_dir + "SanFrancisco_std\\config-parameters.txt";
-		String depotParkingFileName = data_dir + "SanFrancisco_std\\depots8-parkings2.txt";
+		String depotParkingFileName = data_dir + "SanFrancisco_std\\depots1000-parkings34.txt";
 		int maxNbPendingStops = 12;
 		int maxTimeReceiveRequest = 86400;
 		int startSimulationTime = 0;
 		int decisionTime = 15;
-		int day = 1;
-		String requestFileName = data_dir + "SanFrancisco_std\\dynamicSARP_minSpd5_maxSpd60.txt";
-		String plannerName = "dynamicSARPplanner";
-		String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
-		String itineraryFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
-		String summaryFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
-		
-		
-		for(int i = 0; i < args.length; i++){
-			if(args[i].equals("--mapFileName"))
-				mapFileName = args[i+1];
-			else if(args[i].equals("--configFileName"))
-				configFileName = args[i+1];
-			else if(args[i].equals("--requestFileName"))
-				requestFileName = args[i+1];
-			else if(args[i].equals("--depotParkingFileName"))
-				depotParkingFileName = args[i+1];
-			else if(args[i].equals("--plannerName"))
-				plannerName = args[i+1];
-			else if(args[i].equals("--progressiveStatisticFileName"))
-				progressiveStatisticFileName = args[i+1];
-			else if(args[i].equals("--itineraryFileName"))
-				itineraryFileName = args[i+1];
-			else if(args[i].equals("--summaryFileName"))
-				summaryFileName = args[i+1];
-			else if(args[i].equals("--maxNbPendingStops"))
-				maxNbPendingStops = Integer.valueOf(args[i+1]);
-			else if(args[i].equals("--maxTimeReceiveRequest"))
-				maxTimeReceiveRequest = Integer.valueOf(args[i+1]);
-			else if(args[i].equals("--startSimulationTime"))
-				startSimulationTime = Integer.valueOf(args[i+1]);
-			else if(args[i].equals("--decisionTime"))
-				decisionTime = Integer.valueOf(args[i+1]);
+		for(int day = 1; day <= 10; day++){
+			String requestFileName = data_dir + "SanFrancisco_std\\ins_day_" + day + "_minSpd_5_maxSpd_60.txt";
+			String plannerName = "dynamicSARPandPredictionPlanner";
+			String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
+			String itineraryFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
+			String summaryFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
 			
+			for(int i = 0; i < args.length; i++){
+				if(args[i].equals("--mapFileName"))
+					mapFileName = args[i+1];
+				else if(args[i].equals("--configFileName"))
+					configFileName = args[i+1];
+				else if(args[i].equals("--requestFileName"))
+					requestFileName = args[i+1];
+				else if(args[i].equals("--depotParkingFileName"))
+					depotParkingFileName = args[i+1];
+				else if(args[i].equals("--plannerName"))
+					plannerName = args[i+1];
+				else if(args[i].equals("--progressiveStatisticFileName"))
+					progressiveStatisticFileName = args[i+1];
+				else if(args[i].equals("--itineraryFileName"))
+					itineraryFileName = args[i+1];
+				else if(args[i].equals("--summaryFileName"))
+					summaryFileName = args[i+1];
+				else if(args[i].equals("--maxNbPendingStops"))
+					maxNbPendingStops = Integer.valueOf(args[i+1]);
+				else if(args[i].equals("--maxTimeReceiveRequest"))
+					maxTimeReceiveRequest = Integer.valueOf(args[i+1]);
+				else if(args[i].equals("--startSimulationTime"))
+					startSimulationTime = Integer.valueOf(args[i+1]);
+				else if(args[i].equals("--decisionTime"))
+					decisionTime = Integer.valueOf(args[i+1]);
+				
+			}
+			
+			System.out.println("Parameters:\n" +
+			"mapFileName = " + mapFileName + "\n" + 
+			"configFileName = " + configFileName + "\n" +
+			"requestFileName = " + requestFileName + "\n" +
+			"depotParkingFileName = " + depotParkingFileName + "\n" +
+			"plannerName = " + plannerName + "\n"+
+			"progressiveStatisticFileName = " + progressiveStatisticFileName + "\n" +
+			"itineraryFileName = " + itineraryFileName + "\n" +
+			"summaryFileName = " + summaryFileName + "\n" +
+			"maxNbPendingStops = " + maxNbPendingStops + "\n" +
+			"maxTimeReceiveRequest = " + maxTimeReceiveRequest + "\n" +
+			"startSimulationTime = " + startSimulationTime + "\n" +
+			"decisionTime = " + decisionTime
+					);
+			dynamicSARP dSarp = new dynamicSARP();
+			
+			dSarp.sim.loadMapFromTextFile(mapFileName);
+	
+			dSarp.sim.loadParameters(configFileName);
+			dSarp.sim.loadDepotParkings(depotParkingFileName);
+			dSarp.sim.initialize();
+			dSarp.sim.statFilename = progressiveStatisticFileName;
+			dSarp.sim.resetLog();
+			dSarp.sim.getPredictionInfo();
+			
+			dSarp.sim.terminateRequestTime = maxTimeReceiveRequest;
+			dSarp.sim.terminateWorkingTime = maxTimeReceiveRequest;
+			dSarp.sim.TimePointDuration = decisionTime;
+			dSarp.sim.maxPendingStops = maxNbPendingStops;
+			dSarp.sim.startWorkingTime = startSimulationTime;
+			dSarp.sim.maxPendingStops = 14;
+			
+			dSarp.sim.initTimeHorizon();
+			
+			dSarp.simulateDataFromFile(requestFileName, 6, 14);
+			dSarp.sim.writeTaxiItineraries(itineraryFileName);
+			
+			dSarp.sim.initVehicles();
+			dSarp.sim.loadRequestsSARP2014(requestFileName);
+	
+			dSarp.sim.relaxTimeWindowParcelRequests();
+			HashMap<Integer, ItineraryTravelTime> itineraries = dSarp.sim.loadItineraries(itineraryFileName);
+			AnalysisTemplate AT = dSarp.sim.analyzeSolution(itineraries, summaryFileName);
+			dSarp.sim.finalize();
 		}
-		
-		System.out.println("Parameters:\n" +
-		"mapFileName = " + mapFileName + "\n" + 
-		"configFileName = " + configFileName + "\n" +
-		"requestFileName = " + requestFileName + "\n" +
-		"depotParkingFileName = " + depotParkingFileName + "\n" +
-		"plannerName = " + plannerName + "\n"+
-		"progressiveStatisticFileName = " + progressiveStatisticFileName + "\n" +
-		"itineraryFileName = " + itineraryFileName + "\n" +
-		"summaryFileName = " + summaryFileName + "\n" +
-		"maxNbPendingStops = " + maxNbPendingStops + "\n" +
-		"maxTimeReceiveRequest = " + maxTimeReceiveRequest + "\n" +
-		"startSimulationTime = " + startSimulationTime + "\n" +
-		"decisionTime = " + decisionTime
-				);
-		dynamicSARP dSarp = new dynamicSARP();
-		
-		dSarp.sim.loadMapFromTextFile(mapFileName);
-
-		dSarp.sim.loadParameters(configFileName);
-		dSarp.sim.loadDepotParkings(depotParkingFileName);
-		dSarp.sim.initialize();
-		dSarp.sim.statFilename = progressiveStatisticFileName;
-		dSarp.sim.resetLog();
-		
-		dSarp.sim.terminateRequestTime = maxTimeReceiveRequest;
-		dSarp.sim.terminateWorkingTime = maxTimeReceiveRequest;
-		dSarp.sim.TimePointDuration = decisionTime;
-		dSarp.sim.maxPendingStops = maxNbPendingStops;
-		dSarp.sim.startWorkingTime = startSimulationTime;
-		dSarp.sim.maxPendingStops = 14;
-		
-		dSarp.sim.initTimeHorizon();
-		
-		dSarp.simulateDataFromFile(requestFileName, 6, 14);
-		dSarp.sim.writeTaxiItineraries(itineraryFileName);
-		
-		dSarp.sim.initVehicles();
-		dSarp.sim.loadRequests(requestFileName);
-
-		dSarp.sim.relaxTimeWindowParcelRequests();
-		HashMap<Integer, ItineraryTravelTime> itineraries = dSarp.sim.loadItineraries(itineraryFileName);
-		AnalysisTemplate AT = dSarp.sim.analyzeSolution(itineraries, summaryFileName);
-		dSarp.sim.finalize();
 		
 
 		if(true) return;
