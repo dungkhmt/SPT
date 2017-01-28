@@ -165,7 +165,7 @@ public class dynamicSARPandPredictionPlanner {
 				return null;
 			}
 
-			ItineraryTravelTime I = sim.establishItineraryWithAPopularPoint(taxi,
+			ItineraryTravelTime I = sim.establishItineraryWithAPopularPointSARP2014(taxi,
 					nextStartTimePoint, fromIndex, fromPoint, ss, 1);
 			
 			
