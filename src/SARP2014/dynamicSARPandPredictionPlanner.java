@@ -78,6 +78,7 @@ public class dynamicSARPandPredictionPlanner {
 			L.add(pr.id);
 			L.add(-pr.id);
 			if(remainRequestIDs.size() == 0 && taxi.pendingParcelReqs.size() == 12){
+				System.out.println("pending: " + taxi.pendingParcelReqs + "******************************");
 				for(int i = 0; i < taxi.pendingParcelReqs.size(); i++){
 					L.add(taxi.pendingParcelReqs.get(i));
 					sim.nbParcelWaitBoarding++;
@@ -105,6 +106,7 @@ public class dynamicSARPandPredictionPlanner {
 			//", taxi.requestStatus = " + taxi.requestStatus());
 				return null;
 			}
+			System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 			int[] sel_nod = new int[t_sel_nod.length - keptReq.size()];
 			//int idx = -1;
 			System.out.println(name() + "::computePeopleInsertionSequence, t_sel_nod = " + Utility.arr2String(t_sel_nod) + 

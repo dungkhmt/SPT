@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import pbts.algorithms.SequenceOptimizer;
 import pbts.entities.*;
 import pbts.enums.VehicleAction;
 import pbts.enums.VehicleStatus;
@@ -83,12 +84,14 @@ public class SimulatorTimeUnit extends Simulator {
 		return sel_tpi;
 	}
 	
-	public TaxiTimePointIndex getNearestAvailableTaxiForPeopleSARP2014(PeopleRequest pr, double maxTime){
+	public TaxiTimePointIndex getNearestAvailableTaxiForPeopleSARP2014(SequenceOptimizer seqOptimizer, PeopleRequest pr, double maxTime){
 		double t0 = System.currentTimeMillis();
 		TaxiTimePointIndex sel_tpi = null;
 		double minDis = 1000000000;
 		for(int k = 0; k < vehicles.size(); k++){
 			Vehicle taxi = vehicles.get(k);
+			if(taxi.remainRequestIDs.size() > 0)
+				continue;
 			if (taxi.status == VehicleStatus.STOP_WORK)
 				continue;
 			if (taxi.totalTravelDistance > maxTravelDistance)
@@ -98,8 +101,29 @@ public class SimulatorTimeUnit extends Simulator {
 			TaxiTimePointIndex tpi = availableTaxiWithTimePrioriySARP2014(taxi, pr);
 			if(tpi != null){
 				if(tpi.estimation < minDis){
-					sel_tpi = tpi;
-					minDis = sel_tpi.estimation;
+					ArrayList<Integer> L = new ArrayList<Integer>();
+					int[] r = new int[tpi.keptRequestIDs.size()];
+					for(int i = 0; i < tpi.keptRequestIDs.size(); i++)
+						r[i] = tpi.keptRequestIDs.get(i);
+					L.add(pr.id);
+					L.add(-pr.id);
+					if(tpi.remainRequestIDs.size() == 0 && taxi.pendingParcelReqs.size() == 12){
+						for(int i = 0; i < taxi.pendingParcelReqs.size(); i++){
+							L.add(taxi.pendingParcelReqs.get(i));
+						}
+					}
+					else{
+						for(int i = 0; i < tpi.remainRequestIDs.size(); i++){
+							L.add(tpi.remainRequestIDs.get(i));
+						}
+					}
+					//int[] t_r  = new int[0];
+					int[] t_sel_nod = seqOptimizer.computeShortestSequenceManhattan(taxi, tpi.tpi, r, L,maxTime);
+					
+					if(t_sel_nod != null){
+						sel_tpi = tpi;
+						minDis = sel_tpi.estimation;
+					}
 				}
 			}
 			if((System.currentTimeMillis()-t0)*0.001 > maxTime) break;
@@ -3303,17 +3327,17 @@ public class SimulatorTimeUnit extends Simulator {
 		int startSimulationTime = 0;
 		int decisionTime = 15;
 		
-		for(int day = 1; day <= 31; day++){
+		for(int day = 7; day <= 31; day++){
 			String requestFileName = data_dir + "SanFrancisco_std\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt";
 			double maxBenefits = 0;
 			int plIdx = 0;
 			ArrayList<String> listPlanner = new ArrayList<String>();			
-			listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
-			listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
-			listPlanner.add("GreedyExSharingDecisionTimeLimitAndBestParkingPlanner");
+			//listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
+			///listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
+			//listPlanner.add("GreedyExSharingDecisionTimeLimitAndBestParkingPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
-			//listPlanner.add("SequenceDecidedBasedOnAPopularPointPlanner");
+			listPlanner.add("SequenceDecidedBasedOnAPopularPointPlanner");
 			//listPlanner.add("GetManyTimesThenAddAPopularPointPlanner");
 			//listPlanner.add("GetManyTimesThenAddASequencePopularPointsPlanner");
 			
@@ -3389,7 +3413,7 @@ public class SimulatorTimeUnit extends Simulator {
 																	//new GreedySharingNoExchangeDecisionTimeLimitPlanner(simulator),
 																	//new GreedySharingNoExchangeDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner(simulator),
 																	//new NaiveSequentialDecisionTimeLimitPlanner(simulator),
-																	//new SequenceDecidedBasedOnAPopularPointPlanner(simulator),
+																	new SequenceDecidedBasedOnAPopularPointPlanner(simulator),
 																	//new GetManyTimesThenAddAPopularPointPlanner(simulator),
 																	//new GetManyTimesThenAddASequencePopularPointsPlanner(simulator)
 																};

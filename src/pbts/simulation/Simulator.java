@@ -583,7 +583,7 @@ public class Simulator {
 public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, PeopleRequest pr) {
 		if(taxi.remainRequestIDs.size() + 2 > maxPendingStops) return null;
 		if(taxi.totalTravelDistance > maxTravelDistance) return null;
-		
+		if(taxi.pendingParcelReqs.size() == 0 && taxi.remainRequestIDs.size() == 0) return null;
 		// find delivery people location
 		int locID = -1;
 		int idxLocID = -1;
@@ -690,7 +690,7 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 								timePoint = newTimePoint;
 								idxLocID = i;
 								d = newD;
-								System.out.println("==================Found nearest point====================");
+								//System.out.println("==================Found nearest point====================");
 							}
 							break;
 						}
@@ -5597,8 +5597,8 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 					continue;
 				if(timePoint < T.start) continue;
 				
-				if(timePoint > 68400)
-					continue;
+				//if(timePoint > 68400)
+				//	continue;
 				
 				// timePoint = earlyPickupTime;
 
@@ -5635,10 +5635,10 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 					continue;
 				if(timePoint < T.start) continue;
 				
-				if(timePoint > 68400)
-					continue;
-				if(earlyPickupTime < 28800 || earlyPickupTime > 57600)
-					continue;
+				//if(timePoint > 68400)
+				//	continue;
+				//if(earlyPickupTime < 28800 || earlyPickupTime > 57600)
+				//	continue;
 				// timePoint = earlyPickupTime;
 
 				ParcelRequest pr = new ParcelRequest(pickupLocationID,
@@ -5646,9 +5646,9 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 				pr.id = id;
 				pr.timePoint = timePoint;
 				pr.earlyPickupTime = earlyPickupTime;
-				pr.latePickupTime = 67500;
-				pr.earlyDeliveryTime = 67500;
-				pr.lateDeliveryTime = 68400;
+				pr.latePickupTime = latePickupTime;
+				pr.earlyDeliveryTime = earlyDeliveryTime;
+				pr.lateDeliveryTime = lateDeliveryTime;
 
 				allParcelRequests.add(pr);
 				mParcelRequest.put(pr.id, pr);

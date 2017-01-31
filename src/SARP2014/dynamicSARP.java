@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import pbts.algorithms.SequenceOptimizer;
 import pbts.entities.ErrorMSG;
 import pbts.entities.Itinerary;
 import pbts.entities.ItineraryTravelTime;
@@ -28,14 +29,16 @@ import pbts.simulation.SimulatorTimeUnit;
 
 public class dynamicSARP {
 	SimulatorTimeUnit sim;
-	dynamicSARPandPredictionPlanner planner;
+	dynamicSARPplanner planner;
 	ArrayList<Stop> parcelRequests;
 	ArrayList<Stop> peopleRequests;
+	public SequenceOptimizer seqOptimizer = null;
 	
 	public dynamicSARP(){
 		sim = new SimulatorTimeUnit();
-		//planner = new dynamicSARPplanner(sim);
-		planner = new dynamicSARPandPredictionPlanner(sim);
+		SequenceOptimizer seqOptimizer = new SequenceOptimizer(sim, sim.maxPendingStops + 12);
+		planner = new dynamicSARPplanner(sim, seqOptimizer);
+		//planner = new dynamicSARPandPredictionPlanner(sim);
 		parcelRequests = new ArrayList<Stop>();
 		peopleRequests = new ArrayList<Stop>();
 	}
@@ -483,7 +486,7 @@ public class dynamicSARP {
 				PeopleRequest peopleR = sim.queuePeopleReq.get(i);
 				for(int k = 0; k < sim.vehicles.size(); k++){
 					Vehicle taxi = sim.vehicles.get(k);
-					if(!sim.T.stopRequest() && taxi.pendingParcelReqs.size() == 0){
+					if(!sim.T.stopRequest() && taxi.pendingParcelReqs.size() == 0 && taxi.remainRequestIDs.size() == 0){
 						double t3 = System.currentTimeMillis();
 						t3 = t3 * 0.001;
 						
@@ -614,10 +617,10 @@ public class dynamicSARP {
 		int decisionTime = 15;
 		for(int day = 1; day <= 10; day++){
 			String requestFileName = data_dir + "SanFrancisco_std\\ins_day_" + day + "_minSpd_5_maxSpd_60.txt";
-			String plannerName = "dynamicSARPandPredictionPlanner";
-			String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
-			String itineraryFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
-			String summaryFileName = data_dir + "SanFrancisco_std\\outputNewPlanner\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
+			String plannerName = "dynamicSARPplanner";
+			String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\temp\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
+			String itineraryFileName = data_dir + "SanFrancisco_std\\temp\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
+			String summaryFileName = data_dir + "SanFrancisco_std\\temp\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
 			
 			for(int i = 0; i < args.length; i++){
 				if(args[i].equals("--mapFileName"))

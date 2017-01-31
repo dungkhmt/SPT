@@ -31,12 +31,12 @@ public class dynamicSARPplanner {
 	
 	public String name(){ return "dynamicSARPplanner";}
 	
-	public dynamicSARPplanner(SimulatorTimeUnit sim){
+	public dynamicSARPplanner(SimulatorTimeUnit sim, SequenceOptimizer seqOptimizer){
 		this.sim = sim;
 		if(sim != null)
 			this.log = sim.log;
 		IO = new ItineraryOptimizer(sim);
-		seqOptimizer = new SequenceOptimizer(sim, sim.maxPendingStops + 12);
+		this.seqOptimizer = seqOptimizer;//new SequenceOptimizer(sim, sim.maxPendingStops + 12);
 	}
 	public void setSimulator(SimulatorTimeUnit sim){
 		this.sim = sim;
@@ -46,9 +46,6 @@ public class dynamicSARPplanner {
 	public ServiceSequence computePeopleInsertionSequence(Vehicle taxi,
 			TimePointIndex tpi, PeopleRequest pr, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs,
 			double maxTime) {
-		if(taxi.ID == 2){
-			int a = 0;
-		}
 			if(sim.hasPeopleDeliveryRequest(remainRequestIDs)){
 				System.out.println(name() + "::computePeopleInsertionSequence, taxi = " + taxi.ID + ", PeopleRequest = " + pr.id + ", FAILED "
 						+ "due to existence of people delivery request in remainRequestIDs " + Utility.arr2String(remainRequestIDs) + 
@@ -109,6 +106,7 @@ public class dynamicSARPplanner {
 			//", taxi.requestStatus = " + taxi.requestStatus());
 				return null;
 			}
+
 			int[] sel_nod = new int[t_sel_nod.length - keptReq.size()];
 			//int idx = -1;
 			System.out.println(name() + "::computePeopleInsertionSequence, t_sel_nod = " + Utility.arr2String(t_sel_nod) + 
@@ -196,13 +194,13 @@ public class dynamicSARPplanner {
 		
 	public void insertPeopleRequest(PeopleRequest pr, double maxTime){
 		double t0 = System.currentTimeMillis();
-		TaxiTimePointIndex ttpi = sim.getNearestAvailableTaxiForPeopleSARP2014(pr, maxTime);
+		TaxiTimePointIndex ttpi = sim.getNearestAvailableTaxiForPeopleSARP2014(seqOptimizer, pr, maxTime);
 		double t= System.currentTimeMillis() - t0;
 		t = t *0.001;
 		if(t > sim.maxTimeCollectAvailableTaxisPeopleInsertion) sim.maxTimeCollectAvailableTaxisPeopleInsertion = t;
 		
 		if(ttpi == null){
-			sim.nbPeopleComplete++;
+			sim.nbPeopleRejects++;
 			System.out.println(name() + "::insertPeopleRequest(pr = " + pr.id + "), nbPeopleRejects = " + sim.nbPeopleRejects + " DUE TO no available taxi found");
 		}else{
 			t0 = System.currentTimeMillis();
