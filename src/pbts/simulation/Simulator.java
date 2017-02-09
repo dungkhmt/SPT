@@ -583,7 +583,7 @@ public class Simulator {
 public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, PeopleRequest pr) {
 		if(taxi.remainRequestIDs.size() + 2 > maxPendingStops) return null;
 		if(taxi.totalTravelDistance > maxTravelDistance) return null;
-		if(taxi.pendingParcelReqs.size() == 0 && taxi.remainRequestIDs.size() == 0) return null;
+		//if(taxi.pendingParcelReqs.size() == 0 && taxi.remainRequestIDs.size() == 0) return null;
 		// find delivery people location
 		int locID = -1;
 		int idxLocID = -1;
@@ -1040,26 +1040,103 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 		double D = 0;
 		for(int i = 1; i < stSequence.size(); i++){
 			int point1 = -1;
+			int early1 = -1;
+			int late1 = -1;
 			PeopleRequest peoR = mPeopleRequest.get(Math.abs(stSequence.get(i-1)));
 			if(peoR != null){
-				if(stSequence.get(i-1) < 0) point1 = peoR.deliveryLocationID; else point1 = peoR.pickupLocationID;
+				if(stSequence.get(i-1) < 0){
+					point1 = peoR.deliveryLocationID;
+					early1 = peoR.earlyDeliveryTime;
+					late1 = peoR.lateDeliveryTime;
+				}
+				else{
+					point1 = peoR.pickupLocationID;
+					early1 = peoR.earlyPickupTime;
+					late1 = peoR.latePickupTime;
+				}
 			}else{
 				ParcelRequest parR = mParcelRequest.get(Math.abs(stSequence.get(i-1)));
-				if(stSequence.get(i-1) < 0) point1 = parR.deliveryLocationID; else point1 = parR.pickupLocationID;
+				if(stSequence.get(i-1) < 0){
+					point1 = parR.deliveryLocationID;
+					early1 = parR.earlyDeliveryTime;
+					late1 = parR.lateDeliveryTime;
+				}
+				else{
+					point1 = parR.pickupLocationID;
+					early1 = parR.earlyPickupTime;
+					late1 = parR.latePickupTime;
+				}
 			}
 			
 			int point2 = -1;
+			int early2 = -1;
+			int late2 = -1;
 			PeopleRequest peoR2 = mPeopleRequest.get(Math.abs(stSequence.get(i)));
 			if(peoR2 != null){
-				if(stSequence.get(i) < 0) point2 = peoR2.deliveryLocationID; else point2 = peoR2.pickupLocationID;
+				if(stSequence.get(i) < 0){
+					point2 = peoR2.deliveryLocationID;
+					early2 = peoR2.earlyDeliveryTime;
+					late2 = peoR2.lateDeliveryTime;
+				}
+				else{
+					point2 = peoR2.pickupLocationID;
+					early2 = peoR2.earlyPickupTime;
+					late2 = peoR2.latePickupTime;
+				}
 			}else{
 				ParcelRequest parR2 = mParcelRequest.get(Math.abs(stSequence.get(i)));
-				if(stSequence.get(i) < 0) point2 = parR2.deliveryLocationID; else point2 = parR2.pickupLocationID;
+				if(stSequence.get(i) < 0){
+					point2 = parR2.deliveryLocationID;
+					early2 = parR2.earlyDeliveryTime;
+					late2 = parR2.lateDeliveryTime;
+				}
+				else{
+					point2 = parR2.pickupLocationID;
+					early2 = parR2.earlyPickupTime;
+					late2 = parR2.latePickupTime;
+				}
 			}
-			
-			D += estimateTravelingDistanceManhattan(point1, point2);
+			double dis = estimateTravelingDistanceManhattan(point1, point2);
+			int min_t = getTravelTime(dis, maxSpeedms);
+			int max_t = getTravelTime(dis, minSpeedms);
+			if(early1 + min_t < early2 || late1 + max_t > late2){
+				return -1;
+			}
+			D +=dis;
 		}
 		return D;
+	}
+	public ArrayList<Integer> checkAllThePositionToInsertPeople(Vehicle taxi, PeopleRequest peoReq){
+		double bestDistance = 1000000;
+		int length = taxi.pendingParcelReqs.size();
+		ArrayList<Integer> stSq = new ArrayList<Integer>(taxi.pendingParcelReqs);
+		ArrayList<Integer> stSq2 = new ArrayList<Integer>(taxi.pendingParcelReqs);
+		ArrayList<Integer> bestSq = null;
+		
+		for(int i = 0; i <= length; i++){
+			stSq = new ArrayList<Integer>(taxi.pendingParcelReqs);
+			if(i == length)
+				stSq.add(peoReq.id);
+			else
+				stSq.add(i, peoReq.id);
+			for(int j = i + 1; j <= length + 1; j++){
+				stSq2 = new ArrayList<Integer>(stSq);
+				if(j == length + 1)
+					stSq2.add(-peoReq.id);
+				else
+					stSq2.add(j, -peoReq.id);
+				double D = calculateTotalTravelManhattanDistance(stSq2);
+				ErrorMSG err = checkServiceSequenceSARP2014(taxi, stSq2);
+				if(err.err == ErrorType.NO_ERROR){
+					if(bestDistance > D){
+						bestDistance = D;
+						bestSq = new ArrayList<Integer>(stSq2);
+					}
+				}
+			}
+		}
+		
+		return bestSq;
 	}
 	
 	public ArrayList<Integer> checkAllThePositionToInsertParcel(Vehicle taxi, ParcelRequest parcelReq){
@@ -2058,16 +2135,17 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 		for(int i = 0; i < vehicles.size(); i++){
 			Vehicle tx = vehicles.get(i);
 			if(tx.ID == taxi.ID){
-				tx.pendingParcelReqs.clear();
-				for(int k = 0; k < taxi.remainRequestIDs.size(); k++){
-					int rqId = taxi.remainRequestIDs.get(k);
-					PeopleRequest peoReq = mPeopleRequest.get(Math.abs(rqId));
-					if(peoReq != null)
-						tx.pendingParcelReqs.clear();
-					else
-						tx.pendingParcelReqs.add(rqId);
+				if(taxi.pendingParcelReqs.size() != 12){
+					for(int k = 0; k < taxi.remainRequestIDs.size(); k++){
+						int rqId = taxi.remainRequestIDs.get(k);
+						PeopleRequest peoReq = mPeopleRequest.get(Math.abs(rqId));
+						if(peoReq != null)
+							tx.pendingParcelReqs.clear();
+						else
+							tx.pendingParcelReqs.add(rqId);
+					}
+					vehicles.set(i, tx);
 				}
-				vehicles.set(i, tx);
 				break;
 			}
 		}
@@ -5597,9 +5675,8 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 					continue;
 				if(timePoint < T.start) continue;
 				
-				//if(timePoint > 68400)
-				//	continue;
-				
+				if(timePoint < 28800 || timePoint > 68400)
+					continue;
 				// timePoint = earlyPickupTime;
 
 				PeopleRequest pr = new PeopleRequest(pickupLocationID,
@@ -5634,21 +5711,19 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 				if (timePoint < 0)
 					continue;
 				if(timePoint < T.start) continue;
-				
-				//if(timePoint > 68400)
-				//	continue;
-				//if(earlyPickupTime < 28800 || earlyPickupTime > 57600)
-				//	continue;
+
+				if(timePoint < 28800 || timePoint > 57600)
+					continue;
 				// timePoint = earlyPickupTime;
 
 				ParcelRequest pr = new ParcelRequest(pickupLocationID,
 						deliveryLocationID);
 				pr.id = id;
 				pr.timePoint = timePoint;
-				pr.earlyPickupTime = earlyPickupTime;
-				pr.latePickupTime = latePickupTime;
-				pr.earlyDeliveryTime = earlyDeliveryTime;
-				pr.lateDeliveryTime = lateDeliveryTime;
+				pr.earlyPickupTime = 28800;
+				pr.latePickupTime = 86400;
+				pr.earlyDeliveryTime = 28801;
+				pr.lateDeliveryTime = 86400;
 
 				allParcelRequests.add(pr);
 				mParcelRequest.put(pr.id, pr);
@@ -5714,7 +5789,10 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 				if (timePoint < 0)
 					continue;
 				if(timePoint < T.start) continue;
-				
+				if(timePoint > 68400)
+					continue;
+				if(earlyPickupTime < 28800 || earlyPickupTime > 64800)
+					continue;
 				// timePoint = earlyPickupTime;
 
 				PeopleRequest pr = new PeopleRequest(pickupLocationID,
@@ -5749,7 +5827,10 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 				if (timePoint < 0)
 					continue;
 				if(timePoint < T.start) continue;
-				
+				if(timePoint > 68400)
+					continue;
+				if(earlyPickupTime < 28800 || earlyPickupTime > 57600)
+					continue;
 				// timePoint = earlyPickupTime;
 
 				ParcelRequest pr = new ParcelRequest(pickupLocationID,
@@ -5758,8 +5839,10 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 				pr.timePoint = timePoint;
 				pr.earlyPickupTime = earlyPickupTime;
 				pr.latePickupTime = latePickupTime;
-				pr.earlyDeliveryTime = earlyDeliveryTime;
+				pr.earlyDeliveryTime = 28801;
 				pr.lateDeliveryTime = lateDeliveryTime;
+				if(pr.lateDeliveryTime < 64800)
+					pr.lateDeliveryTime = 64800;
 
 				allParcelRequests.add(pr);
 				mParcelRequest.put(pr.id, pr);

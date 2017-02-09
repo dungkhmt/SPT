@@ -28,15 +28,15 @@ import pbts.simulation.Simulator;
 import pbts.simulation.SimulatorTimeUnit;
 
 public class dynamicSARP {
-	SimulatorTimeUnit sim;
-	dynamicSARPplanner planner;
-	ArrayList<Stop> parcelRequests;
-	ArrayList<Stop> peopleRequests;
+	public SimulatorTimeUnit sim;
+	public dynamicSARPplanner planner;
+	public ArrayList<Stop> parcelRequests;
+	public ArrayList<Stop> peopleRequests;
 	public SequenceOptimizer seqOptimizer = null;
 	
 	public dynamicSARP(){
 		sim = new SimulatorTimeUnit();
-		SequenceOptimizer seqOptimizer = new SequenceOptimizer(sim, sim.maxPendingStops + 12);
+		SequenceOptimizer seqOptimizer = new SequenceOptimizer(sim, sim.maxPendingStops + 24);
 		planner = new dynamicSARPplanner(sim, seqOptimizer);
 		//planner = new dynamicSARPandPredictionPlanner(sim);
 		parcelRequests = new ArrayList<Stop>();
@@ -425,23 +425,10 @@ public class dynamicSARP {
 
 		sim.insertedParcelRequests = new ArrayList<ParcelRequest>();
 		sim.insertedPeopleRequests = new ArrayList<PeopleRequest>();
-
-		String fileName = "E:\\Project\\pbts\\git_project\\SPT\\Li2014Info.txt";
-		String fileName2 = "E:\\Project\\pbts\\git_project\\SPT\\Li2014InfoOneTaxi.txt";
-		double t1 = 0;
-		t1 = System.currentTimeMillis();
-		t1 = t1 * 0.001;
 		
 		generateInitialRoutes();
-		try{
-			PrintWriter out= new PrintWriter(fileName);
-			double t2 = System.currentTimeMillis();
-			t2 = t2 * 0.001;
-			out.println("End init: " + (t2-t1));
-			out.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		System.out.println("total people reqs: " + sim.allPeopleRequests.size() + ", total parcels: " + sim.allParcelRequests.size() + ", inserted parcels: " + sim.insertedParcelRequests.size());
+
 		sim.totalParcelRequests = sim.allParcelRequests.size();
 		while (!sim.T.finished()) {
 			if((sim.T.currentTimePoint - sim.T.start)%10 == 0 && sim.T.currentTimePoint > sim.T.start){
@@ -486,21 +473,23 @@ public class dynamicSARP {
 				PeopleRequest peopleR = sim.queuePeopleReq.get(i);
 				for(int k = 0; k < sim.vehicles.size(); k++){
 					Vehicle taxi = sim.vehicles.get(k);
-					if(!sim.T.stopRequest() && taxi.pendingParcelReqs.size() == 0 && taxi.remainRequestIDs.size() == 0){
-						double t3 = System.currentTimeMillis();
-						t3 = t3 * 0.001;
-						
+					if(!sim.T.stopRequest() && taxi.pendingParcelReqs.size() == 0 && taxi.remainRequestIDs.size() == 0){						
 						taxi = greedyInsertionRoute(taxi);
-						try{
-							PrintWriter out= new PrintWriter(fileName2);
-							double t2 = System.currentTimeMillis();
-							t2 = t2 * 0.001;
-							out.println("End init of a taxi: " + (t2- t3));
-							out.close();
-						} catch (Exception ex) {
-							ex.printStackTrace();
+						//sim.vehicles.set(k, taxi);
+					}
+					if(sim.runningPeopleRequests.size() == 0){
+						ArrayList<ParcelRequest> parL = new ArrayList<ParcelRequest>();
+						for(int l = 0; l < taxi.pendingParcelReqs.size(); l++){
+							for(int m = 0; m < sim.allParcelRequests.size(); m++){
+								ParcelRequest par = sim.allParcelRequests.get(m);
+								if(par.id == taxi.pendingParcelReqs.get(l)){
+									parL.add(par);
+									break;
+								}
+							}
 						}
-						sim.vehicles.set(k, taxi);
+						planner.processParcelRequests(parL, taxi);
+						taxi.pendingParcelReqs.clear();
 					}
 				}
 				
@@ -607,7 +596,7 @@ public class dynamicSARP {
 	}
 	
 	public static void main(String[] args){
-		String data_dir = "E:\\Project\\pbts\\git_project\\SPT\\";
+		String data_dir = "C:\\DungPQ\\projects\\SPT\\SPT\\";
 		String mapFileName = data_dir + "SanFrancisco_std\\SanfranciscoRoad-connected-contracted-5-refine-50.txt";
 		String configFileName = data_dir + "SanFrancisco_std\\config-parameters.txt";
 		String depotParkingFileName = data_dir + "SanFrancisco_std\\depots1000-parkings34.txt";
@@ -615,12 +604,12 @@ public class dynamicSARP {
 		int maxTimeReceiveRequest = 86400;
 		int startSimulationTime = 0;
 		int decisionTime = 15;
-		for(int day = 1; day <= 10; day++){
+		for(int day = 1; day <= 9; day++){
 			String requestFileName = data_dir + "SanFrancisco_std\\ins_day_" + day + "_minSpd_5_maxSpd_60.txt";
 			String plannerName = "dynamicSARPplanner";
-			String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\temp\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
-			String itineraryFileName = data_dir + "SanFrancisco_std\\temp\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
-			String summaryFileName = data_dir + "SanFrancisco_std\\temp\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
+			String progressiveStatisticFileName = data_dir + "SanFrancisco_std\\all_in_8h_19h\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-statistic-progress.txt";
+			String itineraryFileName = data_dir + "SanFrancisco_std\\all_in_8h_19h\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-itinerary.txt";
+			String summaryFileName = data_dir + "SanFrancisco_std\\all_in_8h_19h\\ins_day_" + day +"_minSpd_5_maxSpd_60.txt-planner"+ plannerName + "-maxPendingStops10-decisionTime15-summary.xml";
 			
 			for(int i = 0; i < args.length; i++){
 				if(args[i].equals("--mapFileName"))

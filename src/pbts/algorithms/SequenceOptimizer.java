@@ -313,9 +313,6 @@ public class SequenceOptimizer {
 				if (k == n - 1) {
 					ErrorMSG err = sim.checkServiceSequence(taxi, tpi, x, keptReq.size(), n);
 
-					if(taxi.ID == 2){
-						int ab = 0;
-					}
 					if (err.err == ErrorType.NO_ERROR) {
 						if (cost < best) {
 							best = cost;

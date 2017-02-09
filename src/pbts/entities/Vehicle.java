@@ -1477,12 +1477,6 @@ public class Vehicle {
 			return;
 		}
 		
-		for(int i = 0; i < I.size(); i++){
-			VehicleAction act = I.getAction(i);
-			if(act == VehicleAction.PICKUP_PARCEL || act == VehicleAction.DELIVERY_PARCEL){
-				//System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-			}
-		}
 		//if(currentTimePoint == I.getArrivalTime(lastIndexPoint+1)){
 			//lastIndexPoint++;
 			//lastPoint = I.get(lastIndexPoint);

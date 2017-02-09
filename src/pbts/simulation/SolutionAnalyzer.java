@@ -521,6 +521,9 @@ public class SolutionAnalyzer {
 			out.println("<fuel>" + AT.fuelCost + "</fuel>");
 			out.println("<served-parcels>" + AT.nbServedParcels + "</served-parcels>");
 			out.println("<served-people>" + AT.nbServedPassengers + "</served-people>");
+			out.println("<total-parcels>" + sim.totalParcelRequests + "</total-parcels>");
+			out.println("<total-people>" + sim.totalPeopleRequests + "</total-people>");
+			out.println("<wait-parcel>" + sim.nbParcelWaitBoarding + "</wait-parcel>");
 			out.println("<revenue-parcel>" + AT.revenueParcels + "</revenue-parcel>");
 			out.println("<revenue-people>" + AT.revenuePassengers + "</revenue-people>");
 			out.println("<shared-people-services>" + AT.nbSharedPeopleService + "</shared-people-services>");
