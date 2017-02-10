@@ -1036,7 +1036,7 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 		return Math.abs(ull.lat - vll.lat) + Math.abs(ull.lng - vll.lng);
 	}
 	
-	public double calculateTotalTravelManhattanDistance(ArrayList<Integer> stSequence){
+	public double calculateTotalTravelManhattanDistance(Vehicle taxi, ArrayList<Integer> stSequence){
 		double D = 0;
 		int t_min = 0;
 		int t_max = 0;
@@ -1102,17 +1102,21 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 				}
 			}
 			
-			Itinerary I = dijkstra.queryShortestPath(point1, point2);
-			//double dis = estimateTravelingDistance(point1, point2);
-			int min_t = getTravelTime(I.getDistance(), maxSpeedms);
-			int max_t = getTravelTime(I.getDistance(), minSpeedms);
+			//Itinerary I = dijkstra.queryShortestPath(point1, point2);
+			double dis = estimateTravelingDistance(point1, point2);
+			int min_t = getTravelTime(dis, maxSpeedms);
+			int max_t = getTravelTime(dis, minSpeedms);
 			t_min += min_t;
 			t_max += max_t;
 			if(t_min < early2 || t_max > late2){
 				return -1;
 			}
-			D +=I.getDistance();
+			D += dis;
 		}
+		int pickFirstTime = getTravelTime(taxi.lastIndexPoint, stSequence.get(0));
+		int totalTime = getTravelTime(D, minSpeedms);
+		if(totalTime + pickFirstTime > 18000)
+			return -1;
 		return D;
 	}
 	public ArrayList<Integer> checkAllThePositionToInsertPeople(Vehicle taxi, PeopleRequest peoReq){
@@ -1134,7 +1138,7 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 					stSq2.add(-peoReq.id);
 				else
 					stSq2.add(j, -peoReq.id);
-				double D = calculateTotalTravelManhattanDistance(stSq2);
+				double D = calculateTotalTravelManhattanDistance(taxi, stSq2);
 				ErrorMSG err = checkServiceSequenceSARP2014(taxi, stSq2);
 				if(err.err == ErrorType.NO_ERROR){
 					if(bestDistance > D && D > 0){
@@ -1167,7 +1171,7 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 					stSq2.add(-parcelReq.id);
 				else
 					stSq2.add(j, -parcelReq.id);
-				double D = calculateTotalTravelManhattanDistance(stSq2);
+				double D = calculateTotalTravelManhattanDistance(taxi, stSq2);
 				ErrorMSG err = checkServiceSequenceSARP2014(taxi, stSq2);
 				if(err.err == ErrorType.NO_ERROR){
 					if(bestDistance > D && D > 0){
