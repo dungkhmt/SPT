@@ -277,28 +277,25 @@ public class dynamicSARPplanner {
 	}
 	
 	public ServiceSequence computeParcelInsertionSequence(Vehicle taxi,
-			TimePointIndex tpi, ParcelRequest pr, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs) {
-		if(taxi.ID == sim.debugTaxiID){
-			log.println(name() + "::computeParcelInsertionSequence, taxi " + taxi.ID + ", pr = " + pr.id + " tpi = " + tpi.toString() + 
-					", keptReq = " + Utility.arr2String(keptReq) + ", remainrequestIDs = "
-				+ Utility.arr2String(remainRequestIDs) + ", taxi.requestStatus = " + taxi.requestStatus());		
-		}
+			TimePointIndex tpi, ArrayList<ParcelRequest> parL, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs) {
 		ArrayList<Integer> parkings = sim.collectAvailableParkings(taxi);
 		ServiceSequence ss = null;
 		
 		//[SonNV] Create new remainRequests array consist of remain request and pr (pickup and delivery).
-		int[] sel_nod = new int[remainRequestIDs.size() + 2];
+		int[] sel_nod = new int[remainRequestIDs.size() + 2 * parL.size()];
 		for(int i = 0; i < remainRequestIDs.size(); i++)
 			sel_nod[i] = remainRequestIDs.get(i);
 		//insert into end of array.
-		sel_nod[sel_nod.length-2] = pr.id;
-		sel_nod[sel_nod.length-1] = -pr.id;
-		
+		for(int i = 0; i < parL.size(); i++){
+			ParcelRequest pr = parL.get(i);
+			sel_nod[remainRequestIDs.size() + i] = pr.id;
+			sel_nod[remainRequestIDs.size() + i + 1] = -pr.id;
+		}
 		int sel_pk = -1;
 		double minD = 100000000;
 		//[SonNV] Get location id of last point in remain requests. In remain requests array, the last element is new parcel request.
-		ParcelRequest parR = sim.mParcelRequest.get(Math.abs(pr.id));
-		int endLocID = parR.deliveryLocationID;
+		ParcelRequest par = sim.mParcelRequest.get(Math.abs(sel_nod[sel_nod.length -1]));
+		int endLocID = par.deliveryLocationID;
 		
 		//[SonNV]Compute distance from last point in remain request to parking. Then,the nearest parking is inserted.
 		LatLng endLL = sim.map.mLatLng.get(endLocID);
@@ -319,10 +316,10 @@ public class dynamicSARPplanner {
 	}
 
 	public ItineraryServiceSequence computeItineraryParcelInsertion(
-			Vehicle taxi, TimePointIndex next_tpi, ParcelRequest pr, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs) {
+			Vehicle taxi, TimePointIndex next_tpi, ArrayList<ParcelRequest> parL, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs) {
 		// compute best added itinerary when pr is inserted into taxi.
 		ServiceSequence ss = computeParcelInsertionSequence(taxi, next_tpi,
-				pr, keptReq, remainRequestIDs);
+				parL, keptReq, remainRequestIDs);
 		int fromIndex = next_tpi.indexPoint;
 		int nextStartTimePoint = next_tpi.timePoint;
 		int fromPoint = next_tpi.point;
@@ -353,24 +350,24 @@ public class dynamicSARPplanner {
 		return new ItineraryServiceSequence(taxi, I, ss);
 	}
 	
-	public void insertParcelRequest(ParcelRequest pr, Vehicle taxi, TimePointIndex tpi, ArrayList<Integer> keptReq, 
+	public void insertParcelRequest(ArrayList<ParcelRequest> parL, Vehicle taxi, TimePointIndex tpi, ArrayList<Integer> keptReq, 
 			ArrayList<Integer> remainRequestIDs, double maxTime){
-		ItineraryServiceSequence IS = computeItineraryParcelInsertion(taxi,tpi, pr, keptReq, remainRequestIDs);
+		ItineraryServiceSequence IS = computeItineraryParcelInsertion(taxi,tpi, parL, keptReq, remainRequestIDs);
 		if(IS == null){
-			System.out.println(name() + "::insertParcelRequest, pr = " + pr.id + " IS = null");
-			sim.nbParcelRejects++;
+			System.out.println(name() + "::insertParcelRequest " + " IS = null");
+			sim.nbParcelRejects +=parL.size();
 			System.out.println(name() + "::insertParcelRequest --> request "
-					+ pr.id + " is REJECTED due to sel_IS = null, nbPeopleRejected = "
+					+ " is REJECTED due to sel_IS = null, nbPeopleRejected = "
 					+ sim.nbPeopleRejects + "/" + sim.allPeopleRequests.size());
-			sim.log.println(name() + "::insertParcelRequest --> request " + pr.id
+			sim.log.println(name() + "::insertParcelRequest --> request "
 					+ " is REJECTED --> System.exit(-1)");
 			//sim.log.close();
 			//System.exit(-1);
 		}else{
-			System.out.println(name() + "::insertParcelRequest, pr = " + pr.id + " IS = NOT null");
+			System.out.println(name() + "::insertParcelRequest, " + " IS = NOT null");
 			ErrorMSG err = sim.checkServiceSequence(taxi, keptReq, IS.ss.rids, IS.ss.rids.length); 
 			if(err.err != ErrorType.NO_ERROR){
-				System.out.println(name() + "::insertParcelRequest, pr = " + pr.id + ", taxi = " + taxi.ID + ", IS not LEGAL?????" + "\" + "
+				System.out.println(name() + "::insertParcelRequest, pr = "  + ", taxi = " + taxi.ID + ", IS not LEGAL?????" + "\" + "
 						+ "\n peopleOnBoard = " + Utility.arr2String(taxi.peopleReqIDonBoard) + ", parcelOnBoard = " + 
 						Utility.arr2String(taxi.parcelReqIDonBoard) + ", sequence = " + Utility.arr2String(IS.ss.rids) + 
 						"\n keptReq = " + Utility.arr2String(keptReq) + ", remainrequestIDs = " + 
@@ -389,7 +386,7 @@ public class dynamicSARPplanner {
 			
 			//sim.admitNewItinerary(taxi, tpi.timePoint, tpi.indexPoint, tpi.point, IS.I, IS.ss);
 			sim.admitNewItineraryWithoutStatus(taxi, tpi.timePoint, tpi.indexPoint, tpi.point, IS.I, IS.ss);
-			sim.nbParcelWaitBoarding++;
+			sim.nbParcelWaitBoarding += parL.size();
 			if(taxi.ID == sim.debugTaxiID){
 				sim.log.println(name() + "::insertParcelRequest, AFTER admit itinerary, currentItinerary = " + taxi.currentItinerary.toString());
 				
@@ -428,31 +425,21 @@ public class dynamicSARPplanner {
 	public void processParcelRequests(ArrayList<ParcelRequest> parReq, Vehicle taxi) {
 		// TODO Auto-generated method stub
 		double startDecideTime = System.currentTimeMillis();
-		for(int i = 0; i < parReq.size(); i++){
-			//System.out.println("AAAAAAAAAAAAAAAAAAAAAA");
 			double t = (System.currentTimeMillis()-startDecideTime)*0.001; 
-			if(t > sim.maxTimeAllowedOnlineDecision){
-				sim.nbParcelRejects++;
-				System.out.println(name() + "::processParcelRequests, nbParcelRejects = " + sim.nbParcelRejects + 
-						" DUE TO online decision time expired t = " + t + ", sim.maxTimeAllowedOnlineDecision = " + sim.maxTimeAllowedOnlineDecision);
-				continue;
-			}
-			ParcelRequest pr = parReq.get(i);
-			TaxiTimePointIndex ttpi = sim.estimatePickupPlusDeliveryDistanceTaxi(taxi, pr);
+			TimePointIndex tpi = taxi.getNextTimePointIndex(taxi.lastIndexPoint,
+					sim.T.currentTimePoint, sim.TimePointDuration);
+			
+			TaxiTimePointIndex ttpi = new TaxiTimePointIndex(taxi, tpi,
+					taxi.remainRequestIDs, new ArrayList<Integer>());
+			//TaxiTimePointIndex ttpi = sim.estimatePickupPlusDeliveryDistanceTaxi(taxi, pr);
 			double t0 = System.currentTimeMillis();
-			if(ttpi == null){
-				System.out.println(name() + "::processParcelRequests, nbParcelRejects = " + sim.nbParcelRejects + 
-						"DUE TO no available taxi found");
-			}else{
-				insertParcelRequest(pr,ttpi.taxi,ttpi.tpi,ttpi.keptRequestIDs, ttpi.remainRequestIDs,
+			insertParcelRequest(parReq,ttpi.taxi,ttpi.tpi,ttpi.keptRequestIDs, ttpi.remainRequestIDs,
 					sim.maxTimeAllowedInsertOneParcel);
-			}
 			t = System.currentTimeMillis() - t0;
 			t = t*0.001;
 			if(t > sim.maxTimeOneParcelInsertion) sim.maxTimeOneParcelInsertion = t;
 			
 			System.out.println(name() + "::procesParcelRequests, sim.status = " + sim.getAcceptRejectStatus());
-		}
 		//IO.moveGreedyExchangeSARP2014(startDecideTime);
 	}
 }

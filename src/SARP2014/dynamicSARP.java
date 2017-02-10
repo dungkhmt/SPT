@@ -488,7 +488,9 @@ public class dynamicSARP {
 								}
 							}
 						}
-						planner.processParcelRequests(parL, taxi);
+						if(parL.size() != 0){
+							planner.processParcelRequests(parL, taxi);
+						}
 						taxi.pendingParcelReqs.clear();
 					}
 				}

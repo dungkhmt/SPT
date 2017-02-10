@@ -1038,6 +1038,8 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 	
 	public double calculateTotalTravelManhattanDistance(ArrayList<Integer> stSequence){
 		double D = 0;
+		int t_min = 0;
+		int t_max = 0;
 		for(int i = 1; i < stSequence.size(); i++){
 			int point1 = -1;
 			int early1 = -1;
@@ -1067,7 +1069,10 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 					late1 = parR.latePickupTime;
 				}
 			}
-			
+			if(i == 1){
+				t_min += early1;
+				t_max += late1;
+			}
 			int point2 = -1;
 			int early2 = -1;
 			int late2 = -1;
@@ -1096,13 +1101,17 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 					late2 = parR2.latePickupTime;
 				}
 			}
-			double dis = estimateTravelingDistanceManhattan(point1, point2);
-			int min_t = getTravelTime(dis, maxSpeedms);
-			int max_t = getTravelTime(dis, minSpeedms);
-			if(early1 + min_t < early2 || late1 + max_t > late2){
+			
+			Itinerary I = dijkstra.queryShortestPath(point1, point2);
+			//double dis = estimateTravelingDistance(point1, point2);
+			int min_t = getTravelTime(I.getDistance(), maxSpeedms);
+			int max_t = getTravelTime(I.getDistance(), minSpeedms);
+			t_min += min_t;
+			t_max += max_t;
+			if(t_min < early2 || t_max > late2){
 				return -1;
 			}
-			D +=dis;
+			D +=I.getDistance();
 		}
 		return D;
 	}
@@ -1128,7 +1137,7 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 				double D = calculateTotalTravelManhattanDistance(stSq2);
 				ErrorMSG err = checkServiceSequenceSARP2014(taxi, stSq2);
 				if(err.err == ErrorType.NO_ERROR){
-					if(bestDistance > D){
+					if(bestDistance > D && D > 0){
 						bestDistance = D;
 						bestSq = new ArrayList<Integer>(stSq2);
 					}
@@ -1161,7 +1170,7 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 				double D = calculateTotalTravelManhattanDistance(stSq2);
 				ErrorMSG err = checkServiceSequenceSARP2014(taxi, stSq2);
 				if(err.err == ErrorType.NO_ERROR){
-					if(bestDistance > D){
+					if(bestDistance > D && D > 0){
 						bestDistance = D;
 						bestSq = new ArrayList<Integer>(stSq2);
 					}
@@ -5722,7 +5731,7 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 				pr.timePoint = timePoint;
 				pr.earlyPickupTime = 28800;
 				pr.latePickupTime = 86400;
-				pr.earlyDeliveryTime = 28801;
+				pr.earlyDeliveryTime = 28800;
 				pr.lateDeliveryTime = 86400;
 
 				allParcelRequests.add(pr);
