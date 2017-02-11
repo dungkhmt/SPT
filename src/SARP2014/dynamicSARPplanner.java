@@ -78,7 +78,7 @@ public class dynamicSARPplanner {
 				//L.add(r[i]);
 			//}
 			if(taxi.pendingParcelReqs.size() == 12){
-				L = sim.checkAllThePositionToInsertPeople(taxi, pr);
+				L = sim.checkAllThePositionToInsertPeople(startTimePoint, taxi, pr);
 				if(L != null){
 					sim.nbParcelWaitBoarding +=6;
 					taxi.pendingParcelReqs.clear();

@@ -1124,7 +1124,91 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 		*/
 		return D;
 	}
-	public ArrayList<Integer> checkAllThePositionToInsertPeople(Vehicle taxi, PeopleRequest peoReq){
+	
+	public double calculateTotalTravelManhattanDistanceForPeople(int startTimePoint, Vehicle taxi, ArrayList<Integer> stSequence){
+		double D = 0;
+		int t_min = startTimePoint;
+		int t_max = startTimePoint;
+		int startPoint = taxi.lastPoint;
+		for(int i = 1; i < stSequence.size(); i++){
+			int point1 = -1;
+			int early1 = -1;
+			int late1 = -1;
+			PeopleRequest peoR = mPeopleRequest.get(Math.abs(stSequence.get(i-1)));
+			if(peoR != null){
+				if(stSequence.get(i-1) < 0){
+					point1 = peoR.deliveryLocationID;
+					early1 = peoR.earlyDeliveryTime;
+					late1 = peoR.lateDeliveryTime;
+				}
+				else{
+					point1 = peoR.pickupLocationID;
+					early1 = peoR.earlyPickupTime;
+					late1 = peoR.latePickupTime;
+				}
+			}else{
+				ParcelRequest parR = mParcelRequest.get(Math.abs(stSequence.get(i-1)));
+				if(stSequence.get(i-1) < 0){
+					point1 = parR.deliveryLocationID;
+					early1 = parR.earlyDeliveryTime;
+					late1 = parR.lateDeliveryTime;
+				}
+				else{
+					point1 = parR.pickupLocationID;
+					early1 = parR.earlyPickupTime;
+					late1 = parR.latePickupTime;
+				}
+			}
+			int point2 = -1;
+			int early2 = -1;
+			int late2 = -1;
+			PeopleRequest peoR2 = mPeopleRequest.get(Math.abs(stSequence.get(i)));
+			if(peoR2 != null){
+				if(stSequence.get(i) < 0){
+					point2 = peoR2.deliveryLocationID;
+					early2 = peoR2.earlyDeliveryTime;
+					late2 = peoR2.lateDeliveryTime;
+				}
+				else{
+					point2 = peoR2.pickupLocationID;
+					early2 = peoR2.earlyPickupTime;
+					late2 = peoR2.latePickupTime;
+				}
+			}else{
+				ParcelRequest parR2 = mParcelRequest.get(Math.abs(stSequence.get(i)));
+				if(stSequence.get(i) < 0){
+					point2 = parR2.deliveryLocationID;
+					early2 = parR2.earlyDeliveryTime;
+					late2 = parR2.lateDeliveryTime;
+				}
+				else{
+					point2 = parR2.pickupLocationID;
+					early2 = parR2.earlyPickupTime;
+					late2 = parR2.latePickupTime;
+				}
+			}
+			
+			//Itinerary I = dijkstra.queryShortestPath(point1, point2);
+			double dis = estimateTravelingDistance(point1, point2);
+			int min_t = getTravelTime(dis, maxSpeedms);
+			int max_t = getTravelTime(dis, minSpeedms);
+			t_min += min_t;
+			t_max += max_t;
+			if(t_min < early2 || t_max > late2){
+				return -1;
+			}
+			D += dis;
+		}
+		//Itinerary I = dijkstra.queryShortestPath(taxi.lastPoint, startPoint);
+		/*double dis = estimateTravelingDistance(taxi.lastPoint, startPoint);
+		int pickFirstTime = getTravelTime(dis, minSpeedms);
+		int totalTime = getTravelTime(D, minSpeedms);
+		if(totalTime + pickFirstTime > 18000)
+			return -1;
+		*/
+		return D;
+	}
+	public ArrayList<Integer> checkAllThePositionToInsertPeople(int startTimePoint, Vehicle taxi, PeopleRequest peoReq){
 		double bestDistance = 1000000;
 		int length = taxi.pendingParcelReqs.size();
 		ArrayList<Integer> stSq = new ArrayList<Integer>(taxi.pendingParcelReqs);
@@ -1143,7 +1227,7 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 					stSq2.add(-peoReq.id);
 				else
 					stSq2.add(j, -peoReq.id);
-				double D = calculateTotalTravelManhattanDistance(taxi, stSq2);
+				double D = calculateTotalTravelManhattanDistanceForPeople(startTimePoint, taxi, stSq2);
 				ErrorMSG err = checkServiceSequenceSARP2014(taxi, stSq2);
 				if(err.err == ErrorType.NO_ERROR){
 					if(bestDistance > D && D > 0){
