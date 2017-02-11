@@ -209,12 +209,25 @@ public class dynamicSARPplanner {
 			System.out.println(name() + "::insertPeopleRequest(pr = " + pr.id + "), nbPeopleRejects = " + sim.nbPeopleRejects + " DUE TO no available taxi found");
 		}else{
 			t0 = System.currentTimeMillis();
-			
+			boolean ok = false;
+			ArrayList<Integer> pending = new ArrayList<Integer>(ttpi.taxi.pendingParcelReqs);
+			if(ttpi.taxi.pendingParcelReqs.size() == 12){
+				ok = true;
+			}
 			ItineraryServiceSequence IS = computeItineraryPeopleInsertion(ttpi.taxi, ttpi.tpi, pr, 
 					ttpi.keptRequestIDs, ttpi.remainRequestIDs, maxTime);
 			if(IS == null){
 				System.out.println(name() + "::insertPeopleRequest, pr = " + pr.id + " IS = null");
 				sim.nbPeopleRejects++;
+				if(ok == true){
+					for(int i = 0; i < sim.vehicles.size(); i++){
+						Vehicle tx = sim.vehicles.get(i);
+						if(tx.ID == ttpi.taxi.ID){
+							tx.pendingParcelReqs = new ArrayList<Integer>(pending);
+							break;
+						}
+					}
+				}
 				System.out.println(name() + "::insertPeopleRequest --> request "
 						+ pr.id + " is REJECTED due to sel_IS = null, nbPeopleRejected = "
 						+ sim.nbPeopleRejects + "/" + sim.allPeopleRequests.size());
