@@ -1116,11 +1116,12 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 			D += dis;
 		}
 		//Itinerary I = dijkstra.queryShortestPath(taxi.lastPoint, startPoint);
-		double dis = estimateTravelingDistance(taxi.lastPoint, startPoint);
+		/*double dis = estimateTravelingDistance(taxi.lastPoint, startPoint);
 		int pickFirstTime = getTravelTime(dis, minSpeedms);
 		int totalTime = getTravelTime(D, minSpeedms);
 		if(totalTime + pickFirstTime > 18000)
 			return -1;
+		*/
 		return D;
 	}
 	public ArrayList<Integer> checkAllThePositionToInsertPeople(Vehicle taxi, PeopleRequest peoReq){

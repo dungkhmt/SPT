@@ -385,7 +385,7 @@ public class dynamicSARP {
 		for(int i = 0; i < sim.vehicles.size(); i++){
 			Vehicle taxi = sim.vehicles.get(i);
 			taxi = greedyInsertionRoute(taxi);
-			System.out.println("taxi: " + i + ", pending: " + taxi.pendingParcelReqs.size());
+			//System.out.println("taxi: " + i + ", pending: " + taxi.pendingParcelReqs.size());
 		}
 	}
 	
@@ -469,28 +469,15 @@ public class dynamicSARP {
 				}
 			}
 
+			for(int k = 0; k < sim.vehicles.size(); k++){
+				Vehicle taxi = sim.vehicles.get(k);
+				if(!sim.T.stopRequest() && taxi.pendingParcelReqs.size() == 0 && taxi.remainRequestIDs.size() == 0){						
+					taxi = greedyInsertionRoute(taxi);
+					//sim.vehicles.set(k, taxi);
+				}
+			}
 			for (int i = 0; i < sim.queuePeopleReq.size(); i++) {
 				PeopleRequest peopleR = sim.queuePeopleReq.get(i);
-				for(int k = 0; k < sim.vehicles.size(); k++){
-					Vehicle taxi = sim.vehicles.get(k);
-					if(!sim.T.stopRequest() && taxi.pendingParcelReqs.size() == 0 && taxi.remainRequestIDs.size() == 0){						
-						taxi = greedyInsertionRoute(taxi);
-						//sim.vehicles.set(k, taxi);
-					}
-					if(sim.runningPeopleRequests.size() == 0){
-						ArrayList<ParcelRequest> parL = new ArrayList<ParcelRequest>();
-						for(int l = 0; l < taxi.pendingParcelReqs.size(); l++){
-							if(taxi.pendingParcelReqs.get(l) > 0){
-								ParcelRequest par = sim.mParcelRequest.get(taxi.pendingParcelReqs.get(l));
-								parL.add(par);
-							}
-						}
-						if(parL.size() != 0){
-							planner.processParcelRequests(parL, taxi);
-						}
-						taxi.pendingParcelReqs.clear();
-					}
-				}
 				
 				sim.totalPeopleRequests++;
 				if (sim.T.stopRequest()) {
@@ -538,6 +525,19 @@ public class dynamicSARP {
 			
 			sim.T.move(Simulator.TimePointDuration);
 			sim.receiveRequests();
+			
+			if(sim.runningPeopleRequests.size() == 0){
+				for(int k = 0; k < sim.vehicles.size(); k++){
+					Vehicle taxi = sim.vehicles.get(k);
+					for(int l = 0; l < taxi.pendingParcelReqs.size(); l++){
+						if(taxi.pendingParcelReqs.get(l) > 0){
+							ParcelRequest par = sim.mParcelRequest.get(taxi.pendingParcelReqs.get(l));
+							planner.processParcelRequests(par, taxi);
+						}
+					}
+					taxi.pendingParcelReqs.clear();
+				}
+			}
 			// log.println("-------------------");
 		}
 

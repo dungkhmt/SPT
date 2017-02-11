@@ -277,25 +277,21 @@ public class dynamicSARPplanner {
 	}
 	
 	public ServiceSequence computeParcelInsertionSequence(Vehicle taxi,
-			TimePointIndex tpi, ArrayList<ParcelRequest> parL, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs) {
+			TimePointIndex tpi, ParcelRequest parL, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs) {
 		ArrayList<Integer> parkings = sim.collectAvailableParkings(taxi);
 		ServiceSequence ss = null;
 		
 		//[SonNV] Create new remainRequests array consist of remain request and pr (pickup and delivery).
-		int[] sel_nod = new int[remainRequestIDs.size() + 2 * parL.size()];
+		int[] sel_nod = new int[remainRequestIDs.size() + 2];
 		for(int i = 0; i < remainRequestIDs.size(); i++)
 			sel_nod[i] = remainRequestIDs.get(i);
 		//insert into end of array.
-		for(int i = 0; i < parL.size(); i++){
-			ParcelRequest pr = parL.get(i);
-			sel_nod[remainRequestIDs.size() + i] = pr.id;
-			sel_nod[remainRequestIDs.size() + i + 1] = -pr.id;
-		}
+		sel_nod[remainRequestIDs.size()] = parL.id;
+		sel_nod[remainRequestIDs.size() + 1] = -parL.id;
 		int sel_pk = -1;
 		double minD = 100000000;
 		//[SonNV] Get location id of last point in remain requests. In remain requests array, the last element is new parcel request.
-		ParcelRequest par = parL.get(parL.size() - 1);
-		int endLocID = par.deliveryLocationID;
+		int endLocID = parL.deliveryLocationID;
 		
 		//[SonNV]Compute distance from last point in remain request to parking. Then,the nearest parking is inserted.
 		LatLng endLL = sim.map.mLatLng.get(endLocID);
@@ -316,7 +312,7 @@ public class dynamicSARPplanner {
 	}
 
 	public ItineraryServiceSequence computeItineraryParcelInsertion(
-			Vehicle taxi, TimePointIndex next_tpi, ArrayList<ParcelRequest> parL, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs) {
+			Vehicle taxi, TimePointIndex next_tpi, ParcelRequest parL, ArrayList<Integer> keptReq, ArrayList<Integer> remainRequestIDs) {
 		// compute best added itinerary when pr is inserted into taxi.
 		ServiceSequence ss = computeParcelInsertionSequence(taxi, next_tpi,
 				parL, keptReq, remainRequestIDs);
@@ -350,12 +346,20 @@ public class dynamicSARPplanner {
 		return new ItineraryServiceSequence(taxi, I, ss);
 	}
 	
-	public void insertParcelRequest(ArrayList<ParcelRequest> parL, Vehicle taxi, TimePointIndex tpi, ArrayList<Integer> keptReq, 
+	public void insertParcelRequest(ParcelRequest parL, Vehicle taxi, TimePointIndex tpi, ArrayList<Integer> keptReq, 
 			ArrayList<Integer> remainRequestIDs, double maxTime){
 		ItineraryServiceSequence IS = computeItineraryParcelInsertion(taxi,tpi, parL, keptReq, remainRequestIDs);
 		if(IS == null){
 			System.out.println(name() + "::insertParcelRequest " + " IS = null");
-			sim.nbParcelRejects +=parL.size();
+			//sim.nbParcelRejects ++;
+			for(int i = 0; i < sim.insertedParcelRequests.size(); i++){
+				ParcelRequest pr = sim.insertedParcelRequests.get(i);
+				if(pr.id == parL.id){
+					sim.insertedParcelRequests.remove(i);
+					sim.nbParcelRequestsProcessed --;
+					break;
+				}
+			}
 			System.out.println(name() + "::insertParcelRequest --> request "
 					+ " is REJECTED due to sel_IS = null, nbPeopleRejected = "
 					+ sim.nbPeopleRejects + "/" + sim.allPeopleRequests.size());
@@ -386,7 +390,7 @@ public class dynamicSARPplanner {
 			
 			//sim.admitNewItinerary(taxi, tpi.timePoint, tpi.indexPoint, tpi.point, IS.I, IS.ss);
 			sim.admitNewItineraryWithoutStatus(taxi, tpi.timePoint, tpi.indexPoint, tpi.point, IS.I, IS.ss);
-			sim.nbParcelWaitBoarding += parL.size();
+			sim.nbParcelWaitBoarding ++;
 			if(taxi.ID == sim.debugTaxiID){
 				sim.log.println(name() + "::insertParcelRequest, AFTER admit itinerary, currentItinerary = " + taxi.currentItinerary.toString());
 				
@@ -422,7 +426,7 @@ public class dynamicSARPplanner {
 		//IO.moveGreedyExchangeSARP2014(startDecideTime);
 	}
 	
-	public void processParcelRequests(ArrayList<ParcelRequest> parReq, Vehicle taxi) {
+	public void processParcelRequests(ParcelRequest parReq, Vehicle taxi) {
 		// TODO Auto-generated method stub
 		double startDecideTime = System.currentTimeMillis();
 			double t = (System.currentTimeMillis()-startDecideTime)*0.001; 
