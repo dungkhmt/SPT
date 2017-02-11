@@ -3329,7 +3329,7 @@ public class SimulatorTimeUnit extends Simulator {
 			int plIdx = 0;
 			ArrayList<String> listPlanner = new ArrayList<String>();			
 			//listPlanner.add("GreedyExchangeSharingDecisionTimeLimitPlanner");
-			//listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
+			listPlanner.add("GreedyExSharingDecisionTimeLimitAndGetManyTimesThenAddAPopularPointPlanner");
 			listPlanner.add("dynamicSARPplanner");
 			//listPlanner.add("GreedyExSharingDecisionTimeLimitAndBestParkingPlanner");
 			//listPlanner.add("GreedySharingNoExchangeDecisionTimeLimitPlanner");

@@ -294,7 +294,7 @@ public class dynamicSARPplanner {
 		int sel_pk = -1;
 		double minD = 100000000;
 		//[SonNV] Get location id of last point in remain requests. In remain requests array, the last element is new parcel request.
-		ParcelRequest par = sim.mParcelRequest.get(Math.abs(sel_nod[sel_nod.length -1]));
+		ParcelRequest par = parL.get(parL.size() - 1);
 		int endLocID = par.deliveryLocationID;
 		
 		//[SonNV]Compute distance from last point in remain request to parking. Then,the nearest parking is inserted.

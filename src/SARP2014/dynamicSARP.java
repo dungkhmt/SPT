@@ -385,7 +385,7 @@ public class dynamicSARP {
 		for(int i = 0; i < sim.vehicles.size(); i++){
 			Vehicle taxi = sim.vehicles.get(i);
 			taxi = greedyInsertionRoute(taxi);
-			//sim.vehicles.set(i, taxi);
+			System.out.println("taxi: " + i + ", pending: " + taxi.pendingParcelReqs.size());
 		}
 	}
 	
@@ -480,12 +480,9 @@ public class dynamicSARP {
 					if(sim.runningPeopleRequests.size() == 0){
 						ArrayList<ParcelRequest> parL = new ArrayList<ParcelRequest>();
 						for(int l = 0; l < taxi.pendingParcelReqs.size(); l++){
-							for(int m = 0; m < sim.allParcelRequests.size(); m++){
-								ParcelRequest par = sim.allParcelRequests.get(m);
-								if(par.id == taxi.pendingParcelReqs.get(l)){
-									parL.add(par);
-									break;
-								}
+							if(taxi.pendingParcelReqs.get(l) > 0){
+								ParcelRequest par = sim.mParcelRequest.get(taxi.pendingParcelReqs.get(l));
+								parL.add(par);
 							}
 						}
 						if(parL.size() != 0){

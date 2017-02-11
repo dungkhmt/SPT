@@ -1040,6 +1040,7 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 		double D = 0;
 		int t_min = 0;
 		int t_max = 0;
+		int startPoint = -1;
 		for(int i = 1; i < stSequence.size(); i++){
 			int point1 = -1;
 			int early1 = -1;
@@ -1072,6 +1073,7 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 			if(i == 1){
 				t_min += early1;
 				t_max += late1;
+				startPoint = point1;
 			}
 			int point2 = -1;
 			int early2 = -1;
@@ -1108,12 +1110,14 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 			int max_t = getTravelTime(dis, minSpeedms);
 			t_min += min_t;
 			t_max += max_t;
-			if(t_min < early2 || t_max > late2){
+			if(t_min < early2){
 				return -1;
 			}
 			D += dis;
 		}
-		int pickFirstTime = getTravelTime(taxi.lastIndexPoint, stSequence.get(0));
+		//Itinerary I = dijkstra.queryShortestPath(taxi.lastPoint, startPoint);
+		double dis = estimateTravelingDistance(taxi.lastPoint, startPoint);
+		int pickFirstTime = getTravelTime(dis, minSpeedms);
 		int totalTime = getTravelTime(D, minSpeedms);
 		if(totalTime + pickFirstTime > 18000)
 			return -1;
@@ -1153,6 +1157,7 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 	}
 	
 	public ArrayList<Integer> checkAllThePositionToInsertParcel(Vehicle taxi, ParcelRequest parcelReq){
+		double t0 = System.currentTimeMillis();
 		double bestDistance = 1000000;
 		int length = taxi.pendingParcelReqs.size();
 		ArrayList<Integer> stSq = new ArrayList<Integer>(taxi.pendingParcelReqs);
@@ -1177,8 +1182,10 @@ public TaxiTimePointIndex availableTaxiWithTimePrioriySARP2014(Vehicle taxi, Peo
 					if(bestDistance > D && D > 0){
 						bestDistance = D;
 						bestSq = new ArrayList<Integer>(stSq2);
+						return bestSq;
 					}
 				}
+				//if((System.currentTimeMillis()-t0)*0.001 > 0.001) return bestSq;
 			}
 		}
 		
